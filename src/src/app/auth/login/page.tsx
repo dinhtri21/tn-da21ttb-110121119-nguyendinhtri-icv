@@ -74,7 +74,7 @@ export default function AuthenticationForm(props: PaperProps) {
         <Group grow mb="md" mt="md">
           <Button variant="default" w="100%" radius="xl">
             <img
-              src="/icons/google-icon.svg"
+              src="/icons/google.svg"
               alt="My Icon"
               width={16}
               height={16}
@@ -82,7 +82,7 @@ export default function AuthenticationForm(props: PaperProps) {
           </Button>
           <Button variant="default" w="100%" radius="xl">
             <img
-              src="/icons/facebook-icon.svg"
+              src="/icons/facebook.svg"
               alt="My Icon"
               width={16}
               height={16}
