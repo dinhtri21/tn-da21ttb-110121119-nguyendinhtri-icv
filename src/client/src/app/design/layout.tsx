@@ -1,5 +1,5 @@
 'use client'
-import { MyBasicAppShell } from "@/components/layouts/MyBasicAppShell";
+import { MyBasicAppShell } from "@/components/layouts/MyBasicAppShell/MyBasicAppShell";
 import { ReactNode } from "react";
 import { menuData } from "@/data/userMenuData";
 

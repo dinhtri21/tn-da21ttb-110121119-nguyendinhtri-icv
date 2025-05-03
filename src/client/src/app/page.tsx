@@ -5,7 +5,7 @@ import { RootState } from "@/redux/store";
 import { setToken, clearToken } from "@/redux/slices/authSlice";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { MyBasicAppShell } from "@/components/layouts/MyBasicAppShell";
+import { MyBasicAppShell } from "@/components/layouts/MyBasicAppShell/MyBasicAppShell";
 import { menuData } from "@/data/userMenuData";
 
 export default function HomePage({ children }: { children: React.ReactNode }) {
