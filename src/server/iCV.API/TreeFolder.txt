@@ -1,0 +1,3 @@
+dotnet ef migrations add Initialization --project iCV.Infrastructure --startup-project iCV.API
+
+dotnet ef database update --project iCV.Infrastructure --startup-project iCV.API

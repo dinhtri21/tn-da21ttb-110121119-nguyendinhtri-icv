@@ -1,4 +1,4 @@
-﻿namespace iCV.Application
+﻿namespace iCV.Infrastructure
 {
     public class Class1
     {
