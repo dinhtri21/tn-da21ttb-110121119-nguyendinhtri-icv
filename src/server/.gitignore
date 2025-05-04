@@ -4,10 +4,10 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
-/WatchStore.API/appsettings.json
-/WatchStore.API/wwwroot/images/brands
-/WatchStore.API/wwwroot/images/products
-/WatchStore.API/appsettings.Development.json
+/iCV.API/appsettings.json
+/iCV.API/wwwroot/images/brands
+/iCV.API/wwwroot/images/products
+/iCV.API/appsettings*.json
 
 # User-specific files
 *.rsuser
