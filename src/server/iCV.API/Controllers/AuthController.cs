@@ -8,6 +8,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using iCV.Application.Common.DTOs;
+using MediatR;
+using iCV.Application.Users.Queries.LoginWithGoogle;
 
 namespace iCV.API.Controllers
 {
@@ -15,18 +17,22 @@ namespace iCV.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        public AuthController(IConfiguration configuration)
+        private readonly IMediator _mediator;
+        public AuthController(IMediator mediator)
         {
-            _configuration = configuration;
+            _mediator = mediator;
         }
+
         [HttpGet("google-login")]
         public IActionResult GoogleLogin()
         {
             var redirectUrl = Url.Action("GoogleResponse", "Auth");
-            var properties = new AuthenticationProperties { RedirectUri = redirectUrl };
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = redirectUrl,
+                Items = { { "prompt", "select_account" } }  // Force the user to select an account
+            };
 
-            // Challenge the user to authenticate with Google
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
 
@@ -43,36 +49,14 @@ namespace iCV.API.Controllers
                     claim.Value
                 });
 
-            // Create token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var loginData = await _mediator.Send(new LoginWithGoogleQuery
             {
-                //Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+                email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
+                name = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value,
+                pictureUrl = claims.FirstOrDefault(c => c.Type == "picture")?.Value
+            });
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            // Return token and user info
-            var userInfo = new
-            {
-                Token = tokenString,
-                User = new UserDto
-                {
-                    //id = int.Parse(claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value),
-                    id = 1,
-                    userName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value,
-                    email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-                    createdAt = DateTime.UtcNow,
-                    updatedAt = DateTime.UtcNow
-                }
-            };
-
-            return Ok(userInfo);
+            return Ok(loginData);
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using iCV.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using iCV.Infrastructure.Data;
 namespace iCV.Infrastructure.Migrations
 {
     [DbContext(typeof(iCVDbContext))]
-    partial class iCVDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250504171733_Update1")]
+    partial class Update1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,6 +53,7 @@ namespace iCV.Infrastructure.Migrations
                         .HasColumnName("name");
 
                     b.Property<string>("password")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("password");

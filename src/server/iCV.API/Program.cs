@@ -1,5 +1,7 @@
 ﻿using iCV.API.Configuration.Authentication;
+using iCV.API.Configuration.Repository;
 using iCV.API.Configuration.Swagger;
+using iCV.Application.Common.Interfaces;
 using iCV.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -33,6 +35,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<iCVDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).Assembly));
+
+// Repository
+builder.Services.AddRepositories();
+
 // Google Authentication
 builder.Services.AddAuthentication(options =>
 {
@@ -45,12 +53,9 @@ builder.Services.AddAuthentication(options =>
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
     options.CallbackPath = "/signin-google";
-
-    // 👇 Thêm các dòng sau để lấy avatar
     options.Scope.Add("profile");
     options.ClaimActions.MapJsonKey("picture", "picture");
-
-    options.SaveTokens = true; // lưu access token nếu bạn cần gọi API Google sau này
+    options.SaveTokens = true; 
 });
 
 // Authentication

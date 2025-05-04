@@ -37,12 +37,18 @@ namespace iCV.Infrastructure.Configurations
                 .HasColumnName("email")
                 .HasColumnType("varchar(255)")
                 .HasMaxLength(255);
+            builder.HasIndex(u => u.email).IsUnique();
 
             builder.Property(u => u.password)
-                .IsRequired()
                 .HasColumnName("password")
                 .HasColumnType("varchar(100)")
                 .HasMaxLength(100);
+
+            builder.Property(u => u.provider)
+                .IsRequired()
+                .HasColumnName("provider")
+                .HasColumnType("varchar(50)")
+                .HasMaxLength(50);
 
             builder.Property(u => u.createdAt)
                 .IsRequired()
