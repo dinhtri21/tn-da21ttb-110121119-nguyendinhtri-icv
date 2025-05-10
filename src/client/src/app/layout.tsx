@@ -4,6 +4,9 @@ import "./globals.css";
 import { ReduxProvider } from "../redux/provider";
 import MyMantineProvider from "@/providers/MyMantineProvider";
 import '@mantine/core/styles.css';
+import '@mantine/carousel/styles.css';
+import '@mantine/dates/styles.css';
+import { ColorSchemeScript } from "@mantine/core";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +29,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-mantine-color-scheme="light">
+       <head>
+        <ColorSchemeScript defaultColorScheme="light" /> 
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

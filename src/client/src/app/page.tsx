@@ -1,12 +1,11 @@
 "use client";
 
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/redux/store";
-import { setToken, clearToken } from "@/redux/slices/authSlice";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { MyBasicAppShell } from "@/components/layouts/MyBasicAppShell/MyBasicAppShell";
-import { menuData } from "@/data/userMenuData";
+import { clearToken, setToken } from "@/redux/slices/authSlice";
+import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function HomePage({ children }: { children: React.ReactNode }) {
   const token = useSelector((state: RootState) => state.auth.token);
@@ -28,5 +27,5 @@ export default function HomePage({ children }: { children: React.ReactNode }) {
     // }
   }, [token]);
 
-  return <MyBasicAppShell menu={menuData}>{children}</MyBasicAppShell>;
+  return <MyBasicAppShell>{children}</MyBasicAppShell>;
 }
