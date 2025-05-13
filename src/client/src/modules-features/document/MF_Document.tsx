@@ -15,17 +15,21 @@ import IConicTemplate from "./CVTemplate/IConic/IConicTemplate";
 
 export default function MF_Document() {
   return (
-    <Container size="80rem">
-      <Flex flex={1} direction="column" gap={16}>
+    <Container px={16} size="80rem" pb={16}>
+      <Flex flex={1} direction="column" gap={16}  wrap="wrap">
         <MyToolBar />
-        <Grid>
-          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+        {/* <Grid>
+          <Grid.Col span={{ base: 12, md: 12, lg: 6 }}>
             <CvContent />
           </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 6 }}>
+          <Grid.Col bg="red"  span={{ base: 12, md: 12, lg: 6 }}>
               <IConicTemplate />
           </Grid.Col>
-        </Grid>
+        </Grid> */}
+        <Flex flex={1}  direction="row" gap={16}   wrap="wrap">
+          <CvContent />
+          <IConicTemplate />
+        </Flex>
       </Flex>
     </Container>
   );

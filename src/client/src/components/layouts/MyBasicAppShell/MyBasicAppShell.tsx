@@ -45,16 +45,11 @@ export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
   return (
     <AppShell
       header={{ height: 60, collapsed: !pinned, offset: false }}
-      // padding="md"
+      // padding={0}
     >
       <AppShell.Header>
-        <Container size="80rem" h={60}>
-          <Group
-            h="100%"
-            justify="space-between"
-            align="center"
-            px={{ base: 20, sm: 0 }}
-          >
+        <Container size="80rem" h={60} px={16}>
+          <Group h="100%" justify="space-between" align="center">
             {/* Right side */}
             <Flex direction="row" align="center" gap={10}>
               {/* <Burger
@@ -175,9 +170,7 @@ export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
           </Group>
         </Container>
       </AppShell.Header>
-      <AppShell.Main px={{ base: 20, sm: 50 }} pt="76px">
-        {children}
-      </AppShell.Main>
+      <AppShell.Main pt="76px">{children}</AppShell.Main>
     </AppShell>
   );
 }

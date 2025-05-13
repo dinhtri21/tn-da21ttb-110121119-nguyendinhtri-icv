@@ -49,8 +49,8 @@ const accordionItems: accordionItem[] = [
 
 export default function CVContent() {
   return (
-    <Flex flex={1} direction="column" gap={4} align="center">
-      <Accordion w="100%">
+    <Flex flex={1} miw="320px" direction="column" gap={4} >
+      <Accordion  >
         {accordionItems.map((item) => (
           <Accordion.Item key={item.value} value={item.value}>
             <Accordion.Control>
