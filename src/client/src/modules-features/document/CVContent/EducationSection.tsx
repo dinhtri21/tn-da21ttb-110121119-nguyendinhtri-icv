@@ -1,30 +1,37 @@
-import { Flex, TextInput, Text, Textarea, Button } from "@mantine/core";
+import { Flex, Textarea, Text, Button, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { IconBrain, IconCalendarWeek, IconPlus } from "@tabler/icons-react";
 
-export default function WorkExperienceSection() {
+export default function EducationSection() {
   return (
     <Flex flex={1} direction={"column"} gap={4} align="center" px={10}>
+      <TextInput
+        w="100%"
+        label={
+          <Text size="sm" fw={400}>
+            Tên trường
+          </Text>
+        }
+        placeholder="Đại học Trà Vinh"
+      />
       <Flex w="100%" gap={8}>
         <TextInput
           w="50%"
-          leftSectionPointerEvents="none"
           label={
             <Text size="sm" fw={400}>
-              Vị trí
+              Chuyên ngành
             </Text>
           }
-          placeholder="Lập trình viên"
+          placeholder="Công nghệ thông tin"
         />
         <TextInput
           w="50%"
-          leftSectionPointerEvents="none"
           label={
             <Text size="sm" fw={400}>
-              Công ty
+              Xếp loại
             </Text>
           }
-          placeholder="Công ty ABC"
+          placeholder="Giỏi"
         />
       </Flex>
       <Flex w="100%" gap={8}>
@@ -51,30 +58,15 @@ export default function WorkExperienceSection() {
           valueFormat="DD/MM/YYYY"
         />
       </Flex>
-      <Textarea
-        w="100%"
-        label={
-          <Text size="sm" fw={400}>
-            Tóm tắt công việc
-          </Text>
-        }
-        placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
-        autosize
-        minRows={3}
-        maxRows={4}
-      />
 
       <Button
-        leftSection={<IconBrain stroke={1} size={16} />}
-        variant="default"
-      >
-        Tạo bằng AI
-      </Button>
-      <Button
+        size="sm"
+        fw={400}
+        mt={8}
         leftSection={<IconPlus stroke={1} size={16} />}
         variant="default"
       >
-        Thêm kinh nghiệm chuyên môn
+        Thêm học vấn
       </Button>
     </Flex>
   );

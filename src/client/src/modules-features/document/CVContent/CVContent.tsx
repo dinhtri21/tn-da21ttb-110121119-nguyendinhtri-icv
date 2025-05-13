@@ -3,6 +3,9 @@ import React from "react";
 import PersonalInfoSection from "./PersonalInfoSection";
 import OverviewSection from "./OverviewSection";
 import WorkExperienceSection from "./WorkExperienceSection";
+import EducationSection from "./EducationSection";
+import SkillsSection from "./SkillsSection";
+import ProjectSection from "./ProjectSection";
 
 interface accordionItem {
   value: string;
@@ -12,41 +15,42 @@ interface accordionItem {
 
 const accordionItems: accordionItem[] = [
   {
-    value: "item-1",
+    value: "item1",
     label: "Thông tin cá nhân",
     content: <PersonalInfoSection />,
   },
   {
-    value: "item-2",
+    value: "item2",
     label: "Tổng quan",
     content: <OverviewSection />,
   },
+
   {
-    value: "item-3",
+    value: "item4",
+    label: "Học vấn",
+    content: <EducationSection />,
+  },
+  {
+    value: "item5",
+    label: "Kỹ năng",
+    content: <SkillsSection />,
+  },
+  {
+    value: "item3",
     label: "Kinh nghiệm chuyên môn",
     content: <WorkExperienceSection />,
   },
   {
-    value: "item-4",
-    label: "Giáo dục",
-    content: "Nội dung của item 3",
-  },
-  {
-    value: "item-5",
-    label: "Kỹ năng",
-    content: "Nội dung của item 3",
-  },
-  {
-    value: "item-6",
+    value: "item6",
     label: "Dự án cá nhân",
-    content: "Nội dung của item 3",
+    content: <ProjectSection />,
   },
 ];
 
 export default function CVContent() {
   return (
     <Flex flex={1} direction="column" gap={4} align="center">
-      <Accordion w="100%" >
+      <Accordion w="100%">
         {accordionItems.map((item) => (
           <Accordion.Item key={item.value} value={item.value}>
             <Accordion.Control>

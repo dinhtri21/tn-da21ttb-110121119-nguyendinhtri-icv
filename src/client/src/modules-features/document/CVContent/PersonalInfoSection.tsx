@@ -5,7 +5,6 @@ export default function PersonalInfoSection() {
     <Flex direction={"column"} gap={4} align="center" px={10}>
       <TextInput
         w="100%"
-        leftSectionPointerEvents="none"
         label={
           <Text size="sm" fw={400}>
             Họ và tên
@@ -15,7 +14,6 @@ export default function PersonalInfoSection() {
       />
       <TextInput
         w="100%"
-        leftSectionPointerEvents="none"
         label={
           <Text size="sm" fw={400}>
             Chức vụ
@@ -26,7 +24,6 @@ export default function PersonalInfoSection() {
       <Flex w="100%" gap={8}>
         <TextInput
           w="50%"
-          leftSectionPointerEvents="none"
           label={
             <Text size="sm" fw={400}>
               Email
@@ -36,7 +33,6 @@ export default function PersonalInfoSection() {
         />
         <TextInput
           w="50%"
-          leftSectionPointerEvents="none"
           label={
             <Text size="sm" fw={400}>
               Số điện thoại
@@ -47,7 +43,6 @@ export default function PersonalInfoSection() {
       </Flex>
       <TextInput
         w="100%"
-        leftSectionPointerEvents="none"
         label={
           <Text size="sm" fw={400}>
             Địa chỉ

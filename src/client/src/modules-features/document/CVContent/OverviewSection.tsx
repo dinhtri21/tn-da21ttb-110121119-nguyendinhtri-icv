@@ -11,7 +11,7 @@ export default function OverviewSection() {
             Tổng quan
           </Text>
         }
-        placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+        placeholder="Mục tiêu của tôi là trở thành một lập trình viên full-stack."
         autosize
         minRows={3}
         maxRows={4}
@@ -20,6 +20,9 @@ export default function OverviewSection() {
       <Button
         leftSection={<IconBrain stroke={1} size={16} />}
         variant="default"
+        mt={8}
+        size="sm"
+        fw={400}
       >
         Tạo bằng AI
       </Button>

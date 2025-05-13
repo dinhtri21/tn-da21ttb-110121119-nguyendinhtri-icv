@@ -6,6 +6,7 @@ import MyMantineProvider from "@/providers/MyMantineProvider";
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/dates/styles.css';
+import '@mantine/tiptap/styles.css';
 import { ColorSchemeScript } from "@mantine/core";
 
 const geistSans = Geist({
