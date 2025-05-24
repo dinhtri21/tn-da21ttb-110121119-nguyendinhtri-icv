@@ -10,6 +10,9 @@ using System.Security.Claims;
 using iCV.Application.Common.DTOs;
 using MediatR;
 using iCV.Application.Users.Queries.LoginWithGoogle;
+using iCV.Application.Common.Interfaces;
+using iCV.Domain.Entities;
+using iCV.Infrastructure.Repositories;
 
 namespace iCV.API.Controllers
 {

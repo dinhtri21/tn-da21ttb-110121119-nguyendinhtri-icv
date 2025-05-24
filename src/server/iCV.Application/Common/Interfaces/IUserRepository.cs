@@ -11,5 +11,7 @@ namespace iCV.Application.Common.Interfaces
     {
         Task<User?> GetUserByEmailAsync(string email);
         Task CreateUserAsync(User user);
+        Task UpdateUserAsync(User user);
+        Task DeleteUserAsync(string id);
     }
 }

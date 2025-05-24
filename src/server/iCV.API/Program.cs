@@ -1,12 +1,16 @@
 ﻿using iCV.API.Configuration.Authentication;
+using iCV.API.Configuration.Database;
 using iCV.API.Configuration.Repository;
 using iCV.API.Configuration.Swagger;
 using iCV.Application.Common.Interfaces;
-using iCV.Infrastructure.Data;
+using iCV.Infrastructure.Configurations;
+using iCV.Infrastructure.MongoMappings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using WatchStore.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,8 +36,11 @@ builder.Services.AddCors(options =>
 });
 
 // SQl Server
-builder.Services.AddDbContext<iCVDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<iCVDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// MongoDB
+builder.Services.AddMongoDb(builder.Configuration);
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).Assembly));

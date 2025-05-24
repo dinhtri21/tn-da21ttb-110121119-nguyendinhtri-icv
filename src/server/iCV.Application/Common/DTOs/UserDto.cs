@@ -17,7 +17,7 @@ namespace iCV.Application.Common.DTOs
 
     public class UserProfileDto
     {
-        public int id { get; set; }
+        public string id { get; set; }
         public string userName { get; set; }
         public string email { get; set; }
         public string? pictureUrl { get; set; }
