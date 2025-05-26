@@ -24,7 +24,10 @@ namespace iCV.Infrastructure.MongoMappings
                   .SetSerializer(new StringSerializer(BsonType.ObjectId))
                   .SetElementName("_id");
 
-                cm.MapMember(p => p.documentId).SetElementName("documentId");
+                cm.MapMember(e => e.documentId)
+                  .SetElementName("documentId")
+                  .SetSerializer(new StringSerializer(BsonType.ObjectId));
+
                 cm.MapMember(p => p.firstName).SetElementName("firstName");
                 cm.MapMember(p => p.lastName).SetElementName("lastName");
                 cm.MapMember(p => p.jobTitle).SetElementName("jobTitle");

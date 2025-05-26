@@ -13,6 +13,7 @@ namespace iCV.API.Configuration.Repository
             services.AddScoped<IExperienceRepository, ExperienceRepository>();
             services.AddScoped<IPersonalInfoRepository, PersonalInfoRepository>();
             services.AddScoped<ISkillsRepository, SkillsRepository>();
+            services.AddScoped<ICVRepository, CVRepository>();
 
             return services;
         }

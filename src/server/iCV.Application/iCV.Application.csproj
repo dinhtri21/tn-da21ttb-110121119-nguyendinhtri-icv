@@ -11,7 +11,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<Folder Include="Common\Mappings\" />
+		<Folder Include="CVs\Commands\Delete\" />
+		<Folder Include="CVs\Commands\Update\" />
+		<Folder Include="CVs\Queries\" />
 		<Folder Include="Users\Commands\" />
 	</ItemGroup>
 
