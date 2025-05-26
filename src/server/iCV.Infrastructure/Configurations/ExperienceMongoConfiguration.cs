@@ -30,6 +30,7 @@ namespace iCV.Infrastructure.MongoMappings
 
                 cm.MapMember(e => e.title).SetElementName("title");
                 cm.MapMember(e => e.position).SetElementName("position");
+                cm.MapMember(e => e.description).SetElementName("description");
                 cm.MapMember(e => e.currentlyWorking).SetElementName("currentlyWorking");
                 cm.MapMember(e => e.startDate).SetElementName("startDate");
                 cm.MapMember(e => e.endDate).SetElementName("endDate");

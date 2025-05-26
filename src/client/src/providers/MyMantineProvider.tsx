@@ -1,25 +1,19 @@
 "use client";
 
 import { ModalsProvider } from "@mantine/modals";
-import { createTheme, MantineProvider } from '@mantine/core';
+import { createTheme, MantineProvider } from "@mantine/core";
 
-
-
-export default function MyMantineProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MyMantineProvider({ children }: { children: React.ReactNode }) {
   return (
-    <MantineProvider defaultColorScheme="light" >
+    <MantineProvider defaultColorScheme="light">
       {/* <ModalsProvider
         labels={{
           confirm: "Thêm",
           cancel: "Huỷ",
         }}
       > */}
-        {/* <Notifications /> */}
-        {children}
+      {/* <Notifications /> */}
+      {children}
       {/* </ModalsProvider> */}
     </MantineProvider>
   );

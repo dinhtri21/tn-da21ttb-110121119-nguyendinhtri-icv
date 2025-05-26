@@ -4,6 +4,7 @@ export interface IExperience {
     title?: string;
     position?: string;
     currentlyWorking?: boolean;
+    description?: string;
     startDate?: string; 
     endDate?: string;   
 }

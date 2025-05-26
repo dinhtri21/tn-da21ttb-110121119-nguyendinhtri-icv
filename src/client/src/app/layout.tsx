@@ -8,6 +8,7 @@ import '@mantine/carousel/styles.css';
 import '@mantine/dates/styles.css';
 import '@mantine/tiptap/styles.css';
 import { ColorSchemeScript } from "@mantine/core";
+import MyProvider from "@/providers/MyProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +39,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ReduxProvider>
-          <MyMantineProvider>{children}</MyMantineProvider>
+          <MyProvider>{children}</MyProvider>
         </ReduxProvider>
       </body>
     </html>

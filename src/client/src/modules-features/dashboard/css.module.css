@@ -1,0 +1,9 @@
+.cvCard {
+  border: 1px solid #c4c4c4;
+  transition: border-color 0.3s linear;
+}
+
+.cvCard:hover {
+  border-color: #5580ca;
+  box-shadow: #bac6da49 6px 10px 10px;
+}

@@ -1,14 +1,8 @@
 "use client";
 import MyToolBar from "@/components/Toolbar/MyToolBar";
 import {
-  Button,
-  Center,
   Container,
-  Flex,
-  Grid,
-  ScrollArea,
-  Text,
-  Title,
+  Flex
 } from "@mantine/core";
 import CvContent from "./CVContent/CVContent";
 import IConicTemplate from "./CVTemplate/IConic/IConicTemplate";
