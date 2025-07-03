@@ -1,18 +1,18 @@
 "use client";
 import MyToolBar from "@/components/Toolbar/MyToolBar";
-import {
-  Container,
-  Flex
-} from "@mantine/core";
+import { Container, Flex } from "@mantine/core";
 import CvContent from "./CVContent/CVContent";
 import IConicTemplate from "./CVTemplate/IConic/IConicTemplate";
+import { useParams } from "next/navigation";
 
 export default function MF_Document() {
+  const params = useParams();
+  console.log("MF_Document params:", params.id);
   return (
     <Container px={16} size="80rem" pb={16}>
-      <Flex flex={1} direction="column" gap={16}  wrap="wrap">
+      <Flex flex={1} direction="column" gap={16} wrap="wrap">
         <MyToolBar />
-        <Flex flex={1}  direction="row" gap={16}   wrap="wrap">
+        <Flex flex={1} direction="row" gap={16} wrap="wrap">
           <CvContent />
           <IConicTemplate />
         </Flex>
@@ -32,16 +32,14 @@ const cvData = {
       position: "Nhân viên phát triển phần mềm",
       startDate: "01/2020",
       endDate: "12/2022",
-      description:
-        "Tham gia phát triển các dự án phần mềm lớn, sử dụng React và Node.js.",
+      description: "Tham gia phát triển các dự án phần mềm lớn, sử dụng React và Node.js.",
     },
     {
       company: "Công ty ABC",
       position: "Thực tập sinh",
       startDate: "06/2019",
       endDate: "12/2019",
-      description:
-        "Hỗ trợ phát triển giao diện người dùng cho các ứng dụng web.",
+      description: "Hỗ trợ phát triển giao diện người dùng cho các ứng dụng web.",
     },
   ],
   education: [

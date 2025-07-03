@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCV.Domain", "iCV.Domain\iC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCV.Infrastructure", "iCV.Infrastructure\iCV.Infrastructure.csproj", "{0C1D0818-1125-41BD-A44A-31FF3E21EB0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iCV.Data", "iCV.Data\iCV.Data.csproj", "{CD5B55AA-FAE8-4BC6-9483-882ED620F9C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0C1D0818-1125-41BD-A44A-31FF3E21EB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C1D0818-1125-41BD-A44A-31FF3E21EB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C1D0818-1125-41BD-A44A-31FF3E21EB0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD5B55AA-FAE8-4BC6-9483-882ED620F9C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD5B55AA-FAE8-4BC6-9483-882ED620F9C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD5B55AA-FAE8-4BC6-9483-882ED620F9C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD5B55AA-FAE8-4BC6-9483-882ED620F9C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

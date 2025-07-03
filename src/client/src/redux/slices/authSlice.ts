@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface AuthState {
-  token: string | null;
+interface IAuthState {
+  token?: string;
 }
 
-const initialState: AuthState = {
-  token: null,
+const initialState: IAuthState = {
 };
 
 const authSlice = createSlice({
@@ -16,7 +15,7 @@ const authSlice = createSlice({
       state.token = action.payload; 
     },
     clearToken: (state) => {
-      state.token = null; 
+      state.token = undefined; 
     },
   },
 });

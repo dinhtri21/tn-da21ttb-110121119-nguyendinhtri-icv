@@ -35,6 +35,18 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Configure session
+builder.Services.AddDistributedMemoryCache(); // In RAM cache for session state
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Thay vì SameAsRequest
+    options.Cookie.Name = "__Host-SessionId"; // Thêm prefix cho security
+});
+
 // SQl Server
 //builder.Services.AddDbContext<iCVDbContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -72,7 +84,7 @@ builder.Services.AddJwtAuthentication(builder.Configuration["Jwt:key"]);
 builder.Services.AddSwaggerDocumentation();
 //builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
-
+//builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -87,6 +99,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["Cross-Origin-Embedder-Policy"] = "same-origin-allow-popups";
+    await next();
+});
+
+app.UseCors("AllowSpecificOrigin");
+app.UseSession();
 
 app.UseAuthorization();
 

@@ -8,26 +8,18 @@ namespace iCV.Application.Common.DTOs
 {
     public class UserDto
     {
-        public int id { get; set; }
-        public string userName { get; set; }
+        public string? id { get; set; }
+        public string name { get; set; }
         public string email { get; set; }
-        public DateTime createdAt { get; set; }
-        public DateTime updatedAt { get; set; }
-    }
-
-    public class UserProfileDto
-    {
-        public string id { get; set; }
-        public string userName { get; set; }
-        public string email { get; set; }
+        public string provider { get; set; }
         public string? pictureUrl { get; set; }
-        public DateTime createdAt { get; set; }
-        public DateTime updatedAt { get; set; }
+        public DateTime createdAt { get; set; } 
+        public DateTime updatedAt { get; set; } 
     }
 
     public class UserLoginDto
     {
         public string token { get; set; }
-        public UserProfileDto user { get; set; }
+        public UserDto user { get; set; }
     }
 }

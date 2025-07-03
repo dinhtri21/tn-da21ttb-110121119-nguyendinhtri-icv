@@ -4,6 +4,17 @@
 }
 
 .cvCard:hover {
-  border-color: #5580ca;
+  border-color: #b3b3b3;
+  box-shadow: #bac6da49 6px 10px 10px;
+}
+
+.cvNewCard {
+  border-radius: 12;
+  border: 1px solid #c4c4c4;
+  transition: border-color 0.3s linear;
+}
+
+.cvNewCard:hover {
+  border-color: #b3b3b3;
   box-shadow: #bac6da49 6px 10px 10px;
 }

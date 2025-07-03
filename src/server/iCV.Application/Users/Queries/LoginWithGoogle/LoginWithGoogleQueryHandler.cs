@@ -55,12 +55,13 @@ namespace iCV.Application.Users.Queries.LoginWithGoogle
             var userInfo = new UserLoginDto
             {
                 token = tokenString,
-                user = new UserProfileDto
+                user = new UserDto
                 {
                     id = user.id,
-                    userName = user.name,
+                    name = user.name,
                     email = user.email,
                     pictureUrl = request.pictureUrl,
+                    provider = user.provider,
                     createdAt = user.createdAt,
                     updatedAt = user.updatedAt,
                 }

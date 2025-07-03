@@ -1,17 +1,38 @@
 "use client";
 import { ICV } from "@/interface/cv";
-import { Box, Button, Center, Container, Flex, Grid, Image, Stack, Text } from "@mantine/core";
-import { IconDotsVertical, IconPlus, IconTrash } from "@tabler/icons-react";
+import {
+  Box,
+  Button,
+  Center,
+  Container,
+  Flex,
+  Grid,
+  Image,
+  Menu,
+  Stack,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
+import { IconDotsVertical, IconEye, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
 import styles from "./css.module.css";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function MF_Dashboard() {
+  const { colorScheme } = useMantineColorScheme();
+  const router = useRouter();
+
   const query = useQuery<ICV[]>({
     queryKey: ["F_14w3vwnnfy_Read"],
     queryFn: async () => {
       return mockData;
     },
   });
+
+  function handleCardClick(id: any) {
+    router.push(`/document/${id}`);
+  }
 
   if (query.isLoading) return "Loading...";
   if (query.isError) return "Không có dữ liệu...";
@@ -30,7 +51,7 @@ export default function MF_Dashboard() {
             Tạo sơ yếu lý lịch tùy chỉnh của riêng bạn với AI
           </Text>
         </Flex>
-        <Button variant="outline" color="gray" leftSection={<IconTrash size={16} stroke={2} />}>
+        <Button variant="outline" color="gray" leftSection={<IconTrash size={18} stroke={2} />}>
           Xoá tất cả
         </Button>
       </Flex>
@@ -40,18 +61,25 @@ export default function MF_Dashboard() {
         </Text>
         <Box>
           <Grid mt={20}>
-            <Grid.Col span={{ base: 12, md: 6, lg: 2 }}>
-              <Center h={220} bg={"gray.2"} style={{ borderRadius: 12 }}>
-                <Stack align="center" gap={4}>
-                  <IconPlus size={32} stroke={1} />
-                  <Text size="sm">Tạo CV mới</Text>
-                </Stack>
-              </Center>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
+              <Link href={`/document/1`}>
+                <Center
+                  h={220}
+                  bg={colorScheme === "dark" ? "#1A1B1E" : "#F3F4F6"}
+                  className={styles.cvNewCard}
+                >
+                  <Stack align="center" gap={4}>
+                    <IconPlus size={32} stroke={1} />
+                    <Text size="sm">Tạo mới</Text>
+                  </Stack>
+                </Center>
+              </Link>
             </Grid.Col>
             {query?.data &&
               query.data.map((cv, i) => {
                 return (
-                  <Grid.Col key={i} span={{ base: 12, md: 6, lg: 2 }}>
+                  <Grid.Col key={i} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
+                    {/* <Link href={`/document/${cv.document.id}`}> */}
                     <div
                       className={styles.cvCard}
                       style={{
@@ -60,13 +88,14 @@ export default function MF_Dashboard() {
                         cursor: "pointer",
                         height: 220,
                       }}
+                      onClick={() => handleCardClick(cv.document.id)}
                     >
                       <Image
                         src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png"
                         h={170}
                         fit="cover"
                       />
-                      <Box px={8} py={4}>
+                      <Box px={12} py={4}>
                         <Text fw={500} size="sm" lineClamp={1}>
                           {cv.document.title}
                         </Text>
@@ -80,19 +109,39 @@ export default function MF_Dashboard() {
                             })}
                           </Text>
                           <Box>
-                            <IconDotsVertical size={16} stroke={1} />
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation(); // Ngăn click vào card
+                              }}
+                            >
+                              <Menu shadow="md" width={90}>
+                                <Menu.Target>
+                                  <IconDotsVertical size={16} stroke={2} />
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                  <Menu.Item
+                                    onClick={() => handleCardClick(cv.document.id)}
+                                    leftSection={<IconPencil size={14} color="blue" />}
+                                  >
+                                    Sửa
+                                  </Menu.Item>
+                                  <Menu.Item leftSection={<IconEye size={14} color="orange" />}>
+                                    Xem
+                                  </Menu.Item>
+                                  <Menu.Item leftSection={<IconTrash size={14} color="red" />}>
+                                    Xoá
+                                  </Menu.Item>
+                                </Menu.Dropdown>
+                              </Menu>
+                            </div>
                           </Box>
                         </Flex>
                       </Box>
                     </div>
+                    {/* </Link> */}
                   </Grid.Col>
                 );
               })}
-            {/* <Grid.Col span={{ base: 12, md: 6, lg: 2 }}>1</Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6, lg: 2 }}>1</Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6, lg: 2 }}>1</Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6, lg: 2 }}>1</Grid.Col>
-            <Grid.Col span={{ base: 12, md: 6, lg: 2 }}>1</Grid.Col> */}
           </Grid>
         </Box>
       </Flex>
