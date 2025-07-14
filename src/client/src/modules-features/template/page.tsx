@@ -754,28 +754,65 @@ export default function CVBuilderPage() {
 
   return (
     <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      <div className="flex min-h-screen bg-gray-50">
-        {/* Left Sidebar */}
-        <Sidebar onAddBlock={(type) => addBlock(type, "left")} />
-        {/* Main Content */}
-        <main className="flex-1 p-8">
-          <MyToolBar />
-          <h1 className="text-2xl font-bold mb-6">Trình tạo CV kéo thả</h1>
+    sensors={sensors}
+    collisionDetection={closestCenter}
+    onDragStart={handleDragStart}
+    onDragOver={handleDragOver}
+    onDragEnd={handleDragEnd}
+  >
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Left Sidebar */}
+      <Sidebar onAddBlock={(type) => addBlock(type, "left")} />
+      
+      {/* Main Content */}
+      <main className="flex-1 p-8 bg-amber-50 min-h-screen flex flex-col items-center">
+        <MyToolBar />
+        <h1 className="text-2xl font-bold mb-6">Trình tạo CV kéo thả</h1>
+        
+        {/* CV Container với kích thước A4 chính xác */}
+        <div className="cv-container" style={{ 
+          width: "794px",
+          minHeight: "1123px",
+          margin: "0 auto",
+          position: "relative"
+        }}>
           <div
-            className="drop-zone-area max-w-6xl mx-auto bg-amber-50"
             id="print-section"
+            className="drop-zone-area bg-white shadow-2xl"
+            style={{
+              width: "794px",        // A4 width at 96dpi - FIXED
+              minHeight: "1123px",   // A4 height at 96dpi - FIXED
+              maxWidth: "794px",     // Prevent overflow
+              padding: "32px",       // Inner padding
+              borderRadius: "8px",   // Slightly reduced for PDF
+              boxSizing: "border-box",
+              margin: "0",
+              position: "relative",
+              // Thêm styles để đảm bảo consistency
+              fontSize: "14px",
+              lineHeight: "1.4",
+              fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+            }}
           >
-            <div className="min-h-[200px] flex gap-4 relative">
+            {/* Content area với kích thước tính toán chính xác */}
+            <div 
+              className="cv-content"
+              style={{
+                width: "100%",
+                minHeight: "calc(1123px - 64px)", // Trừ đi padding
+                display: "flex",
+                gap: "16px",
+                position: "relative"
+              }}
+            >
               {/* Left Column */}
               <div
-                className="bg-white rounded-lg shadow-sm p-4 "
-                style={{ width: `${leftWidth}%` }}
+                className="cv-left-column bg-gray-800 text-white rounded-lg shadow-sm p-4"
+                style={{ 
+                  width: `${leftWidth}%`,
+                  minHeight: "100%",
+                  flexShrink: 0
+                }}
               >
                 <SortableContext
                   items={[
@@ -808,7 +845,7 @@ export default function CVBuilderPage() {
                 </SortableContext>
 
                 {leftBlocks.length === 0 && (
-                  <div className="text-gray-400 text-center py-10 border-2 border-dashed border-gray-300 rounded">
+                  <div className="text-gray-300 text-center py-10 border-2 border-dashed border-gray-600 rounded">
                     <p className="text-sm">Kéo các mục vào cột trái</p>
                   </div>
                 )}
@@ -816,8 +853,12 @@ export default function CVBuilderPage() {
 
               {/* Right Column */}
               <div
-                className="bg-white rounded-lg shadow-sm p-4"
-                style={{ width: `${100 - leftWidth}%` }}
+                className="cv-right-column bg-white rounded-lg shadow-sm p-4"
+                style={{ 
+                  width: `${100 - leftWidth}%`,
+                  minHeight: "100%",
+                  flexShrink: 0
+                }}
               >
                 <SortableContext
                   items={[
@@ -856,54 +897,54 @@ export default function CVBuilderPage() {
                 )}
               </div>
             </div>
-            {/* Resizable Divider */}
           </div>
-        </main>
+        </div>
+      </main>
 
-        {/* Right Sidebar - Preview */}
-        <div className="w-64 bg-white border-l p-4">
-          <h2 className="font-bold mb-4">Bố cục CV</h2>
-          <div className="space-y-4">
-            {/* Resizable Preview */}
-            <ResizablePreview
-              leftWidth={leftWidth}
-              onWidthChange={setLeftWidth}
-              leftBlocks={leftBlocks}
-              rightBlocks={rightBlocks}
-            />
+      {/* Right Sidebar - Preview */}
+      <div className="w-64 bg-white border-l p-4">
+        <h2 className="font-bold mb-4">Bố cục CV</h2>
+        <div className="space-y-4">
+          {/* Resizable Preview */}
+          <ResizablePreview
+            leftWidth={leftWidth}
+            onWidthChange={setLeftWidth}
+            leftBlocks={leftBlocks}
+            rightBlocks={rightBlocks}
+          />
 
-            {/* Block list */}
-            <div>
-              <h3 className="text-sm font-medium mb-2">Danh sách block</h3>
-              <div className="space-y-2 max-h-96 overflow-y-auto">
-                {leftBlocks.map((block, idx) => (
-                  <PreviewBlock key={`left-${idx}`} block={block} column="left" />
-                ))}
-                {rightBlocks.map((block, idx) => (
-                  <PreviewBlock key={`right-${idx}`} block={block} column="right" />
-                ))}
-                {leftBlocks.length === 0 && rightBlocks.length === 0 && (
-                  <div className="text-gray-400 text-center py-4 text-sm">Chưa có block nào</div>
-                )}
-              </div>
+          {/* Block list */}
+          <div>
+            <h3 className="text-sm font-medium mb-2">Danh sách block</h3>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {leftBlocks.map((block, idx) => (
+                <PreviewBlock key={`left-${idx}`} block={block} column="left" />
+              ))}
+              {rightBlocks.map((block, idx) => (
+                <PreviewBlock key={`right-${idx}`} block={block} column="right" />
+              ))}
+              {leftBlocks.length === 0 && rightBlocks.length === 0 && (
+                <div className="text-gray-400 text-center py-4 text-sm">Chưa có block nào</div>
+              )}
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <DragOverlay>
-        {activeId ? (
-          <div className="bg-white rounded shadow-lg p-4 opacity-90 scale-105">
-            {activeId.startsWith("sidebar-") ? (
-              <div className="px-3 py-2">
-                {BLOCKS.find((b) => `sidebar-${b.type}` === activeId)?.label}
-              </div>
-            ) : (
-              <div className="px-3 py-2">Block</div>
-            )}
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+    <DragOverlay>
+      {activeId ? (
+        <div className="bg-white rounded shadow-lg p-4 opacity-90 scale-105">
+          {activeId.startsWith("sidebar-") ? (
+            <div className="px-3 py-2">
+              {BLOCKS.find((b) => `sidebar-${b.type}` === activeId)?.label}
+            </div>
+          ) : (
+            <div className="px-3 py-2">Block</div>
+          )}
+        </div>
+      ) : null}
+    </DragOverlay>
+  </DndContext>
   );
 }
