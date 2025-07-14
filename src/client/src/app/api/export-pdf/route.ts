@@ -64,6 +64,31 @@ export async function POST(req: NextRequest) {
               padding: 32px !important;
               box-sizing: border-box !important;
               page-break-inside: avoid;
+              background: white !important;
+            }
+
+            /* Ẩn các elements điều khiển */
+            .cv-block-controls,
+            .cv-block-delete,
+            .cv-block-drag,
+            .print\\:hidden,
+            .group-hover\\:opacity-100,
+            button.absolute,
+            .cursor-move,
+            [class*="backdrop-blur"] {
+              display: none !important;
+              opacity: 0 !important;
+              visibility: hidden !important;
+            }
+
+            /* Đảm bảo nội dung block và input hiển thị */
+            .cv-block-container,
+            .cv-block-content,
+            .cv-input {
+              display: block !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+              background: white !important;
             }
             
             /* Đảm bảo background colors hiển thị */
@@ -87,6 +112,14 @@ export async function POST(req: NextRequest) {
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
               }
+
+              /* Reset tất cả các hiệu ứng hover */
+              *:hover {
+                background: initial !important;
+                color: initial !important;
+                border-color: initial !important;
+                box-shadow: none !important;
+              }
             }
           </style>
         </head>
@@ -102,6 +135,22 @@ export async function POST(req: NextRequest) {
     
     // Đợi fonts load và styles apply
     await page.evaluateHandle('document.fonts.ready');
+
+    // Thêm script để xóa các elements không cần thiết trước khi tạo PDF
+    await page.evaluate(() => {
+      // Xóa tất cả các nút điều khiển
+      const controlElements = document.querySelectorAll('.cv-block-controls, .cv-block-delete, .cv-block-drag, button.absolute, .cursor-move');
+      controlElements.forEach(el => el.remove());
+
+      // Xóa các attributes không cần thiết
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(el => {
+        el.removeAttribute('data-dnd-draggable');
+        el.removeAttribute('draggable');
+        el.removeAttribute('role');
+        el.removeAttribute('tabindex');
+      });
+    });
     
     // Thay thế page.waitForTimeout bằng setTimeout với Promise
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -109,16 +158,16 @@ export async function POST(req: NextRequest) {
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
-      preferCSSPageSize: false, // Tắt để sử dụng format A4 cố định
+      preferCSSPageSize: false,
       margin: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0
       },
-      width: "210mm",   // A4 width
-      height: "297mm",  // A4 height
-      scale: 1.0,       // Không scale
+      width: "210mm",
+      height: "297mm",
+      scale: 1.0,
     });
 
     await browser.close();

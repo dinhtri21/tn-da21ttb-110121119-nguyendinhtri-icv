@@ -19,10 +19,8 @@ export const extractAllStyles = async (): Promise<string> => {
     if (href) {
       try {
         if (href.startsWith('http') || href.startsWith('//')) {
-          // External URL - keep as link for CDN resources
           styles.push(`<link rel="stylesheet" href="${href}">`);
         } else {
-          // Local file - fetch content
           const response = await fetch(href);
           if (response.ok) {
             const cssContent = await response.text();
@@ -39,7 +37,6 @@ export const extractAllStyles = async (): Promise<string> => {
   // 3. Thêm CSS cần thiết cho PDF với A4 sizing
   styles.push(`
     <style>
-      /* PDF-specific styles with A4 exact sizing */
       * {
         -webkit-print-color-adjust: exact !important;
         color-adjust: exact !important;
@@ -56,7 +53,6 @@ export const extractAllStyles = async (): Promise<string> => {
         font-size: 14px;
       }
       
-      /* Ensure A4 dimensions are maintained */
       #print-section {
         width: 794px !important;
         min-height: 1123px !important;
@@ -85,38 +81,84 @@ export const extractAllStyles = async (): Promise<string> => {
         flex-shrink: 0 !important;
         min-height: 100% !important;
       }
+
+      /* Ẩn các nút điều khiển */
+      .cv-block-controls,
+      .cv-block-delete,
+      .cv-block-drag {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+
+      /* Đảm bảo nội dung block vẫn hiển thị */
+      .cv-block-container,
+      .cv-block-content {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: white !important;
+      }
+
+      /* Ẩn border của input và textarea khi in */
+      .cv-input {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        background: white !important;
+      }
       
-      /* Remove any transforms or scales that might interfere */
       .drop-zone-area {
         transform: none !important;
         scale: 1 !important;
       }
       
-      /* Ensure consistent text rendering */
-      p, div, span, h1, h2, h3, h4, h5, h6 {
-        margin: 0 0 0.5em 0;
-        padding: 0;
-      }
-      
-      /* Tailwind CSS CDN fallback */
-      @import url('https://cdn.tailwindcss.com');
-      
-      /* Print media queries */
       @media print {
         * {
           -webkit-print-color-adjust: exact !important;
           color-adjust: exact !important;
         }
-        
-        html, body {
-          width: 794px !important;
-          height: 1123px !important;
+
+        /* Ẩn các elements điều khiển khi in */
+        .cv-block-controls,
+        .cv-block-delete,
+        .cv-block-drag,
+        .print\\:hidden,
+        .group-hover\\:opacity-100 {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
         }
-        
-        #print-section {
-          width: 794px !important;
-          min-height: 1123px !important;
+
+        /* Đảm bảo hiển thị nội dung block */
+        .cv-block-container,
+        .cv-block-content {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          background: white !important;
           page-break-inside: avoid !important;
+        }
+
+        /* Đảm bảo hiển thị nội dung input và textarea */
+        .cv-input {
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          border: transparent !important;
+          outline: transparent !important;
+          box-shadow: none !important;
+          background: white !important;
+        }
+
+        *:hover {
+          background: initial !important;
+          color: initial !important;
+          border-color: initial !important;
+          box-shadow: none !important;
         }
       }
     </style>
