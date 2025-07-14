@@ -18,6 +18,7 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import MyToolBar from "@/components/Toolbar/MyToolBar";
 
 // TypeScript interfaces
 interface Block {
@@ -58,7 +59,12 @@ interface SortableBlockProps {
   id: string;
   index: number;
   column: "left" | "right";
-  moveBlock: (fromColumn: "left" | "right", toColumn: "left" | "right", from: number, to: number) => void;
+  moveBlock: (
+    fromColumn: "left" | "right",
+    toColumn: "left" | "right",
+    from: number,
+    to: number
+  ) => void;
   removeBlock: (column: "left" | "right", index: number) => void;
   children: React.ReactNode;
   isOver: boolean;
@@ -299,7 +305,12 @@ function ResizableDivider({ leftWidth, onWidthChange }: ResizableDividerProps) {
 }
 
 // Resizable preview component
-function ResizablePreview({ leftWidth, onWidthChange, leftBlocks, rightBlocks }: ResizablePreviewProps) {
+function ResizablePreview({
+  leftWidth,
+  onWidthChange,
+  leftBlocks,
+  rightBlocks,
+}: ResizablePreviewProps) {
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -480,7 +491,12 @@ export default function CVBuilderPage() {
     }
   };
 
-  const moveBlock = (fromColumn: "left" | "right", toColumn: "left" | "right", from: number, to: number): void => {
+  const moveBlock = (
+    fromColumn: "left" | "right",
+    toColumn: "left" | "right",
+    from: number,
+    to: number
+  ): void => {
     if (fromColumn === toColumn) {
       // Same column reordering
       const blocks = getBlocks(fromColumn);
@@ -747,18 +763,20 @@ export default function CVBuilderPage() {
       <div className="flex min-h-screen bg-gray-50">
         {/* Left Sidebar */}
         <Sidebar onAddBlock={(type) => addBlock(type, "left")} />
-
         {/* Main Content */}
         <main className="flex-1 p-8">
+          <MyToolBar />
           <h1 className="text-2xl font-bold mb-6">Trình tạo CV kéo thả</h1>
-          <div className="drop-zone-area max-w-6xl mx-auto bg-amber-50">
+          <div
+            className="drop-zone-area max-w-6xl mx-auto bg-amber-50"
+            id="print-section"
+          >
             <div className="min-h-[200px] flex gap-4 relative">
               {/* Left Column */}
               <div
                 className="bg-white rounded-lg shadow-sm p-4 "
                 style={{ width: `${leftWidth}%` }}
               >
-                <h3 className="font-semibold mb-4 text-blue-600">Cột trái</h3>
                 <SortableContext
                   items={[
                     "empty-drop-zone-left",
@@ -801,7 +819,6 @@ export default function CVBuilderPage() {
                 className="bg-white rounded-lg shadow-sm p-4"
                 style={{ width: `${100 - leftWidth}%` }}
               >
-                <h3 className="font-semibold mb-4 text-green-600">Cột phải</h3>
                 <SortableContext
                   items={[
                     "empty-drop-zone-right",
@@ -840,7 +857,6 @@ export default function CVBuilderPage() {
               </div>
             </div>
             {/* Resizable Divider */}
-            <ResizableDivider leftWidth={leftWidth} onWidthChange={setLeftWidth} />
           </div>
         </main>
 
