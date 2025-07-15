@@ -18,7 +18,7 @@ export default function MyMantineProvider({ children }: { children: React.ReactN
     </MantineProvider>
   );
 }
-
 const theme = createTheme({
   /** Put your mantine theme override here */
 });
+

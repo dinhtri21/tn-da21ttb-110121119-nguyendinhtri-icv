@@ -129,14 +129,16 @@ export async function POST(req: NextRequest) {
       </html>
     `;
 
+    // Load content và đợi cho tất cả resources được load
     await page.setContent(fullHTML, { 
-      waitUntil: ["networkidle0", "domcontentloaded"] 
+      waitUntil: ["networkidle0", "domcontentloaded", "load"] 
     });
     
-    // Đợi fonts load và styles apply
+    // Đợi thêm một chút để đảm bảo fonts và styles được áp dụng
     await page.evaluateHandle('document.fonts.ready');
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Thêm script để xóa các elements không cần thiết trước khi tạo PDF
+    // Thêm script để xóa các elements không cần thiết
     await page.evaluate(() => {
       // Xóa tất cả các nút điều khiển
       const controlElements = document.querySelectorAll('.cv-block-controls, .cv-block-delete, .cv-block-drag, button.absolute, .cursor-move');
@@ -151,9 +153,6 @@ export async function POST(req: NextRequest) {
         el.removeAttribute('tabindex');
       });
     });
-    
-    // Thay thế page.waitForTimeout bằng setTimeout với Promise
-    await new Promise(resolve => setTimeout(resolve, 1000));
 
     const pdfBuffer = await page.pdf({
       format: "A4",

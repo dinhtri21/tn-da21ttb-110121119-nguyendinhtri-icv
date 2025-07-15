@@ -3,7 +3,10 @@
 export const extractAllStyles = async (): Promise<string> => {
   const styles: string[] = [];
   
-  // 1. Lấy tất cả inline styles
+  // 1. Đợi cho tất cả fonts và styles được load
+  await document.fonts.ready;
+  
+  // 2. Lấy tất cả inline styles và computed styles
   const inlineStyles = Array.from(document.querySelectorAll('style'));
   inlineStyles.forEach(style => {
     if (style.textContent) {
@@ -11,30 +14,42 @@ export const extractAllStyles = async (): Promise<string> => {
     }
   });
   
-  // 2. Lấy tất cả external stylesheets
+  // 3. Lấy tất cả external stylesheets và đợi chúng load xong
   const externalLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
   
-  for (const link of externalLinks) {
+  const stylePromises = externalLinks.map(async (link) => {
     const href = link.getAttribute('href');
-    if (href) {
-      try {
-        if (href.startsWith('http') || href.startsWith('//')) {
-          styles.push(`<link rel="stylesheet" href="${href}">`);
-        } else {
-          const response = await fetch(href);
-          if (response.ok) {
-            const cssContent = await response.text();
-            styles.push(`<style>${cssContent}</style>`);
-          }
-        }
-      } catch (error) {
-        console.warn(`Failed to load stylesheet: ${href}`, error);
-        styles.push(`<link rel="stylesheet" href="${href}">`);
+    if (!href) return '';
+    
+    try {
+      if (href.startsWith('http') || href.startsWith('//')) {
+        return `<link rel="stylesheet" href="${href}">`;
       }
+      
+      // Đợi stylesheet load xong
+      const response = await fetch(href);
+      if (response.ok) {
+        const cssContent = await response.text();
+        return `<style>${cssContent}</style>`;
+      }
+    } catch (error) {
+      console.warn(`Failed to load stylesheet: ${href}`, error);
+      return `<link rel="stylesheet" href="${href}">`;
     }
+    return '';
+  });
+
+  const loadedStyles = await Promise.all(stylePromises);
+  styles.push(...loadedStyles.filter(Boolean));
+  
+  // 4. Thêm computed styles cho các elements
+  const printSection = document.getElementById('print-section');
+  if (printSection) {
+    const computedStyles = getComputedStylesForElements(printSection);
+    styles.push(`<style>${computedStyles}</style>`);
   }
   
-  // 3. Thêm CSS cần thiết cho PDF với A4 sizing
+  // 5. Thêm CSS cần thiết cho PDF với A4 sizing
   styles.push(`
     <style>
       * {
@@ -242,4 +257,37 @@ export const validateA4Size = (elementId: string): boolean => {
   
   return Math.abs(rect.width - 794) <= tolerance && 
          rect.height >= 1123 - tolerance;
+};
+
+// Helper function để lấy computed styles cho tất cả elements
+const getComputedStylesForElements = (rootElement: HTMLElement): string => {
+  const elements = [rootElement, ...Array.from(rootElement.querySelectorAll('*'))] as HTMLElement[];
+  const styles: string[] = [];
+  
+  elements.forEach((el, index) => {
+    const computedStyle = window.getComputedStyle(el);
+    const className = `pdf-element-${index}`;
+    el.classList.add(className);
+    
+    const importantProps = [
+      'background-color', 'color', 'font-family', 'font-size', 'font-weight',
+      'margin', 'padding', 'border', 'display', 'position', 'width', 'height',
+      'flex', 'grid', 'text-align', 'line-height', 'opacity', 'visibility',
+      'transform', 'transition', 'box-shadow', 'border-radius'
+    ];
+    
+    const rules = importantProps
+      .map(prop => {
+        const value = computedStyle.getPropertyValue(prop);
+        return value ? `${prop}: ${value} !important;` : '';
+      })
+      .filter(Boolean)
+      .join(' ');
+    
+    if (rules) {
+      styles.push(`.${className} { ${rules} }`);
+    }
+  });
+  
+  return styles.join('\n');
 };
