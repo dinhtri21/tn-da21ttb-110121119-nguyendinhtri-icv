@@ -24,6 +24,7 @@ import SortableBlock from "./components/SortableBlock";
 import BlockEditor from "./components/BlockEditor";
 import ResizablePreview from "./components/ResizablePreview";
 import PreviewBlock from "./components/PreviewBlock";
+import { IEducation } from "@/interface/education";
 
 export default function MF_Document() {
   const [leftBlocks, setLeftBlocks] = useState<Block[]>([]);

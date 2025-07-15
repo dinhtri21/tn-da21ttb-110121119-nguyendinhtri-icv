@@ -79,7 +79,6 @@ export const extractAllStyles = async (): Promise<string> => {
         position: relative !important;
         overflow: hidden !important;
       }
-      
       .cv-content {
         width: 100% !important;
         min-height: calc(1123px - 64px) !important;
@@ -122,8 +121,6 @@ export const extractAllStyles = async (): Promise<string> => {
         box-shadow: none !important;
         display: block !important;
         visibility: visible !important;
-        opacity: 1 !important;
-        background: white !important;
       }
       
       .drop-zone-area {
@@ -162,11 +159,9 @@ export const extractAllStyles = async (): Promise<string> => {
         .cv-input {
           display: block !important;
           visibility: visible !important;
-          opacity: 1 !important;
           border: transparent !important;
           outline: transparent !important;
           box-shadow: none !important;
-          background: white !important;
         }
 
         *:hover {
