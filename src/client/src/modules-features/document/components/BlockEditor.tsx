@@ -1,6 +1,8 @@
 import { ProfileEditor } from "./editors/ProfileEditor";
 import { EducationEditor } from "./editors/EducationEditor";
 import { DefaultEditor } from "./editors/DefaultEditor";
+import { PersonalInfoEditor } from "./editors/PersonalInfoEditor";
+import { BusinessCardEditor } from "./editors/BusinessCardEditor";
 
 export interface BlockEditorProps {
   type: string;
@@ -14,6 +16,10 @@ export default function BlockEditor({ type, value, onChange }: BlockEditorProps)
       return <ProfileEditor value={value} onChange={onChange} />;
     case "education":
       return <EducationEditor value={value} onChange={onChange} />;
+    case "personalInfo":
+      return <PersonalInfoEditor value={value} onChange={onChange} />;
+    case "businessCard":
+      return <BusinessCardEditor value={value} onChange={onChange} />;
     default:
       return <DefaultEditor type={type} value={value} onChange={onChange} />;
   }

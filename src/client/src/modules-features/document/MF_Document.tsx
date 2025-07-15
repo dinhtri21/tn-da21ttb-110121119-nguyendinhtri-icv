@@ -380,7 +380,7 @@ export default function MF_Document() {
                 </div>
 
                 <div
-                  className="cv-right-column bg-white rounded-lg shadow-sm p-4"
+                  className="cv-right-column bg-white px-2"
                   style={{ 
                     width: `${100 - leftWidth}%`,
                     minHeight: "100%",

@@ -54,7 +54,7 @@ export default function SortableBlock({
           style={style}
           {...attributes}
           {...listeners}
-          className={`cv-block-content bg-white rounded mb-3 transition-all duration-200 ${
+          className={`cv-block-content bg-white rounded mb-1 transition-all duration-200 ${
             isDragging ? "shadow-lg scale-105" : ""
           }`}
         >

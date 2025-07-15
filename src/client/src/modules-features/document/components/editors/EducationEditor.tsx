@@ -16,11 +16,11 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
   });
 
   return (
-    <div className="hover:border hover:border-gray-300 border border-transparent p-2 rounded-md focus-within:border focus-within:border-gray-300">
+    <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <label className="block mb-1 font-medium text-[18px] text-gray-700">
         {BLOCKS.find((b) => b.type === "education")?.label}
       </label>
-      <div className="w-full h-[1px] mb-1 bg-gray-200"></div>
+      <div className="w-full h-[2px] mb-1 bg-blue-200"></div>
       <div className="space-y-1">
         {/* Trường học và thời gian */}
         <div className="flex justify-between items-center gap-1">

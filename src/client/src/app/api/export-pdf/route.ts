@@ -87,8 +87,6 @@ export async function POST(req: NextRequest) {
             .cv-input {
               display: block !important;
               visibility: visible !important;
-              opacity: 1 !important;
-              background: white !important;
             }
             
             /* Đảm bảo background colors hiển thị */

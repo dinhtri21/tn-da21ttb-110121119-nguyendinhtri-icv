@@ -1,9 +1,9 @@
 export interface IPersonalInfo {
     id?: string;
     documentId?: string;
-    firstName?: string;
-    lastName?: string;
+    fullName?: string;
     jobTitle?: string;
+    dateOfBirth?: string;
     address?: string;
     phone?: string;
     email?: string;

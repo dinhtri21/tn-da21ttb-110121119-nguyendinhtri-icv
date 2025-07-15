@@ -13,7 +13,7 @@ export default function EmptyDropZone({ isOver, column }: EmptyDropZoneProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`min-h-[2px] transition-all duration-200 ${
+      className={`min-h-[1px] transition-all duration-200 ${
         isOver ? "mb-2" : "mb-1"
       } flex items-center justify-center`}
     >
