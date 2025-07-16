@@ -39,7 +39,7 @@ export function DefaultEditor({ type, value, onChange }: DefaultEditorProps) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={getPlaceholder(type)}
-        className="cv-input w-full p-[2px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 resize-y min-h-[100px] print:border-0 print:ring-0"
+        className="cv-input w-full p-[2px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 resize-y min-h-[100px] print:border-transparent print:ring-0"
         rows={4}
       />
     </div>

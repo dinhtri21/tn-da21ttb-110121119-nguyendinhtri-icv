@@ -64,8 +64,8 @@ export const extractAllStyles = async (): Promise<string> => {
         margin: 0 !important;
         padding: 0 !important;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        line-height: 1.4;
-        font-size: 14px;
+        // line-height: 1.4;
+        // font-size: 14px;
       }
       
       #print-section {
@@ -73,7 +73,7 @@ export const extractAllStyles = async (): Promise<string> => {
         min-height: 1123px !important;
         max-width: 794px !important;
         margin: 0 !important;
-        padding: 32px !important;
+        // padding: 32px !important;
         box-sizing: border-box !important;
         background: white !important;
         position: relative !important;
@@ -83,7 +83,6 @@ export const extractAllStyles = async (): Promise<string> => {
         width: 100% !important;
         min-height: calc(1123px - 64px) !important;
         display: flex !important;
-        gap: 16px !important;
       }
       
       .cv-left-column {
@@ -111,13 +110,12 @@ export const extractAllStyles = async (): Promise<string> => {
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
-        background: white !important;
       }
 
       /* Ẩn border của input và textarea khi in */
       .cv-input {
-        border: none !important;
-        outline: none !important;
+        border: transparent !important;
+        outline: transparent !important;
         box-shadow: none !important;
         display: block !important;
         visibility: visible !important;
@@ -151,7 +149,6 @@ export const extractAllStyles = async (): Promise<string> => {
           display: block !important;
           visibility: visible !important;
           opacity: 1 !important;
-          background: white !important;
           page-break-inside: avoid !important;
         }
 

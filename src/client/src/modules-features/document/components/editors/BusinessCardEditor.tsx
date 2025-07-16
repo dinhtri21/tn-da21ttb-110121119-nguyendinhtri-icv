@@ -28,7 +28,7 @@ export function BusinessCardEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.fullName}
             onChange={(e) => setPersonalInfo({ ...personalInfo, fullName: e.target.value })}
             placeholder="Họ tên"
-            className="cv-input flex-1 !text-[30px] !font-bold !tracking-[2px] text-gray-800 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-0 print:ring-0"
+            className="cv-input flex-1 !text-[30px] !font-bold !tracking-[2px] text-gray-800 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
 
@@ -39,7 +39,7 @@ export function BusinessCardEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.jobTitle}
             onChange={(e) => setPersonalInfo({ ...personalInfo, jobTitle: e.target.value })}
             placeholder="Vị trí ứng tuyển"
-            className="cv-input flex-1 !text-[20px] !font-[400] text-gray-400 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-0 print:ring-0"
+            className="cv-input flex-1 !text-[20px] !font-[400] text-gray-400 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
 

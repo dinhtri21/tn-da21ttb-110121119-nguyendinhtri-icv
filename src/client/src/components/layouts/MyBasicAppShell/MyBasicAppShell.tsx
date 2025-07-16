@@ -14,7 +14,7 @@ import {
 import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import { IconChevronDown, IconLogout, IconSwitchHorizontal } from "@tabler/icons-react";
 import cx from "clsx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import classes from "./css.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
@@ -22,53 +22,42 @@ import { clearUser } from "@/redux/slices/userSlide";
 import { clearToken } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
 
-// const user = {
-//   name: "Đình Trí",
-//   email: "dinhtri@gmail.com",
-//   image:
-//     "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
-// };
-
 export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
   const pinned = useHeadroom({ fixedAt: 120 });
   const [opened, { toggle }] = useDisclosure();
   const theme = useMantineTheme();
   const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const userState = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const router = useRouter();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handleLogout = () => {
-    if (typeof window !== "undefined") {
+    // Only run localStorage operations after component is mounted
+    if (mounted) {
       localStorage.removeItem("authToken");
       localStorage.removeItem("userData");
+      dispatch(clearUser());
+      dispatch(clearToken());
+      router.replace("/auth/login");
     }
-    dispatch(clearUser());
-    dispatch(clearToken());
-    router.replace("/auth/login");
   };
 
   return (
     <AppShell
       header={{ height: 60, collapsed: !pinned, offset: false }}
-      // padding={0}
     >
       <AppShell.Header>
         <Container size="80rem" h={60} px={16}>
           <Group h="100%" justify="space-between" align="center">
-            {/* Right side */}
             <Flex direction="row" align="center" gap={10}>
-              {/* <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="sm"
-              size="sm"
-            /> */}
               <Text fz={30}>iCV</Text>
             </Flex>
-            {/* <Avatar radius="xl">+2</Avatar> */}
-            {/* Left side */}
             <Group>
               <MySwitchTheme />
               <Menu
@@ -86,7 +75,7 @@ export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
                     })}
                   >
                     <Group gap={7}>
-                      {userState.user?.pictureUrl ? (
+                      {mounted && userState.user?.pictureUrl ? (
                         <Avatar
                           src={userState.user?.pictureUrl}
                           alt={userState.user?.name}
@@ -99,7 +88,6 @@ export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
                         />
                       ) : (
                         <Avatar
-                          // src={user.image}
                           alt={userState.user?.name}
                           radius="xl"
                           size={35}

@@ -30,7 +30,7 @@ export function PersonalInfoEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.address}
             onChange={(e) => setPersonalInfo({ ...personalInfo, address: e.target.value })}
             placeholder="Địa chỉ"
-            className="cv-input flex-1 text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-0 print:ring-0"
+            className="cv-input flex-1 text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
 
@@ -42,7 +42,7 @@ export function PersonalInfoEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.dateOfBirth}
             onChange={(e) => setPersonalInfo({ ...personalInfo, dateOfBirth: e.target.value })}
             placeholder="Ngày sinh"
-            className="cv-input w-[90px] text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-0 print:ring-0"
+            className="cv-input w-[90px] text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
 
@@ -54,7 +54,7 @@ export function PersonalInfoEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.email}
             onChange={(e) => setPersonalInfo({ ...personalInfo, email: e.target.value })}
             placeholder="Email"
-            className="cv-input flex-1 text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-0 print:ring-0"
+            className="cv-input flex-1 text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
 
@@ -66,7 +66,7 @@ export function PersonalInfoEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.phone}
             onChange={(e) => setPersonalInfo({ ...personalInfo, phone: e.target.value })}
             placeholder="Số điện thoại"
-            className="cv-input w-[90px] flex-1 text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-0 print:ring-0"
+            className="cv-input w-[90px] flex-1 text-gray-600 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
       </div>

@@ -1,18 +1,20 @@
-import { IEducation } from "@/interface/education";
-import { BLOCKS } from "../../constants/blocks";
+import { IExperience } from "@/interface/experience";
 import { useState } from "react";
+import { BLOCKS } from "../../constants/blocks";
 
-interface EducationEditorProps {
+interface ExperienceEditorProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function EducationEditor({ value, onChange }: EducationEditorProps) {
-  const [education, setEducation] = useState<IEducation>({
-    universityName: "",
+export function ExperienceEditor({ value, onChange }: ExperienceEditorProps) {
+  const [experience, setExperience] = useState<IExperience>({
+    title: "",
+    position: "",
+    currentlyWorking: false,
+    description: "",
     startDate: "",
     endDate: "",
-    major: "",
   });
 
   return (
@@ -28,26 +30,26 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
           <div className="flex-1 text-gray-600">
             <input
               type="text"
-              value={education.universityName}
-              onChange={(e) => setEducation({ ...education, universityName: e.target.value })}
+              value={experience.title}
+              onChange={(e) => setExperience({ ...experience, title: e.target.value })}
               placeholder="Tên trường"
-              className="cv-input w-full !text-[16px] !font-medium border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
+              className="cv-input w-full !text-[16px] !font-medium border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-transparent focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
             />
           </div>
 
           {/* Thời gian */}
           <div className="flex items-center gap-1 whitespace-nowrap bg-gray-100 px-[6px] rounded-md text-gray-500">
             <input
-              value={education.startDate}
-              onChange={(e) => setEducation({ ...education, startDate: e.target.value })}
+              value={experience.startDate}
+              onChange={(e) => setExperience({ ...experience, startDate: e.target.value })}
               placeholder="2020"
               type="text"
               className="cv-input max-w-[32px] bg-gray-100 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
             />
             <span>-</span>
             <input
-              value={education.endDate}
-              onChange={(e) => setEducation({ ...education, endDate: e.target.value })}
+              value={experience.endDate}
+              onChange={(e) => setExperience({ ...experience, endDate: e.target.value })}
               placeholder="2024"
               type="text"
               className="cv-input max-w-[32px] bg-gray-100 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
@@ -58,8 +60,8 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
         {/* Ngành học */}
         <div>
           <input
-            value={education.major}
-            onChange={(e) => setEducation({ ...education, major: e.target.value })}
+            value={experience.position}
+            onChange={(e) => setExperience({ ...experience, position: e.target.value })}
             type="text"
             placeholder="Ngành học"
             className="cv-input text-gray-600 w-full border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"

@@ -10,7 +10,7 @@ export function ProfileEditor({ value, onChange }: ProfileEditorProps) {
       <input
         type="file"
         accept="image/*"
-        className="cv-input w-full p-[2px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-0 print:ring-0"
+        className="cv-input w-full p-[2px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-transparent focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-transparent"
       />
     </div>
   );

@@ -5,7 +5,7 @@ import puppeteer from "puppeteer";
 export async function POST(req: NextRequest) {
   try {
     const { content, styles } = await req.json();
-    
+
     if (!content) {
       return NextResponse.json({ error: "Missing content" }, { status: 400 });
     }
@@ -13,20 +13,20 @@ export async function POST(req: NextRequest) {
     const browser = await puppeteer.launch({
       headless: true,
       args: [
-        "--no-sandbox", 
+        "--no-sandbox",
         "--disable-setuid-sandbox",
         "--disable-web-security",
-        "--disable-features=VizDisplayCompositor"
+        "--disable-features=VizDisplayCompositor",
       ],
     });
 
     const page = await browser.newPage();
-    
+
     // Set viewport để khớp với A4 (96 DPI)
     await page.setViewport({
-      width: 794,  // A4 width at 96 DPI
+      width: 794, // A4 width at 96 DPI
       height: 1123, // A4 height at 96 DPI
-      deviceScaleFactor: 1
+      deviceScaleFactor: 1,
     });
 
     // Tạo HTML hoàn chỉnh với styles được tối ưu cho A4
@@ -61,10 +61,25 @@ export async function POST(req: NextRequest) {
               min-height: 1123px !important;
               max-width: 794px !important;
               margin: 0 !important;
-              padding: 32px !important;
+              // padding: 32px !important;
               box-sizing: border-box !important;
               page-break-inside: avoid;
               background: white !important;
+            }
+            .cv-content {
+              min-height: calc(1123px - 64px) !important;
+              width: 100% !important;
+              display: flex !important;
+            }
+
+            .cv-left-column {
+              flex-shrink: 0 !important;
+              min-height: 100% !important;
+            }
+
+            .cv-right-column {
+             flex-shrink: 0 !important;
+             min-height: 100% !important;
             }
 
             /* Ẩn các elements điều khiển */
@@ -85,6 +100,9 @@ export async function POST(req: NextRequest) {
             .cv-block-container,
             .cv-block-content,
             .cv-input {
+              border: transparent !important;
+              outline: transparent !important;
+              box-shadow: none !important;
               display: block !important;
               visibility: visible !important;
             }
@@ -128,27 +146,29 @@ export async function POST(req: NextRequest) {
     `;
 
     // Load content và đợi cho tất cả resources được load
-    await page.setContent(fullHTML, { 
-      waitUntil: ["networkidle0", "domcontentloaded", "load"] 
+    await page.setContent(fullHTML, {
+      waitUntil: ["networkidle0", "domcontentloaded", "load"],
     });
-    
+
     // Đợi thêm một chút để đảm bảo fonts và styles được áp dụng
-    await page.evaluateHandle('document.fonts.ready');
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await page.evaluateHandle("document.fonts.ready");
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Thêm script để xóa các elements không cần thiết
     await page.evaluate(() => {
       // Xóa tất cả các nút điều khiển
-      const controlElements = document.querySelectorAll('.cv-block-controls, .cv-block-delete, .cv-block-drag, button.absolute, .cursor-move');
-      controlElements.forEach(el => el.remove());
+      const controlElements = document.querySelectorAll(
+        ".cv-block-controls, .cv-block-delete, .cv-block-drag, button.absolute, .cursor-move"
+      );
+      controlElements.forEach((el) => el.remove());
 
       // Xóa các attributes không cần thiết
-      const allElements = document.querySelectorAll('*');
-      allElements.forEach(el => {
-        el.removeAttribute('data-dnd-draggable');
-        el.removeAttribute('draggable');
-        el.removeAttribute('role');
-        el.removeAttribute('tabindex');
+      const allElements = document.querySelectorAll("*");
+      allElements.forEach((el) => {
+        el.removeAttribute("data-dnd-draggable");
+        el.removeAttribute("draggable");
+        el.removeAttribute("role");
+        el.removeAttribute("tabindex");
       });
     });
 
@@ -160,7 +180,7 @@ export async function POST(req: NextRequest) {
         top: 0,
         right: 0,
         bottom: 0,
-        left: 0
+        left: 0,
       },
       width: "210mm",
       height: "297mm",

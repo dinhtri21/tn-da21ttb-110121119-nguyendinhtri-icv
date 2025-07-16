@@ -1,6 +1,7 @@
 export interface Block {
   type: string;
   value: string;
+  height?: number; // Added for spacer blocks
 }
 
 export interface BlockType {
@@ -16,5 +17,10 @@ export interface MousePosition {
 export interface ResizableDividerProps {
   leftWidth: number;
   onWidthChange: (width: number) => void;
+}
+
+export interface SpacerBlock extends Block {
+  type: 'spacer';
+  height: number;
 }
 

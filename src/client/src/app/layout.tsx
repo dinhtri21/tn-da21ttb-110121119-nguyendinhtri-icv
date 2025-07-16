@@ -31,12 +31,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-mantine-color-scheme="light">
-       <head>
-        <ColorSchemeScript defaultColorScheme="light" /> 
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ColorSchemeScript defaultColorScheme="light" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <ReduxProvider>
           <MyProvider>{children}</MyProvider>

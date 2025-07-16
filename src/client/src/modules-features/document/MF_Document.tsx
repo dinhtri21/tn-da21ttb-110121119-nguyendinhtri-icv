@@ -11,10 +11,7 @@ import {
   closestCenter,
   DragOverEvent,
 } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import MyToolBar from "@/components/Toolbar/MyToolBar";
 import { Block } from "./interfaces/types";
 import { BLOCKS } from "./constants/blocks";
@@ -34,7 +31,7 @@ export default function MF_Document() {
   const [overPosition, setOverPosition] = useState<"top" | "bottom" | null>(null);
   const [isOverEmpty, setIsOverEmpty] = useState(false);
   const [overColumn, setOverColumn] = useState<"left" | "right" | null>(null);
-  const [leftWidth, setLeftWidth] = useState(50);
+  const [leftWidth, setLeftWidth] = useState(35);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -296,17 +293,20 @@ export default function MF_Document() {
     >
       <div className="flex min-h-screen bg-gray-50">
         <Sidebar onAddBlock={(type) => addBlock(type, "left")} />
-        
+
         <main className="flex-1 p-8 bg-amber-50 min-h-screen flex flex-col items-center">
           <MyToolBar />
           <h1 className="text-2xl font-bold mb-6">Trình tạo CV kéo thả</h1>
-          
-          <div className="cv-container" style={{ 
-            width: "794px",
-            minHeight: "1123px",
-            margin: "0 auto",
-            position: "relative"
-          }}>
+
+          <div
+            className="cv-container"
+            style={{
+              width: "794px",
+              minHeight: "1123px",
+              margin: "0 auto",
+              position: "relative",
+            }}
+          >
             <div
               id="print-section"
               className="drop-zone-area bg-white shadow-2xl"
@@ -314,32 +314,32 @@ export default function MF_Document() {
                 width: "794px",
                 minHeight: "1123px",
                 maxWidth: "794px",
-                padding: "32px",
+                // padding: "32px",
                 borderRadius: "8px",
                 boxSizing: "border-box",
                 margin: "0",
                 position: "relative",
                 fontSize: "14px",
                 lineHeight: "1.4",
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
               }}
             >
-              <div 
+              <div
                 className="cv-content"
                 style={{
                   width: "100%",
                   minHeight: "calc(1123px - 64px)",
                   display: "flex",
-                  gap: "16px",
-                  position: "relative"
+                  // gap: "16px",
+                  position: "relative",
                 }}
               >
                 <div
-                  className="cv-left-column rounded-lg"
-                  style={{ 
+                  className="cv-left-column bg-[#F7F7F7] pl-[24px] pr-[15px] pt-[24px] pb-[24px]"
+                  style={{
                     width: `${leftWidth}%`,
                     minHeight: "100%",
-                    flexShrink: 0
+                    flexShrink: 0,
                   }}
                 >
                   <SortableContext
@@ -380,11 +380,11 @@ export default function MF_Document() {
                 </div>
 
                 <div
-                  className="cv-right-column bg-white px-2"
-                  style={{ 
+                  className="cv-right-column bg-white px-2 pl-[15px] pr-[24px] pt-[24px] pb-[24px]"
+                  style={{
                     width: `${100 - leftWidth}%`,
                     minHeight: "100%",
-                    flexShrink: 0
+                    flexShrink: 0,
                   }}
                 >
                   <SortableContext
@@ -423,6 +423,7 @@ export default function MF_Document() {
                     </div>
                   )}
                 </div>
+                
               </div>
             </div>
           </div>
