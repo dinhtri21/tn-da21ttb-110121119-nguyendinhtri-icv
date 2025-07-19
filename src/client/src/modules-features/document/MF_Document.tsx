@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -22,6 +22,7 @@ import BlockEditor from "./components/BlockEditor";
 import ResizablePreview from "./components/ResizablePreview";
 import PreviewBlock from "./components/PreviewBlock";
 import { IEducation } from "@/interface/education";
+import { useReactToPrint } from "react-to-print";
 
 export default function MF_Document() {
   const [leftBlocks, setLeftBlocks] = useState<Block[]>([]);
@@ -32,6 +33,8 @@ export default function MF_Document() {
   const [isOverEmpty, setIsOverEmpty] = useState(false);
   const [overColumn, setOverColumn] = useState<"left" | "right" | null>(null);
   const [leftWidth, setLeftWidth] = useState(35);
+  const printRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef: printRef });
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -296,6 +299,7 @@ export default function MF_Document() {
 
         <main className="flex-1 p-8 bg-amber-50 min-h-screen flex flex-col items-center">
           <MyToolBar />
+          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={reactToPrintFn}>In PDF</button>
           <h1 className="text-2xl font-bold mb-6">Trình tạo CV kéo thả</h1>
 
           <div
@@ -309,6 +313,7 @@ export default function MF_Document() {
           >
             <div
               id="print-section"
+              ref={printRef}
               className="drop-zone-area bg-white shadow-2xl"
               style={{
                 width: "794px",
