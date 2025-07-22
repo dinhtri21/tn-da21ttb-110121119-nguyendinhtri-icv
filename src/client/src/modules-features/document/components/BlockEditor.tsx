@@ -5,6 +5,7 @@ import { PersonalInfoEditor } from "./editors/PersonalInfoEditor";
 import { BusinessCardEditor } from "./editors/BusinessCardEditor";
 import { AvatarEditor } from "./editors/AvatarEditor";
 import { SpacerEditor } from "./editors/SpacerEditor";
+import { ProjectEditor } from "./editors/ProjectEditor";
 
 export interface BlockEditorProps {
   type: string;
@@ -24,6 +25,8 @@ export default function BlockEditor({ type, value, onChange }: BlockEditorProps)
       return <BusinessCardEditor value={value} onChange={onChange} />;
     case "avatar":
       return <AvatarEditor value={value} onChange={onChange} />;
+    case "project":
+      return <ProjectEditor value={value} onChange={onChange} />;
     case "spacer": {
       let height = 20;
       try {

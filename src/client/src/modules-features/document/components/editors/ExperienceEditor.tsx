@@ -38,7 +38,7 @@ export function ExperienceEditor({ value, onChange }: ExperienceEditorProps) {
           </div>
 
           {/* Thời gian */}
-          <div className="flex items-center gap-1 whitespace-nowrap bg-gray-100 px-[6px] rounded-md text-gray-500">
+          <div className="flex items-center gap-1 whitespace-nowrap bg-gray-100 px-[6px] rounded-md text-[#737373]">
             <input
               value={experience.startDate}
               onChange={(e) => setExperience({ ...experience, startDate: e.target.value })}
