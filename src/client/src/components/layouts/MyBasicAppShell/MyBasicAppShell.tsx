@@ -122,7 +122,7 @@ export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
           </Group>
         </Container>
       </AppShell.Header>
-      <AppShell.Main pt="76px">{children}</AppShell.Main>
+      <AppShell.Main pt="61px">{children}</AppShell.Main>
     </AppShell>
   );
 }

@@ -11,51 +11,56 @@ import { Text } from "@mantine/core";
 import MySelectCvTheme from "../Select/MySelectCvTheme";
 import { useState } from "react";
 import { extractAllStyles } from "@/utils/cssUtils";
+import { useReactToPrint } from "react-to-print";
 
-export default function MyToolBar() {
+export default function MyToolBar({ printRef }: { printRef: React.RefObject<HTMLDivElement> }) {
   const [isExporting, setIsExporting] = useState(false);
 
-  const handleExportPDF = async () => {
-    const element = document.getElementById("print-section");
-    
-    if (!element) {
-      alert("Không tìm thấy phần tử để xuất PDF");
-      return;
-    }
+  // Move useReactToPrint hook to component level
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+  });
 
-    setIsExporting(true);
-    
-    try {
-      // Đợi cho tất cả styles được load và áp dụng
-      const styles = await extractAllStyles();
-      const content = element.outerHTML;
-      
-      const res = await fetch("/api/export-pdf", {
-        method: "POST",
-        body: JSON.stringify({ content, styles }),
-        headers: { "Content-Type": "application/json" },
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Lỗi khi xuất PDF");
-      }
-      
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `cv-nguyen-van-a-${Date.now()}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
-      
-    } catch (error) {
-      console.error("Export error:", error);
-      alert(`Lỗi khi xuất PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  // const handleExportPDF = async () => {
+  //   const element = document.getElementById("print-section");
+
+  //   if (!element) {
+  //     alert("Không tìm thấy phần tử để xuất PDF");
+  //     return;
+  //   }
+
+  //   setIsExporting(true);
+
+  //   try {
+  //     // Đợi cho tất cả styles được load và áp dụng
+  //     const styles = await extractAllStyles();
+  //     const content = element.outerHTML;
+
+  //     const res = await fetch("/api/export-pdf", {
+  //       method: "POST",
+  //       body: JSON.stringify({ content, styles }),
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+
+  //     if (!res.ok) {
+  //       const errorData = await res.json();
+  //       throw new Error(errorData.error || "Lỗi khi xuất PDF");
+  //     }
+
+  //     const blob = await res.blob();
+  //     const url = URL.createObjectURL(blob);
+  //     const a = document.createElement("a");
+  //     a.href = url;
+  //     a.download = `cv-nguyen-van-a-${Date.now()}.pdf`;
+  //     a.click();
+  //     URL.revokeObjectURL(url);
+  //   } catch (error) {
+  //     console.error("Export error:", error);
+  //     alert(`Lỗi khi xuất PDF: ${error instanceof Error ? error.message : "Unknown error"}`);
+  //   } finally {
+  //     setIsExporting(false);
+  //   }
+  // };
 
   return (
     <Flex
@@ -65,9 +70,11 @@ export default function MyToolBar() {
       align="center"
       wrap="wrap"
       gap={16}
+      py={16}
+      px={16}
     >
       <Group gap={4}>
-        <IconFileCv stroke={1} size={24} />
+        <IconFileCv color="blue" stroke={1} size={24} />
         <Text>Tên file</Text>
         <IconWorld stroke={1} size={24} />
       </Group>
@@ -77,7 +84,7 @@ export default function MyToolBar() {
           Màu sắc
         </Button>
         <Button
-          onClick={handleExportPDF}
+          onClick={handlePrint}
           leftSection={<IconDownload size={16} />}
           variant="default"
           loading={isExporting}

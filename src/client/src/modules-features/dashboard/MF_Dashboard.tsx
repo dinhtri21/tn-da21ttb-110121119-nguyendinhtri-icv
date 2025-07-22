@@ -38,7 +38,7 @@ export default function MF_Dashboard() {
   if (query.isError) return "Không có dữ liệu...";
 
   return (
-    <Container px={16} size="80rem" pb={16}>
+    <Container px={16} size="80rem" pb={16} mt={16}>
       <Flex justify={"space-between"} align="center" gap={8} wrap="wrap">
         <Flex
           direction="column"
@@ -51,7 +51,7 @@ export default function MF_Dashboard() {
             Tạo sơ yếu lý lịch tùy chỉnh của riêng bạn với AI
           </Text>
         </Flex>
-        <Button variant="outline" color="gray" leftSection={<IconTrash size={18} stroke={2} />}>
+        <Button variant="light" color="red" leftSection={<IconTrash size={18} stroke={2} />}>
           Xoá tất cả
         </Button>
       </Flex>
@@ -60,7 +60,7 @@ export default function MF_Dashboard() {
           Tất cả CV
         </Text>
         <Box>
-          <Grid mt={20}>
+          <Grid mt={16}>
             <Grid.Col span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
               <Link href={`/document/1`}>
                 <Center
@@ -96,7 +96,7 @@ export default function MF_Dashboard() {
                         fit="cover"
                       />
                       <Box px={12} py={4}>
-                        <Text fw={500} size="sm" lineClamp={1}>
+                        <Text fw={500} size="sm" c="gray.8" lineClamp={1}>
                           {cv.document.title}
                         </Text>
                         <Flex justify="space-between" align="center">

@@ -3,5 +3,6 @@ import { MyBasicAppShell } from "@/components/layouts/MyBasicAppShell/MyBasicApp
 import { ReactNode } from "react";
 
 export default function Layout({ children }: { children?: ReactNode }) {
-  return <MyBasicAppShell>{children}</MyBasicAppShell>;
+  // return <MyBasicAppShell>{children}</MyBasicAppShell>;
+  return <div>{children}</div>;
 }

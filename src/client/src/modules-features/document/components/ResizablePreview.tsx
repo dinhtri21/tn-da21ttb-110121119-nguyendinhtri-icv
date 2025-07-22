@@ -32,7 +32,7 @@ export default function ResizablePreview({
       const newWidth = ((e.clientX - containerRect.left) / containerRect.width) * 100;
 
       // Giới hạn từ 20% đến 80%
-      const clampedWidth = Math.max(20, Math.min(80, newWidth));
+      const clampedWidth = Math.max(30, Math.min(70, newWidth));
       onWidthChange(clampedWidth);
     };
 
@@ -52,27 +52,29 @@ export default function ResizablePreview({
   }, [isDragging, onWidthChange]);
 
   return (
-    <div className="bg-gray-50 rounded p-3">
-      <h3 className="text-sm font-medium mb-3">Xem trước bố cục</h3>
-      <div ref={containerRef} className="relative">
-        <div className="flex gap-0 relative h-32 border rounded overflow-hidden">
-          <div className="bg-blue-100 p-2 relative" style={{ width: `${leftWidth}%` }}>
-            <div className="text-xs text-blue-600 font-medium mb-1">Cột trái</div>
+    <div className="bg-gray-50 rounded">
+      <h3 className="text-sm font-medium text-gray-600">Tuỳ chỉnh tỉ lệ</h3>
+      <p className="text-gray-400 text-xs mb-2">💡 Kéo thanh để điều chỉnh</p>
+      <div ref={containerRef} className="relative h-[250px] overflow-y-auto border border-gray-300 rounded">
+        {/* Resizable preview */}
+        <div className="flex gap-0 relative rounded min-h-full">
+          {/* Left column */}
+          <div className="bg-gray-100 p-2 relative " style={{ width: `${leftWidth}%` }}>
             <div className="space-y-1">
-              {leftBlocks.slice(0, 3).map((block, idx) => (
-                <div key={idx} className="text-xs bg-blue-200 rounded px-1 py-0.5 truncate">
+              <div className="text-xs text-gray-500 flex justify-center">
+                <p>{Math.round(leftWidth)}%</p>
+              </div>
+              {leftBlocks.map((block, idx) => (
+                <div key={idx} className="text-xs bg-gray-200 rounded px-1 py-0.5 truncate">
                   {BLOCKS.find((b) => b.type === block.type)?.label}
                 </div>
               ))}
-              {leftBlocks.length > 3 && (
-                <div className="text-xs text-blue-500">+{leftBlocks.length - 3} khác</div>
-              )}
             </div>
           </div>
 
           {/* Resizable divider */}
           <div
-            className={`absolute top-0 bottom-0 w-1 bg-gray-400 hover:bg-blue-500 cursor-col-resize transition-colors z-10 ${
+            className={`absolute top-0 bottom-0 w-[2px] h-full bg-blue-300 hover:bg-blue-500 cursor-col-resize transition-colors z-10 ${
               isDragging ? "bg-blue-500 shadow-lg" : ""
             }`}
             style={{ left: `${leftWidth}%`, transform: "translateX(-50%)" }}
@@ -86,26 +88,23 @@ export default function ResizablePreview({
             </div>
           </div>
 
-          <div className="bg-green-100 p-2 relative" style={{ width: `${100 - leftWidth}%` }}>
-            <div className="text-xs text-green-600 font-medium mb-1">Cột phải</div>
+          {/* Right column */}
+          <div className="bg-gray-100 p-2 relative" style={{ width: `${100 - leftWidth}%` }}>
+            {/* <div className="text-xs text-green-600 font-medium mb-1">Cột phải</div> */}
             <div className="space-y-1">
-              {rightBlocks.slice(0, 3).map((block, idx) => (
-                <div key={idx} className="text-xs bg-green-200 rounded px-1 py-0.5 truncate">
+              <div className="text-xs text-gray-500 flex justify-center">
+                <p>{Math.round(100 - leftWidth)}%</p>
+              </div>
+              {rightBlocks.map((block, idx) => (
+                <div key={idx} className="text-xs bg-gray-200 rounded px-1 py-0.5 truncate">
                   {BLOCKS.find((b) => b.type === block.type)?.label}
                 </div>
               ))}
-              {rightBlocks.length > 3 && (
-                <div className="text-xs text-green-500">+{rightBlocks.length - 3} khác</div>
-              )}
+              {/* {rightBlocks.length > 3 && (
+                <div className="text-xs text-gray-500">+{rightBlocks.length - 3} khác</div>
+              )} */}
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-col justify-between items-center mt-2 text-xs text-gray-500">
-          <div>
-            Tỷ lệ: {Math.round(leftWidth)}% - {Math.round(100 - leftWidth)}%
-          </div>
-          <div className="text-gray-400">💡 Kéo thanh để điều chỉnh</div>
         </div>
       </div>
     </div>

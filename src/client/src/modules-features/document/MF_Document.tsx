@@ -22,7 +22,8 @@ import BlockEditor from "./components/BlockEditor";
 import ResizablePreview from "./components/ResizablePreview";
 import PreviewBlock from "./components/PreviewBlock";
 import { IEducation } from "@/interface/education";
-import { useReactToPrint } from "react-to-print";
+import { IconLayout, IconLayoutGrid } from "@tabler/icons-react";
+import { Group } from "@mantine/core";
 
 export default function MF_Document() {
   const [leftBlocks, setLeftBlocks] = useState<Block[]>([]);
@@ -34,7 +35,6 @@ export default function MF_Document() {
   const [overColumn, setOverColumn] = useState<"left" | "right" | null>(null);
   const [leftWidth, setLeftWidth] = useState(35);
   const printRef = useRef<HTMLDivElement>(null);
-  const reactToPrintFn = useReactToPrint({ contentRef: printRef });
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -294,14 +294,14 @@ export default function MF_Document() {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
+      <div className="border-b border-gray-300 ">
+        <MyToolBar printRef={printRef as React.RefObject<HTMLDivElement>} />
+      </div>
       <div className="flex min-h-screen bg-gray-50">
+        {/* Sidebar */}
         <Sidebar onAddBlock={(type) => addBlock(type, "left")} />
-
-        <main className="flex-1 p-8 bg-amber-50 min-h-screen flex flex-col items-center">
-          <MyToolBar />
-          <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={reactToPrintFn}>In PDF</button>
-          <h1 className="text-2xl font-bold mb-6">Trình tạo CV kéo thả</h1>
-
+        {/* Main content */}
+        <main className="flex-1 p-8 bg-gray-100 min-h-screen flex flex-col items-center">
           <div
             className="cv-container"
             style={{
@@ -312,130 +312,122 @@ export default function MF_Document() {
             }}
           >
             <div
-              id="print-section"
+              // id="print-section"
               ref={printRef}
-              className="drop-zone-area bg-white shadow-2xl"
+              className="drop-zone-area shadow-2xl"
               style={{
-                width: "794px",
-                minHeight: "1123px",
-                maxWidth: "794px",
+                width: "815px",
+                minHeight: "1056px",
+                maxWidth: "815px",
                 // padding: "32px",
-                borderRadius: "8px",
                 boxSizing: "border-box",
                 margin: "0",
                 position: "relative",
                 fontSize: "14px",
                 lineHeight: "1.4",
+                display: "flex",
                 fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
               }}
             >
               <div
-                className="cv-content"
+                className="cv-left-column bg-[#F7F7F7] pl-[24px] pr-[15px] pt-[24px] pb-[24px]"
                 style={{
-                  width: "100%",
-                  minHeight: "calc(1123px - 64px)",
-                  display: "flex",
-                  // gap: "16px",
-                  position: "relative",
+                  width: `${leftWidth}%`,
+                  minHeight: "100%",
+                  flexShrink: 0,
                 }}
               >
-                <div
-                  className="cv-left-column bg-[#F7F7F7] pl-[24px] pr-[15px] pt-[24px] pb-[24px]"
-                  style={{
-                    width: `${leftWidth}%`,
-                    minHeight: "100%",
-                    flexShrink: 0,
-                  }}
+                <SortableContext
+                  items={[
+                    "empty-drop-zone-left",
+                    ...leftBlocks.map((_, idx) => `left-block-${idx}`),
+                  ]}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <SortableContext
-                    items={[
-                      "empty-drop-zone-left",
-                      ...leftBlocks.map((_, idx) => `left-block-${idx}`),
-                    ]}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    <EmptyDropZone isOver={isOverEmpty && overColumn === "left"} column="left" />
+                  <EmptyDropZone isOver={isOverEmpty && overColumn === "left"} column="left" />
 
-                    {leftBlocks.map((block, idx) => (
-                      <SortableBlock
-                        key={idx}
-                        id={`left-block-${idx}`}
-                        index={idx}
-                        column="left"
-                        moveBlock={moveBlock}
-                        removeBlock={removeBlock}
-                        isOver={overId === `left-block-${idx}`}
-                        isOverTop={overId === `left-block-${idx}` && overPosition === "top"}
-                        isOverBottom={overId === `left-block-${idx}` && overPosition === "bottom"}
-                      >
-                        <BlockEditor
-                          type={block.type}
-                          value={block.value}
-                          onChange={(val) => updateBlock("left", idx, val)}
-                        />
-                      </SortableBlock>
-                    ))}
-                  </SortableContext>
+                  {leftBlocks.map((block, idx) => (
+                    <SortableBlock
+                      key={idx}
+                      id={`left-block-${idx}`}
+                      index={idx}
+                      column="left"
+                      moveBlock={moveBlock}
+                      removeBlock={removeBlock}
+                      isOver={overId === `left-block-${idx}`}
+                      isOverTop={overId === `left-block-${idx}` && overPosition === "top"}
+                      isOverBottom={overId === `left-block-${idx}` && overPosition === "bottom"}
+                    >
+                      <BlockEditor
+                        type={block.type}
+                        value={block.value}
+                        onChange={(val) => updateBlock("left", idx, val)}
+                      />
+                    </SortableBlock>
+                  ))}
+                </SortableContext>
 
-                  {leftBlocks.length === 0 && (
-                    <div className="text-gray-300 text-center py-10 border-2 border-dashed border-gray-600 rounded">
-                      <p className="text-sm">Kéo các mục vào cột trái</p>
-                    </div>
-                  )}
-                </div>
+                {leftBlocks.length === 0 && (
+                  <div className="text-gray-400 text-center py-10 border-2 border-dashed border-gray-300 rounded">
+                    <p className="text-sm">Kéo các mục vào cột trái</p>
+                  </div>
+                )}
+              </div>
 
-                <div
-                  className="cv-right-column bg-white px-2 pl-[15px] pr-[24px] pt-[24px] pb-[24px]"
-                  style={{
-                    width: `${100 - leftWidth}%`,
-                    minHeight: "100%",
-                    flexShrink: 0,
-                  }}
+              <div
+                className="cv-right-column bg-white px-2 pl-[15px] pr-[24px] pt-[24px] pb-[24px]"
+                style={{
+                  width: `${100 - leftWidth}%`,
+                  minHeight: "100%",
+                  flexShrink: 0,
+                }}
+              >
+                <SortableContext
+                  items={[
+                    "empty-drop-zone-right",
+                    ...rightBlocks.map((_, idx) => `right-block-${idx}`),
+                  ]}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <SortableContext
-                    items={[
-                      "empty-drop-zone-right",
-                      ...rightBlocks.map((_, idx) => `right-block-${idx}`),
-                    ]}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    <EmptyDropZone isOver={isOverEmpty && overColumn === "right"} column="right" />
+                  <EmptyDropZone isOver={isOverEmpty && overColumn === "right"} column="right" />
 
-                    {rightBlocks.map((block, idx) => (
-                      <SortableBlock
-                        key={idx}
-                        id={`right-block-${idx}`}
-                        index={idx}
-                        column="right"
-                        moveBlock={moveBlock}
-                        removeBlock={removeBlock}
-                        isOver={overId === `right-block-${idx}`}
-                        isOverTop={overId === `right-block-${idx}` && overPosition === "top"}
-                        isOverBottom={overId === `right-block-${idx}` && overPosition === "bottom"}
-                      >
-                        <BlockEditor
-                          type={block.type}
-                          value={block.value}
-                          onChange={(val) => updateBlock("right", idx, val)}
-                        />
-                      </SortableBlock>
-                    ))}
-                  </SortableContext>
+                  {rightBlocks.map((block, idx) => (
+                    <SortableBlock
+                      key={idx}
+                      id={`right-block-${idx}`}
+                      index={idx}
+                      column="right"
+                      moveBlock={moveBlock}
+                      removeBlock={removeBlock}
+                      isOver={overId === `right-block-${idx}`}
+                      isOverTop={overId === `right-block-${idx}` && overPosition === "top"}
+                      isOverBottom={overId === `right-block-${idx}` && overPosition === "bottom"}
+                    >
+                      <BlockEditor
+                        type={block.type}
+                        value={block.value}
+                        onChange={(val) => updateBlock("right", idx, val)}
+                      />
+                    </SortableBlock>
+                  ))}
+                </SortableContext>
 
-                  {rightBlocks.length === 0 && (
-                    <div className="text-gray-400 text-center py-10 border-2 border-dashed border-gray-300 rounded">
-                      <p className="text-sm">Kéo các mục vào cột phải</p>
-                    </div>
-                  )}
-                </div>
-                
+                {rightBlocks.length === 0 && (
+                  <div className="text-gray-400 text-center py-10 border-2 border-dashed border-gray-300 rounded">
+                    <p className="text-sm">Kéo các mục vào cột phải</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </main>
 
-        <div className="w-64 bg-white border-l p-4">
-          <h2 className="font-bold mb-4">Bố cục CV</h2>
+        {/* Right sidebar */}
+        <div className="w-64 bg-white border-l border-gray-300 p-4">
+          <Group gap={4} align="center" mb={"xs"} justify="space-between">
+            <h2 className="font-medium">Bố cục</h2>
+            <IconLayoutGrid stroke={2} size={16} color="gray" />
+          </Group>
           <div className="space-y-4">
             <ResizablePreview
               leftWidth={leftWidth}
@@ -444,7 +436,7 @@ export default function MF_Document() {
               rightBlocks={rightBlocks}
             />
 
-            <div>
+            {/* <div>
               <h3 className="text-sm font-medium mb-2">Danh sách block</h3>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {leftBlocks.map((block, idx) => (
@@ -457,7 +449,7 @@ export default function MF_Document() {
                   <div className="text-gray-400 text-center py-4 text-sm">Chưa có block nào</div>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
