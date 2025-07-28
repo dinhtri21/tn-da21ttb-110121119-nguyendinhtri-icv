@@ -1,11 +1,12 @@
-import { ProfileEditor } from "./editors/ProfileEditor";
-import { EducationEditor } from "./editors/EducationEditor";
-import { DefaultEditor } from "./editors/DefaultEditor";
-import { PersonalInfoEditor } from "./editors/PersonalInfoEditor";
-import { BusinessCardEditor } from "./editors/BusinessCardEditor";
-import { AvatarEditor } from "./editors/AvatarEditor";
-import { SpacerEditor } from "./editors/SpacerEditor";
-import { ProjectEditor } from "./editors/ProjectEditor";
+import { AvatarBlock } from "./Blocks/AvatarBlock";
+import { BusinessCardBlock } from "./Blocks/BusinessCardBlock";
+import { DefaultBlock } from "./Blocks/DefaultBlock";
+import { EducationBlock } from "./Blocks/EducationBlock";
+import { OverviewBlock } from "./Blocks/OverviewBlock";
+import { PersonalInfoBlock } from "./Blocks/PersonalInfoBlock";
+import { ProfileBlock } from "./Blocks/ProfileBlock";
+import { ProjectBlock } from "./Blocks/ProjectBlock";
+import { SpacerBlock } from "./Blocks/SpacerBlock";
 
 export interface BlockEditorProps {
   type: string;
@@ -16,17 +17,19 @@ export interface BlockEditorProps {
 export default function BlockEditor({ type, value, onChange }: BlockEditorProps) {
   switch (type) {
     case "profile":
-      return <ProfileEditor value={value} onChange={onChange} />;
+      return <ProfileBlock value={value} onChange={onChange} />;
     case "education":
-      return <EducationEditor value={value} onChange={onChange} />;
+      return <EducationBlock value={value} onChange={onChange} />;
     case "personalInfo":
-      return <PersonalInfoEditor value={value} onChange={onChange} />;
+      return <PersonalInfoBlock value={value} onChange={onChange} />;
     case "businessCard":
-      return <BusinessCardEditor value={value} onChange={onChange} />;
+      return <BusinessCardBlock value={value} onChange={onChange} />;
     case "avatar":
-      return <AvatarEditor value={value} onChange={onChange} />;
+      return <AvatarBlock value={value} onChange={onChange} />;
     case "project":
-      return <ProjectEditor value={value} onChange={onChange} />;
+      return <ProjectBlock value={value} onChange={onChange} />;
+    case "overview":
+      return <OverviewBlock value={value} onChange={onChange} />;
     case "spacer": {
       let height = 20;
       try {
@@ -36,7 +39,7 @@ export default function BlockEditor({ type, value, onChange }: BlockEditorProps)
         console.error('Failed to parse spacer height:', e);
       }
       return (
-        <SpacerEditor
+        <SpacerBlock
           height={height}
           onHeightChange={(newHeight) => {
             onChange(JSON.stringify({ height: newHeight }));
@@ -45,6 +48,6 @@ export default function BlockEditor({ type, value, onChange }: BlockEditorProps)
       );
     }
     default:
-      return <DefaultEditor type={type} value={value} onChange={onChange} />;
+      return <DefaultBlock type={type} value={value} onChange={onChange} />;
   }
 }

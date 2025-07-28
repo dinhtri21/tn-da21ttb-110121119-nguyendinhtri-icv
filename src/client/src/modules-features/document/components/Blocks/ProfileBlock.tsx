@@ -1,9 +1,9 @@
-interface ProfileEditorProps {
+interface ProfileBlockProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function ProfileEditor({ value, onChange }: ProfileEditorProps) {
+export function ProfileBlock({ value, onChange }: ProfileBlockProps) {
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <label className="block mb-2 font-medium text-gray-700">Ảnh đại diện</label>

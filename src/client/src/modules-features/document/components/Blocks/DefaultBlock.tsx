@@ -1,12 +1,12 @@
 import { BLOCKS } from "../../constants/blocks";
 
-interface DefaultEditorProps {
+interface DefaultBlockProps {
   type: string;
   value: string;
   onChange: (value: string) => void;
 }
 
-export function DefaultEditor({ type, value, onChange }: DefaultEditorProps) {
+export function DefaultBlock({ type, value, onChange }: DefaultBlockProps) {
   const getPlaceholder = (type: string): string => {
     switch (type) {
       case "name":

@@ -45,6 +45,7 @@ const TiptapEditor = ({ content = "", onChange, placeholder }: TiptapEditorProps
     content,
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());
+      console.log("Editor content updated:", editor.getHTML());
     },
     onFocus: () => setIsFocused(true),
     onBlur: (e) => {
@@ -180,6 +181,13 @@ const TiptapEditor = ({ content = "", onChange, placeholder }: TiptapEditorProps
 
       {/* Custom styles để đảm bảo bullet points hiển thị */}
       <style jsx global>{`
+        /* Màu cho text thường */
+        .ProseMirror,
+        .tiptap-wrapper,
+        .tiptap-editor-content {
+          color: #737373; 
+        }
+
         .tiptap-editor-content p {
           line-height: 1.6;
         }
@@ -221,6 +229,7 @@ const TiptapEditor = ({ content = "", onChange, placeholder }: TiptapEditorProps
         .tiptap-wrapper strong,
         .tiptap-editor-content strong {
           font-weight: bold;
+          color: #737373; /* Màu cho text đậm */
         }
 
         .ProseMirror em,

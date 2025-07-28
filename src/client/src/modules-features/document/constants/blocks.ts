@@ -4,7 +4,7 @@ export const BLOCKS: BlockType[] = [
   { type: "avatar", label: "Ảnh đại diện" },
   { type: "personalInfo", label: "Thông tin cá nhân" },
   { type: "businessCard", label: "Danh thiếp" },
-  { type: "objective", label: "Mục tiêu nghề nghiệp" },
+  { type: "overview", label: "Giới thiệu" },
   { type: "experience", label: "Kinh nghiệm làm việc" },
   { type: "education", label: "Học vấn" },
   { type: "skills", label: "Kỹ năng" },

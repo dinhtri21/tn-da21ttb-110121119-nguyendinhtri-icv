@@ -2,12 +2,12 @@ import { IEducation } from "@/interface/education";
 import { BLOCKS } from "../../constants/blocks";
 import { useState } from "react";
 
-interface EducationEditorProps {
+interface EducationBlockProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function EducationEditor({ value, onChange }: EducationEditorProps) {
+export function EducationBlock({ value, onChange }: EducationBlockProps) {
   const [education, setEducation] = useState<IEducation>({
     universityName: "",
     startDate: "",
@@ -17,7 +17,7 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
 
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
-      <label className="block mb-1 font-medium text-[18px] text-gray-700">
+      <label className="block mb-1 font-medium text-[18px] text-[#404041]">
         {BLOCKS.find((b) => b.type === "education")?.label}
       </label>
       <div className="w-full h-[2px] mb-1 bg-blue-200"></div>
@@ -31,6 +31,9 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
               value={education.universityName}
               onChange={(e) => setEducation({ ...education, universityName: e.target.value })}
               placeholder="Tên trường"
+              style={{
+                color: "#404041",
+              }}
               className="cv-input w-full !text-[16px] !font-medium border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
             />
           </div>
@@ -42,6 +45,10 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
               onChange={(e) => setEducation({ ...education, startDate: e.target.value })}
               placeholder="2020"
               type="text"
+              maxLength={4}
+              style={{
+                color: "#737373",
+              }}
               className="cv-input max-w-[32px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
             />
             <span>-</span>
@@ -49,6 +56,7 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
               value={education.endDate}
               onChange={(e) => setEducation({ ...education, endDate: e.target.value })}
               placeholder="2024"
+              maxLength={4}
               type="text"
               className="cv-input max-w-[32px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
             />
@@ -61,6 +69,9 @@ export function EducationEditor({ value, onChange }: EducationEditorProps) {
             value={education.major}
             onChange={(e) => setEducation({ ...education, major: e.target.value })}
             type="text"
+            style={{
+              color: "#737373",
+            }}
             placeholder="Ngành học"
             className="cv-input text-gray-600 w-full border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />

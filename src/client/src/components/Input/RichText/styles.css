@@ -6,7 +6,7 @@
 
   /* List styles */
   ul,
-  ol {
+  /* ol {
     padding: 0 1rem;
     margin: 1.25rem 1rem 1.25rem 0.4rem;
 
@@ -14,7 +14,7 @@
       margin-top: 0.25em;
       margin-bottom: 0.25em;
     }
-  }
+  } */
 
   /* Heading styles */
   h1,
@@ -24,14 +24,14 @@
   h5,
   h6 {
     line-height: 1.1;
-    margin-top: 2.5rem;
+    /* margin-top: 2.5rem; */
     text-wrap: pretty;
   }
 
   h1,
   h2 {
-    margin-top: 3.5rem;
-    margin-bottom: 1.5rem;
+    /* margin-top: 3.5rem;
+    margin-bottom: 1.5rem; */
   }
 
   h1 {

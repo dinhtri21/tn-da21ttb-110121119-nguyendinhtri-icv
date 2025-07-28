@@ -61,9 +61,6 @@ export default function SortableBlock({
 
         {/* Overlay controls - only visible on hover and not printed */}
         <div className="cv-block-controls absolute top-[-34px] left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 print:hidden flex gap-2 p-[6px] bg-gray-100 backdrop-blur-sm rounded-t">
-          <ActionIcon size="sm" variant="light" color="red" onClick={() => removeBlock(column, index)}>
-            <IconTrash stroke={1.5} />
-          </ActionIcon>
           <ActionIcon
             size="sm"
             variant="light"
@@ -73,6 +70,9 @@ export default function SortableBlock({
             className="cursor-move"
           >
             <IconArrowsMove stroke={1.5} />
+          </ActionIcon>
+          <ActionIcon size="sm" variant="light" color="red" onClick={() => removeBlock(column, index)}>
+            <IconTrash stroke={1.5} />
           </ActionIcon>
         </div>
       </div>

@@ -2,12 +2,12 @@ import { IAvatar } from "@/interface/avatar";
 import { IconUpload, IconUserCircle } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
-interface AvatarEditorProps {
+interface AvatarBlockProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function AvatarEditor({ value, onChange }: AvatarEditorProps) {
+export function AvatarBlock({ value, onChange }: AvatarBlockProps) {
   const [avatar, setAvatar] = useState<IAvatar>({
     file: undefined,
     url: "",

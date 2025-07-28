@@ -1,11 +1,11 @@
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
-interface SpacerEditorProps {
+interface SpacerBlockProps {
   height?: number;
   onHeightChange?: (height: number) => void;
 }
 
-export function SpacerEditor({ height = 20, onHeightChange }: SpacerEditorProps) {
+export function SpacerBlock({ height = 20, onHeightChange }: SpacerBlockProps) {
   const handleHeightChange = (delta: number) => {
     const newHeight = Math.max(10, height + delta); // Minimum height of 10px
     onHeightChange?.(newHeight);

@@ -3,12 +3,12 @@ import { BLOCKS } from "../../constants/blocks";
 import { useState } from "react";
 import { IconCalendarEvent, IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 
-interface PersonalInfoEditorProps {
+interface PersonalInfoBlockProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function BusinessCardEditor({ value, onChange }: PersonalInfoEditorProps) {
+export function BusinessCardBlock({ value, onChange }: PersonalInfoBlockProps) {
   const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>({
     fullName: "",
     jobTitle: "",
@@ -28,8 +28,10 @@ export function BusinessCardEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.fullName}
             onChange={(e) => setPersonalInfo({ ...personalInfo, fullName: e.target.value })}
             placeholder="Họ tên"
-
-            className="cv-input flex-1 w-[100%] !text-[30px] !font-bold !tracking-[2px] text-gray-800 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
+            style={{
+              color: "#404041",
+            }}
+            className="cv-input flex-1 w-[100%] !text-[32px] !font-bold !tracking-[2px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
 
@@ -40,6 +42,9 @@ export function BusinessCardEditor({ value, onChange }: PersonalInfoEditorProps)
             value={personalInfo.jobTitle}
             onChange={(e) => setPersonalInfo({ ...personalInfo, jobTitle: e.target.value })}
             placeholder="Vị trí ứng tuyển"
+            style={{
+              color: "#737373",
+            }}
             className="cv-input flex-1 !text-[20px] !font-[400] text-gray-400 border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
           />
         </div>
