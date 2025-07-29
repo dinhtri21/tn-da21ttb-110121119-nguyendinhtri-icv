@@ -102,7 +102,7 @@ export default function MF_Document() {
   };
 
   const handleDragOver = (event: DragOverEvent): void => {
-    const { over } = event;
+    const { active, over } = event;
 
     if (!over) {
       setOverId(null);
@@ -113,18 +113,12 @@ export default function MF_Document() {
     }
 
     const overId = over.id.toString();
+    const activeId = active.id.toString();
 
-    if (overId === "empty-drop-zone-left") {
+    // Xử lý khi hover trên empty drop zones
+    if (overId === "empty-drop-zone-left" || overId === "empty-drop-zone-right") {
       setIsOverEmpty(true);
-      setOverColumn("left");
-      setOverId(null);
-      setOverPosition(null);
-      return;
-    }
-
-    if (overId === "empty-drop-zone-right") {
-      setIsOverEmpty(true);
-      setOverColumn("right");
+      setOverColumn(overId === "empty-drop-zone-left" ? "left" : "right");
       setOverId(null);
       setOverPosition(null);
       return;
@@ -134,21 +128,34 @@ export default function MF_Document() {
     setOverColumn(null);
 
     if (overId.startsWith("left-block-") || overId.startsWith("right-block-")) {
-      setOverId(overId);
+      // Lấy column và index của block đang được hover
+      const targetColumn = overId.startsWith("left-block-") ? "left" : "right";
+      const targetIndex = parseInt(overId.replace(`${targetColumn}-block-`, ""));
 
-      const mouseY = (event.activatorEvent as MouseEvent)?.clientY || 0;
-      const element = document.getElementById(overId);
-
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const elementCenter = rect.top + rect.height / 2;
-        setOverPosition(mouseY < elementCenter ? "top" : "bottom");
-      } else {
-        setOverPosition("bottom");
+      // Xác định nguồn của block đang kéo (sidebar hoặc column)
+      let activeColumn = null;
+      if (activeId.startsWith("left-block-")) {
+        activeColumn = "left";
+      } else if (activeId.startsWith("right-block-")) {
+        activeColumn = "right";
       }
-    } else {
-      setOverId(null);
-      setOverPosition(null);
+
+      // Chỉ xử lý nếu không phải là block đang kéo
+      if (activeId !== overId) {
+        setOverId(overId);
+
+        // Nếu đang kéo từ sidebar hoặc từ cột khác
+        if (!activeColumn || activeColumn !== targetColumn) {
+          setOverPosition("bottom");
+        } else {
+          // Nếu đang sắp xếp trong cùng một cột, không hiện indicator
+          setOverId(null);
+          setOverPosition(null);
+        }
+      } else {
+        setOverId(null);
+        setOverPosition(null);
+      }
     }
   };
 
@@ -267,17 +274,30 @@ export default function MF_Document() {
       if (targetColumn && targetIndex !== -1) {
         let finalIndex = targetIndex;
 
-        if (overPosition === "top") {
-          finalIndex = targetIndex;
-        } else {
+        // Điều chỉnh finalIndex dựa trên vị trí thả
+        if (overPosition === "bottom") {
           finalIndex = targetIndex + 1;
         }
 
-        if (activeColumn === targetColumn && activeIndex < finalIndex) {
-          finalIndex -= 1;
-        }
+        // Quan trọng: Không cần điều chỉnh finalIndex khi di chuyển trong cùng một cột
+        // if (activeColumn === targetColumn && activeIndex < finalIndex) {
+        //   finalIndex -= 1;
+        // }
 
+        // Chỉ di chuyển nếu vị trí thực sự thay đổi
         if (finalIndex !== activeIndex || activeColumn !== targetColumn) {
+          // Xử lý đặc biệt khi di chuyển trong cùng một cột
+          if (activeColumn === targetColumn) {
+            // Khi kéo lên trên (từ dưới lên)
+            if (activeIndex > targetIndex) {
+              finalIndex = overPosition === "bottom" ? targetIndex + 1 : targetIndex;
+            }
+            // Khi kéo xuống dưới (từ trên xuống)
+            else {
+              finalIndex = overPosition === "bottom" ? targetIndex + 1 : targetIndex;
+            }
+          }
+
           moveBlock(activeColumn, targetColumn, activeIndex, finalIndex);
         }
       }
