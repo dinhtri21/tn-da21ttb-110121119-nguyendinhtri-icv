@@ -2,6 +2,7 @@ import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 import { IProject } from "@/interface/project";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
+import { IPersonalInfo } from "@/interface/personalInfo";
 
 interface OverviewBlockProps {
   value: string;
@@ -9,16 +10,8 @@ interface OverviewBlockProps {
 }
 
 export function OverviewBlock({ value, onChange }: OverviewBlockProps) {
-  const [project, setProject] = useState<IProject>({
-    client: "",
-    name: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    position: "",
-    responsibilities: "",
-    technologies: "",
-    link: "",
+  const [project, setProject] = useState<IPersonalInfo>({
+    overview: "", 
   });
 
   return (
@@ -26,7 +19,7 @@ export function OverviewBlock({ value, onChange }: OverviewBlockProps) {
       <label className="block mb-1 font-medium text-[18px] text-[#404041]">
         {BLOCKS.find((b) => b.type === "overview")?.label}
       </label>
-      <div className="w-full h-[2px] mb-1 bg-blue-200"></div>
+      <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
       <TiptapEditor
         placeholder="Giới thiệu chung mục tiêu nghề nghiệp..."
         content="<p>- Mục tiêu: trở thành một full-stack developer.</p><p> - Khả năng: học hỏi và áp dụng công nghệ mới nhanh chóng.</p>"

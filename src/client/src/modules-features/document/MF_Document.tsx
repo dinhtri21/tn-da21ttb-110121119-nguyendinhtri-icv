@@ -1,29 +1,27 @@
 "use client";
-import React, { useRef, useState } from "react";
+import MyToolBar from "@/components/Toolbar/MyToolBar";
 import {
+  closestCenter,
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
   useSensor,
   useSensors,
-  closestCenter,
-  DragOverEvent,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import MyToolBar from "@/components/Toolbar/MyToolBar";
-import { Block } from "./interfaces/types";
-import { BLOCKS } from "./constants/blocks";
-import Sidebar from "./components/Sidebar";
-import EmptyDropZone from "./components/EmptyDropZone";
-import SortableBlock from "./components/SortableBlock";
-import BlockEditor from "./components/BlockEditor";
-import ResizablePreview from "./components/ResizablePreview";
-import PreviewBlock from "./components/PreviewBlock";
-import { IEducation } from "@/interface/education";
-import { IconLayout, IconLayoutGrid } from "@tabler/icons-react";
 import { Group } from "@mantine/core";
+import { IconLayoutGrid } from "@tabler/icons-react";
+import React, { useRef, useState } from "react";
+import BlockEditor from "./components/BlockEditor";
+import EmptyDropZone from "./components/EmptyDropZone";
+import ResizablePreview from "./components/ResizablePreview";
+import Sidebar from "./components/Sidebar";
+import SortableBlock from "./components/SortableBlock";
+import { BLOCKS } from "./constants/blocks";
+import { Block } from "./interfaces/types";
 
 export default function MF_Document() {
   const [leftBlocks, setLeftBlocks] = useState<Block[]>([]);

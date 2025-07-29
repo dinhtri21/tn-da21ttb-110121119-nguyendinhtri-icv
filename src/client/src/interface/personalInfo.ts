@@ -7,4 +7,5 @@ export interface IPersonalInfo {
     address?: string;
     phone?: string;
     email?: string;
+    overview?: string;
 }

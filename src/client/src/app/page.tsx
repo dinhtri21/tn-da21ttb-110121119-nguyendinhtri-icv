@@ -2,13 +2,12 @@
 
 import { clearToken, setToken } from "@/redux/slices/authSlice";
 import { RootState } from "@/redux/store";
-import { AppShell, Button, Container, Flex, Group, Text, Image } from "@mantine/core";
+import { AppShell, Button, Container, Flex, Group, Image, Text } from "@mantine/core";
 import { useHeadroom } from "@mantine/hooks";
-import { IconArrowRight, IconDownload, IconPhoto } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function HomePage({ children }: { children: React.ReactNode }) {
+export default function HomePage() {
   let tokenLocalStorage: string | null = null;
   if (typeof window !== "undefined") {
     tokenLocalStorage = localStorage.getItem("authToken");

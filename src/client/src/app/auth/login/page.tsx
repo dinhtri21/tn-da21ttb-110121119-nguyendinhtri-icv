@@ -21,9 +21,9 @@ import {
   useComputedColorScheme,
   useMantineColorScheme,
 } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 import { useForm } from "@mantine/form";
 import { upperFirst, useDisclosure, useToggle } from "@mantine/hooks";
+import { notifications } from "@mantine/notifications";
 import { IconMoon, IconSun } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";

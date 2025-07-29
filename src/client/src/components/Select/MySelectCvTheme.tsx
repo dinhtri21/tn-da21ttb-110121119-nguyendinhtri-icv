@@ -1,16 +1,15 @@
 "use client";
+import { Carousel } from "@mantine/carousel";
 import {
   Button,
-  Grid,
-  Popover,
-  TextInput,
-  Image,
   Flex,
-  Text,
+  Grid,
+  Image,
+  Popover,
+  Text
 } from "@mantine/core";
+import { IconBrandDatabricks, IconChevronDown } from "@tabler/icons-react";
 import { useState } from "react";
-import { Carousel } from "@mantine/carousel";
-import { IconChevronDown, IconBrandDatabricks } from "@tabler/icons-react";
 
 export default function MySelectCvTheme() {
   const [opened, setOpened] = useState(false);

@@ -228,7 +228,7 @@ const TiptapEditor = ({ content = "", onChange, placeholder }: TiptapEditorProps
         .ProseMirror strong,
         .tiptap-wrapper strong,
         .tiptap-editor-content strong {
-          font-weight: bold;
+          font-weight: 600;
           color: #737373; /* Màu cho text đậm */
         }
 

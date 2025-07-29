@@ -2,10 +2,12 @@ import { AvatarBlock } from "./Blocks/AvatarBlock";
 import { BusinessCardBlock } from "./Blocks/BusinessCardBlock";
 import { DefaultBlock } from "./Blocks/DefaultBlock";
 import { EducationBlock } from "./Blocks/EducationBlock";
+import { ExperienceBlock } from "./Blocks/ExperienceBlock";
 import { OverviewBlock } from "./Blocks/OverviewBlock";
 import { PersonalInfoBlock } from "./Blocks/PersonalInfoBlock";
 import { ProfileBlock } from "./Blocks/ProfileBlock";
 import { ProjectBlock } from "./Blocks/ProjectBlock";
+import { SkillBlock } from "./Blocks/SkillBlock";
 import { SpacerBlock } from "./Blocks/SpacerBlock";
 
 export interface BlockEditorProps {
@@ -30,6 +32,10 @@ export default function BlockEditor({ type, value, onChange }: BlockEditorProps)
       return <ProjectBlock value={value} onChange={onChange} />;
     case "overview":
       return <OverviewBlock value={value} onChange={onChange} />;
+    case "skills":
+      return <SkillBlock value={value} onChange={onChange} />;
+    case "experience":
+      return <ExperienceBlock value={value} onChange={onChange} />;
     case "spacer": {
       let height = 20;
       try {

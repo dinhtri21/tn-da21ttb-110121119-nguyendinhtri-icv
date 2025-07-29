@@ -1,5 +1,8 @@
 "use client";
 import { MySwitchTheme } from "@/components/ActionIcons/SwitchTheme/MySwitchTheme";
+import { clearToken } from "@/redux/slices/authSlice";
+import { clearUser } from "@/redux/slices/userSlide";
+import { RootState } from "@/redux/store";
 import {
   AppShell,
   Avatar,
@@ -14,13 +17,10 @@ import {
 import { useDisclosure, useHeadroom } from "@mantine/hooks";
 import { IconChevronDown, IconLogout, IconSwitchHorizontal } from "@tabler/icons-react";
 import cx from "clsx";
-import { useState, useEffect } from "react";
-import classes from "./css.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { clearUser } from "@/redux/slices/userSlide";
-import { clearToken } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import classes from "./css.module.css";
 
 export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
   const pinned = useHeadroom({ fixedAt: 120 });

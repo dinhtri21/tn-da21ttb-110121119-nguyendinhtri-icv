@@ -1,9 +1,9 @@
+import { Input, Text } from "@mantine/core";
+import { RichTextEditor } from "@mantine/tiptap";
 import Highlight from "@tiptap/extension-highlight";
 import Underline from "@tiptap/extension-underline";
 import { EditorOptions, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { RichTextEditor } from "@mantine/tiptap";
-import { Input, Text } from "@mantine/core";
 
 export interface IMyTextEditor extends Partial<EditorOptions> {
   label?: string;

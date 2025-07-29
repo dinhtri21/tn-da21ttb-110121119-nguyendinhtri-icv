@@ -1,17 +1,14 @@
-import { Button, Container, Flex, Group, Select } from "@mantine/core";
+import { Button, Flex, Group, Text } from "@mantine/core";
 import {
-  IconFileCv,
-  IconPhoto,
-  IconWorld,
   IconDownload,
-  IconPalette,
+  IconFileCv,
   IconInputAi,
+  IconPalette,
+  IconWorld
 } from "@tabler/icons-react";
-import { Text } from "@mantine/core";
-import MySelectCvTheme from "../Select/MySelectCvTheme";
 import { useState } from "react";
-import { extractAllStyles } from "@/utils/cssUtils";
 import { useReactToPrint } from "react-to-print";
+import MySelectCvTheme from "../Select/MySelectCvTheme";
 
 export default function MyToolBar({ printRef }: { printRef: React.RefObject<HTMLDivElement> }) {
   const [isExporting, setIsExporting] = useState(false);

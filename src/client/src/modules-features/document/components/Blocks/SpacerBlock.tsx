@@ -7,7 +7,7 @@ interface SpacerBlockProps {
 
 export function SpacerBlock({ height = 20, onHeightChange }: SpacerBlockProps) {
   const handleHeightChange = (delta: number) => {
-    const newHeight = Math.max(10, height + delta); // Minimum height of 10px
+    const newHeight = Math.max(1, height + delta); // Minimum height of 10px
     onHeightChange?.(newHeight);
   };
 

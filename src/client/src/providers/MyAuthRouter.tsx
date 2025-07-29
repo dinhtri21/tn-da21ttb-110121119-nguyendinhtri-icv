@@ -1,14 +1,13 @@
 "use client";
 
-import { clearToken, setToken } from "@/redux/slices/authSlice";
+import { IUser } from "@/interface/user";
+import { setToken } from "@/redux/slices/authSlice";
+import { setUser } from "@/redux/slices/userSlide";
 import { RootState } from "@/redux/store";
-import { Box, LoadingOverlay, Text } from "@mantine/core";
-import { useParams, useRouter } from "next/navigation";
+import { Box, LoadingOverlay } from "@mantine/core";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { usePathname } from "next/navigation";
-import { IUser } from "@/interface/user";
-import { setUser } from "@/redux/slices/userSlide";
 
 export default function MyAuthRouter({ children }: { children: React.ReactNode }) {
   let tokenLocalStorage: string | null = null;
@@ -40,7 +39,9 @@ export default function MyAuthRouter({ children }: { children: React.ReactNode }
         dispatch(setToken(tokenLocalStorage));
         dispatch(setUser(userDataLocalStorage));
         setCheckAuth(false);
-        isAuthPage && Router.replace("/dashboard");
+        if (isAuthPage) {
+          Router.replace("/dashboard");
+        }
       }
     }
 
@@ -49,7 +50,9 @@ export default function MyAuthRouter({ children }: { children: React.ReactNode }
 
     // Have token local app
     setCheckAuth(false);
-    isAuthPage && Router.replace("/dashboard");
+    if (isAuthPage) {
+      Router.replace("/dashboard");
+    }
   }, [token]);
 
   if (isAuthPage) {
