@@ -1,10 +1,9 @@
-import { IEducation } from "@/interface/education";
-import { BLOCKS } from "../../constants/blocks";
-import { useState } from "react";
-import { IExperience } from "@/interface/experience";
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 import { ActionIcon } from "@mantine/core";
-import { IconBrowserCheck, IconMinus } from "@tabler/icons-react";
+import { IconBrowserCheck } from "@tabler/icons-react";
+import { useState } from "react";
+import { BLOCKS } from "../../constants/blocks";
+import { IExperience } from "@/interface/cv";
 
 interface ExperienceBlockProps {
   value: string;

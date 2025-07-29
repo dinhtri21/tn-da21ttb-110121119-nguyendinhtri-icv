@@ -1,4 +1,4 @@
-import { IEducation } from "@/interface/education";
+import { IEducation } from "@/interface/cv";
 import { BLOCKS } from "../../constants/blocks";
 import { useState } from "react";
 

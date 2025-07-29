@@ -1,7 +1,6 @@
-import { IPersonalInfo } from "@/interface/personalInfo";
-import { BLOCKS } from "../../constants/blocks";
-import { useState } from "react";
+import { IPersonalInfo } from "@/interface/cv";
 import { IconCalendarEvent, IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
+import { useState } from "react";
 
 interface PersonalInfoBlockProps {
   value: string;

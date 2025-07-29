@@ -1,9 +1,9 @@
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
-import { IProject } from "@/interface/project";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
 import { ActionIcon } from "@mantine/core";
 import { IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
+import { IProject } from "@/interface/cv";
 
 interface EducationBlockProps {
   value: string;
@@ -13,26 +13,16 @@ interface EducationBlockProps {
 export function ProjectBlock({ value, onChange }: EducationBlockProps) {
   const [project, setProject] = useState<IProject[]>([
     {
-      client: "",
-      name: "",
+      title: "",
       description: "",
       startDate: "",
       endDate: "",
-      position: "",
-      responsibilities: "",
-      technologies: "",
-      link: "",
     },
     {
-      client: "",
-      name: "",
+      title: "",
       description: "",
       startDate: "",
       endDate: "",
-      position: "",
-      responsibilities: "",
-      technologies: "",
-      link: "",
     },
   ]);
 
@@ -54,15 +44,10 @@ export function ProjectBlock({ value, onChange }: EducationBlockProps) {
             setProject([
               ...project,
               {
-                client: "",
-                name: "",
+                title: "",
                 description: "",
                 startDate: "",
                 endDate: "",
-                position: "",
-                responsibilities: "",
-                technologies: "",
-                link: "",
               },
             ])
           }
@@ -97,10 +82,10 @@ export function ProjectBlock({ value, onChange }: EducationBlockProps) {
                 <div className="flex-1 text-gray-700">
                   <input
                     type="text"
-                    value={proj.name}
+                    value={proj.title}
                     onChange={(e) =>
                       setProject(
-                        project.map((p, i) => (i === index ? { ...p, name: e.target.value } : p))
+                        project.map((p, i) => (i === index ? { ...p, title: e.target.value } : p))
                       )
                     }
                     placeholder="Tên dự án"

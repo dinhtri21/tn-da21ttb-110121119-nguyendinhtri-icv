@@ -60,7 +60,7 @@ export default function SortableBlock({
         </div>
 
         {/* Overlay controls - only visible on hover and not printed */}
-        <div className="cv-block-controls absolute top-[50%] left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 print:hidden flex gap-2 p-[6px] bg-gray-100 backdrop-blur-sm rounded-t">
+        <div className="cv-block-controls absolute top-[-34px] left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 print:hidden flex gap-2 p-[6px] bg-gray-100 backdrop-blur-sm rounded-t">
           <ActionIcon
             size="sm"
             variant="light"

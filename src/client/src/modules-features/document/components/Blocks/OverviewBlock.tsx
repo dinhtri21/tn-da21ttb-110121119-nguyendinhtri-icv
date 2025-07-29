@@ -1,8 +1,7 @@
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
-import { IProject } from "@/interface/project";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
-import { IPersonalInfo } from "@/interface/personalInfo";
+import { IPersonalInfo } from "@/interface/cv";
 
 interface OverviewBlockProps {
   value: string;
@@ -11,7 +10,7 @@ interface OverviewBlockProps {
 
 export function OverviewBlock({ value, onChange }: OverviewBlockProps) {
   const [project, setProject] = useState<IPersonalInfo>({
-    overview: "", 
+    overview: "",
   });
 
   return (

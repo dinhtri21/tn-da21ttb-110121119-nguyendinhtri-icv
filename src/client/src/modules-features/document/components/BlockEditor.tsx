@@ -1,11 +1,12 @@
 import { AvatarBlock } from "./Blocks/AvatarBlock";
+import { AwardBlock } from "./Blocks/AwardBlock";
 import { BusinessCardBlock } from "./Blocks/BusinessCardBlock";
+import { CertificateBlock } from "./Blocks/CertificateBlock";
 import { DefaultBlock } from "./Blocks/DefaultBlock";
 import { EducationBlock } from "./Blocks/EducationBlock";
 import { ExperienceBlock } from "./Blocks/ExperienceBlock";
 import { OverviewBlock } from "./Blocks/OverviewBlock";
 import { PersonalInfoBlock } from "./Blocks/PersonalInfoBlock";
-import { ProfileBlock } from "./Blocks/ProfileBlock";
 import { ProjectBlock } from "./Blocks/ProjectBlock";
 import { SkillBlock } from "./Blocks/SkillBlock";
 import { SpacerBlock } from "./Blocks/SpacerBlock";
@@ -18,8 +19,6 @@ export interface BlockEditorProps {
 
 export default function BlockEditor({ type, value, onChange }: BlockEditorProps) {
   switch (type) {
-    case "profile":
-      return <ProfileBlock value={value} onChange={onChange} />;
     case "education":
       return <EducationBlock value={value} onChange={onChange} />;
     case "personalInfo":
@@ -36,6 +35,10 @@ export default function BlockEditor({ type, value, onChange }: BlockEditorProps)
       return <SkillBlock value={value} onChange={onChange} />;
     case "experience":
       return <ExperienceBlock value={value} onChange={onChange} />;
+    case "award":
+      return <AwardBlock value={value} onChange={onChange} />;
+    case "certificate":
+      return <CertificateBlock value={value} onChange={onChange} />;
     case "spacer": {
       let height = 20;
       try {

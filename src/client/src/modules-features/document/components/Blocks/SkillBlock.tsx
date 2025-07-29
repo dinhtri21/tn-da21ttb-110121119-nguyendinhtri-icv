@@ -1,8 +1,7 @@
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
-import { IProject } from "@/interface/project";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
-import { ISkills } from "@/interface/skills";
+import { ISkill } from "@/interface/cv";
 
 interface OverviewBlockProps {
   value: string;
@@ -10,9 +9,7 @@ interface OverviewBlockProps {
 }
 
 export function SkillBlock({ value, onChange }: OverviewBlockProps) {
-  const [project, setProject] = useState<ISkills>({
-    id: "",
-    documentId: "",
+  const [project, setProject] = useState<ISkill>({
     description: "",
   });
 

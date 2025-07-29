@@ -1,7 +1,5 @@
-import { IPersonalInfo } from "@/interface/personalInfo";
-import { BLOCKS } from "../../constants/blocks";
+import { IPersonalInfo } from "@/interface/cv";
 import { useState } from "react";
-import { IconCalendarEvent, IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 
 interface PersonalInfoBlockProps {
   value: string;
@@ -12,10 +10,6 @@ export function BusinessCardBlock({ value, onChange }: PersonalInfoBlockProps) {
   const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>({
     fullName: "",
     jobTitle: "",
-    dateOfBirth: "",
-    address: "",
-    phone: "",
-    email: "",
   });
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">

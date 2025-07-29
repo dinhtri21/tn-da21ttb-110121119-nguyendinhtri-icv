@@ -1,4 +1,4 @@
-import { IAvatar } from "@/interface/avatar";
+import { IAvatar } from "@/interface/cv";
 import { IconUpload, IconUserCircle } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
@@ -10,7 +10,7 @@ interface AvatarBlockProps {
 export function AvatarBlock({ value, onChange }: AvatarBlockProps) {
   const [avatar, setAvatar] = useState<IAvatar>({
     file: undefined,
-    url: "",
+    path: "",
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -24,9 +24,9 @@ export function AvatarBlock({ value, onChange }: AvatarBlockProps) {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const url = reader.result as string;
-        setAvatar({ file, url });
-        onChange(url); // Gửi url của ảnh lên component cha
+        const path = reader.result as string;
+        setAvatar({ file, path });
+        onChange(path); // Gửi path của ảnh lên component cha
       };
       reader.readAsDataURL(file);
     }
@@ -39,9 +39,9 @@ export function AvatarBlock({ value, onChange }: AvatarBlockProps) {
         onClick={handleImageClick}
       >
         {/* Ảnh hiển thị */}
-        {avatar.url ? (
+        {avatar.path ? (
           <img
-            src={avatar.url}
+            src={avatar.path}
             alt="Avatar"
             className="w-full h-full object-cover rounded-full"
           />
