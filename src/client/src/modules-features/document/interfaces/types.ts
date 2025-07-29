@@ -1,6 +1,8 @@
+import { ICV } from "@/interface/cv";
+
 export interface Block {
   type: string;
-  value: string;
+  value: ICV;
   height?: number; // Added for spacer blocks
 }
 

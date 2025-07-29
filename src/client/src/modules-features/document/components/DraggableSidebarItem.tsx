@@ -5,9 +5,10 @@ import { BlockType } from "../interfaces/types";
 export interface DraggableSidebarItemProps {
   block: BlockType;
   onAddBlock: (type: string) => void;
+  isDisabled?: boolean;
 }
 
-export default function DraggableSidebarItem({ block, onAddBlock }: DraggableSidebarItemProps) {
+export default function DraggableSidebarItem({ block, onAddBlock, isDisabled }: DraggableSidebarItemProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id: `sidebar-${block.type}`,
     data: {
@@ -24,11 +25,16 @@ export default function DraggableSidebarItem({ block, onAddBlock }: DraggableSid
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="bg-gray-100 hover:bg-blue-100 rounded px-3 py-2 text-left cursor-move"
-      onClick={() => onAddBlock(block.type)}
+      style={{
+        ...style,
+        opacity: isDisabled ? 0.5 : style.opacity,
+        cursor: isDisabled ? 'not-allowed' : 'move'
+      }}
+      {...(isDisabled ? {} : { ...attributes, ...listeners })}
+      className={`bg-gray-100 rounded px-3 py-2 text-left ${
+        isDisabled ? 'cursor-not-allowed' : 'hover:bg-blue-100 cursor-move'
+      }`}
+      onClick={() => !isDisabled && onAddBlock(block.type)}
     >
       {block.label}
     </div>

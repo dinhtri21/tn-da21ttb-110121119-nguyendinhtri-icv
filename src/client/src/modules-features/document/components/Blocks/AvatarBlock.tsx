@@ -1,13 +1,13 @@
-import { IAvatar } from "@/interface/cv";
+import { IAvatar, ICV } from "@/interface/cv";
 import { IconUpload, IconUserCircle } from "@tabler/icons-react";
 import { useRef, useState } from "react";
 
 interface AvatarBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function AvatarBlock({ value, onChange }: AvatarBlockProps) {
+export function AvatarBlock({ value, setCvData }: AvatarBlockProps) {
   const [avatar, setAvatar] = useState<IAvatar>({
     file: undefined,
     path: "",
@@ -26,7 +26,16 @@ export function AvatarBlock({ value, onChange }: AvatarBlockProps) {
       reader.onloadend = () => {
         const path = reader.result as string;
         setAvatar({ file, path });
-        onChange(path); // Gửi path của ảnh lên component cha
+        setCvData(
+          (prevData) => ({
+            ...prevData,
+            avatar: { 
+              file,
+              fileName: file.name,
+
+            }, // Cập nhật dữ liệu CV với ảnh đại diện mới
+          })
+        ); // Gửi path của ảnh lên component cha
       };
       reader.readAsDataURL(file);
     }

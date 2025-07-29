@@ -45,7 +45,6 @@ const TiptapEditor = ({ content = "", onChange, placeholder }: TiptapEditorProps
     content,
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML());
-      console.log("Editor content updated:", editor.getHTML());
     },
     onFocus: () => setIsFocused(true),
     onBlur: (e) => {

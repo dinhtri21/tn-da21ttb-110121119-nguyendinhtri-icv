@@ -3,14 +3,14 @@ import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
 import { ActionIcon } from "@mantine/core";
 import { IconMinus, IconPlus, IconTrash } from "@tabler/icons-react";
-import { IProject } from "@/interface/cv";
+import { ICV, IProject } from "@/interface/cv";
 
 interface EducationBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function ProjectBlock({ value, onChange }: EducationBlockProps) {
+export function ProjectBlock({ value, setCvData }: EducationBlockProps) {
   const [project, setProject] = useState<IProject[]>([
     {
       title: "",

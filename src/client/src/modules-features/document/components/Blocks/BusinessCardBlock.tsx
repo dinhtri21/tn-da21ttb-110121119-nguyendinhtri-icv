@@ -1,16 +1,12 @@
-import { IPersonalInfo } from "@/interface/cv";
+import { ICV, IPersonalInfo } from "@/interface/cv";
 import { useState } from "react";
 
 interface PersonalInfoBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function BusinessCardBlock({ value, onChange }: PersonalInfoBlockProps) {
-  const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>({
-    fullName: "",
-    jobTitle: "",
-  });
+export function BusinessCardBlock({ value, setCvData }: PersonalInfoBlockProps) {
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       {/* Thông tin liên hệ */}
@@ -19,8 +15,14 @@ export function BusinessCardBlock({ value, onChange }: PersonalInfoBlockProps) {
         <div className="flex items-center gap-1 flex-1">
           <input
             type="text"
-            value={personalInfo.fullName}
-            onChange={(e) => setPersonalInfo({ ...personalInfo, fullName: e.target.value })}
+            value={value.personalInfo?.fullName || ""}
+            onChange={(e) => setCvData(prev => ({
+              ...prev,
+              personalInfo: {
+                ...prev.personalInfo,
+                fullName: e.target.value
+              }
+            }))}
             placeholder="Họ tên"
             style={{
               color: "#404041",
@@ -33,8 +35,14 @@ export function BusinessCardBlock({ value, onChange }: PersonalInfoBlockProps) {
         <div className="flex items-center gap-1 flex-1">
           <input
             type="text"
-            value={personalInfo.jobTitle}
-            onChange={(e) => setPersonalInfo({ ...personalInfo, jobTitle: e.target.value })}
+            value={value.personalInfo?.jobTitle || ""}
+            onChange={(e) => setCvData(prev => ({
+              ...prev,
+              personalInfo: {
+                ...prev.personalInfo,
+                jobTitle: e.target.value
+              }
+            }))}
             placeholder="Vị trí ứng tuyển"
             style={{
               color: "#737373",

@@ -3,14 +3,14 @@ import { ActionIcon } from "@mantine/core";
 import { IconBrowserCheck } from "@tabler/icons-react";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
-import { IExperience } from "@/interface/cv";
+import { ICV, IExperience } from "@/interface/cv";
 
 interface ExperienceBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function ExperienceBlock({ value, onChange }: ExperienceBlockProps) {
+export function ExperienceBlock({ value, setCvData }: ExperienceBlockProps) {
   const [experience, setExperience] = useState<IExperience>({
     title: "",
     startDate: "",

@@ -1,14 +1,14 @@
 import { BLOCKS } from "../../constants/blocks";
 import { useState } from "react";
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
-import { IAward } from "@/interface/cv";
+import { IAward, ICV } from "@/interface/cv";
 
 interface AwardBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function AwardBlock({ value, onChange }: AwardBlockProps) {
+export function AwardBlock({ value, setCvData }: AwardBlockProps) {
   const [award, setAward] = useState<IAward>({
     title: "",
     date: "",

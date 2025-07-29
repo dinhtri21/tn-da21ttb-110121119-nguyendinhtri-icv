@@ -5,9 +5,10 @@ import DraggableSidebarItem from "./DraggableSidebarItem";
 
 export interface SidebarProps {
   onAddBlock: (type: string) => void;
+  usedBlocks: string[];
 }
 
-export default function Sidebar({ onAddBlock }: SidebarProps) {
+export default function Sidebar({ onAddBlock, usedBlocks }: SidebarProps) {
   return (
     <div className="w-64 bg-white border-r border-gray-300 p-4">
       <Group gap={4} align="center" mb={"xs"} justify="space-between">
@@ -16,7 +17,12 @@ export default function Sidebar({ onAddBlock }: SidebarProps) {
       </Group>
       <div className="flex flex-col gap-2">
         {BLOCKS.map((block) => (
-          <DraggableSidebarItem key={block.type} block={block} onAddBlock={onAddBlock} />
+          <DraggableSidebarItem 
+            key={block.type} 
+            block={block} 
+            onAddBlock={onAddBlock}
+            isDisabled={usedBlocks.includes(block.type) && block.type !== 'spacer'}
+          />
         ))}
       </div>
     </div>

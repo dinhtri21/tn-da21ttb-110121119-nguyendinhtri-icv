@@ -1,12 +1,13 @@
+import { ICV } from "@/interface/cv";
 import { BLOCKS } from "../../constants/blocks";
 
 interface DefaultBlockProps {
   type: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function DefaultBlock({ type, value, onChange }: DefaultBlockProps) {
+export function DefaultBlock({ type, value, setCvData }: DefaultBlockProps) {
   const getPlaceholder = (type: string): string => {
     switch (type) {
       case "name":
@@ -36,8 +37,14 @@ export function DefaultBlock({ type, value, onChange }: DefaultBlockProps) {
         {BLOCKS.find((b) => b.type === type)?.label}
       </label>
       <textarea
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={""}
+        onChange={(e) => setCvData((prevData) => ({
+          ...prevData,
+          template: {
+            ...prevData.template,
+            [type]: e.target.value,
+          },
+        }))}
         placeholder={getPlaceholder(type)}
         className="cv-input w-full p-[2px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 resize-y min-h-[100px] print:border-transparent print:ring-0"
         rows={4}

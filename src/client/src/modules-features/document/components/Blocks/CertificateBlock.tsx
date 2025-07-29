@@ -1,14 +1,14 @@
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
-import { ICertificate } from "@/interface/cv";
+import { ICertificate, ICV } from "@/interface/cv";
 
 interface CertificateBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function CertificateBlock({ value, onChange }: CertificateBlockProps ) {
+export function CertificateBlock({ value, setCvData }: CertificateBlockProps ) {
   const [certificate, setCertificate] = useState<ICertificate>({
     title: "",
     date: "",
@@ -18,7 +18,7 @@ export function CertificateBlock({ value, onChange }: CertificateBlockProps ) {
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <label className="block mb-1 font-medium text-[18px] text-[#404041]">
-        {BLOCKS.find((b) => b.type === "award")?.label}
+        {BLOCKS.find((b) => b.type === "certificate")?.label}
       </label>
       <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
       <div className="space-y-1">

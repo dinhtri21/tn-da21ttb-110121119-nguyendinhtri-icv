@@ -22,6 +22,7 @@ import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
 import { BLOCKS } from "./constants/blocks";
 import { Block } from "./interfaces/types";
+import { ICV, Template1CV } from "@/interface/cv";
 
 export default function MF_Document() {
   const [leftBlocks, setLeftBlocks] = useState<Block[]>([]);
@@ -32,7 +33,25 @@ export default function MF_Document() {
   const [isOverEmpty, setIsOverEmpty] = useState(false);
   const [overColumn, setOverColumn] = useState<"left" | "right" | null>(null);
   const [leftWidth, setLeftWidth] = useState(35);
+  
+  // Track which blocks are used
+  const usedBlocks = [...leftBlocks, ...rightBlocks].map(block => block.type);
   const printRef = useRef<HTMLDivElement>(null);
+  const [cvData, setCvData] = useState<ICV>({
+    template: {
+      id: 1,
+      leftSizeColum: leftWidth,
+      rightSizeColum: 100 - leftWidth,
+      leftColumn: leftBlocks.map((block, index) => ({
+        id: index,
+        type: block.type || undefined,
+      })),
+      rightColumn: rightBlocks.map((block, index) => ({
+        id: index,
+        type: block.type || undefined,
+      })),
+    },
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -78,7 +97,7 @@ export default function MF_Document() {
 
   const addBlock = (type: string, column: "left" | "right" = "left"): void => {
     const blocks = getBlocks(column);
-    setBlocks(column, [...blocks, { type, value: "" }]);
+    setBlocks(column, [...blocks, { type, value: {} }]);
   };
 
   const removeBlock = (column: "left" | "right", index: number): void => {
@@ -89,7 +108,7 @@ export default function MF_Document() {
     );
   };
 
-  const updateBlock = (column: "left" | "right", index: number, value: string): void => {
+  const updateBlock = (column: "left" | "right", index: number, value: ICV): void => {
     const blocks = getBlocks(column);
     setBlocks(
       column,
@@ -197,13 +216,13 @@ export default function MF_Document() {
       const blockType = activeId.replace("sidebar-", "");
 
       if (overId === "empty-drop-zone-left") {
-        const newBlocks = [{ type: blockType, value: "" }, ...leftBlocks];
+        const newBlocks = [{ type: blockType, value: {} }, ...leftBlocks];
         setLeftBlocks(newBlocks);
         return;
       }
 
       if (overId === "empty-drop-zone-right") {
-        const newBlocks = [{ type: blockType, value: "" }, ...rightBlocks];
+        const newBlocks = [{ type: blockType, value: {} }, ...rightBlocks];
         setRightBlocks(newBlocks);
         return;
       }
@@ -229,7 +248,7 @@ export default function MF_Document() {
         }
 
         const newBlocks = [...blocks];
-        newBlocks.splice(insertIndex, 0, { type: blockType, value: "" });
+        newBlocks.splice(insertIndex, 0, { type: blockType, value: {} });
         setBlocks(targetColumn, newBlocks);
       } else {
         addBlock(blockType, "left");
@@ -313,11 +332,32 @@ export default function MF_Document() {
       onDragEnd={handleDragEnd}
     >
       <div className="border-b border-gray-300 ">
-        <MyToolBar printRef={printRef as React.RefObject<HTMLDivElement>} />
+        <MyToolBar
+          printRef={printRef as React.RefObject<HTMLDivElement>}
+          cv={{
+            ...cvData,
+            template: {
+              id: 1,
+              leftSizeColum: leftWidth,
+              rightSizeColum: 100 - leftWidth,
+              leftColumn: leftBlocks.map((block, index) => ({
+                id: index,
+                type: block.type || undefined,
+              })),
+              rightColumn: rightBlocks.map((block, index) => ({
+                id: index,
+                type: block.type || undefined,
+              })),
+            },
+          }}
+        />
       </div>
       <div className="flex min-h-screen bg-gray-50">
         {/* Sidebar */}
-        <Sidebar onAddBlock={(type) => addBlock(type, "left")} />
+        <Sidebar 
+          onAddBlock={(type) => addBlock(type, "left")} 
+          usedBlocks={usedBlocks}
+        />
         {/* Main content */}
         <main className="flex-1 p-8 bg-gray-100 min-h-screen flex flex-col items-center">
           <div
@@ -376,11 +416,7 @@ export default function MF_Document() {
                       isOverTop={overId === `left-block-${idx}` && overPosition === "top"}
                       isOverBottom={overId === `left-block-${idx}` && overPosition === "bottom"}
                     >
-                      <BlockEditor
-                        type={block.type}
-                        value={block.value}
-                        onChange={(val) => updateBlock("left", idx, val)}
-                      />
+                      <BlockEditor type={block.type} value={cvData} setCvData={setCvData} />
                     </SortableBlock>
                   ))}
                 </SortableContext>
@@ -421,11 +457,7 @@ export default function MF_Document() {
                       isOverTop={overId === `right-block-${idx}` && overPosition === "top"}
                       isOverBottom={overId === `right-block-${idx}` && overPosition === "bottom"}
                     >
-                      <BlockEditor
-                        type={block.type}
-                        value={block.value}
-                        onChange={(val) => updateBlock("right", idx, val)}
-                      />
+                      <BlockEditor type={block.type} value={cvData} setCvData={setCvData} />
                     </SortableBlock>
                   ))}
                 </SortableContext>

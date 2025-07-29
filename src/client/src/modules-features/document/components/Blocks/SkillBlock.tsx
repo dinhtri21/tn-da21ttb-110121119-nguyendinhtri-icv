@@ -1,14 +1,14 @@
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
-import { ISkill } from "@/interface/cv";
+import { ICV, ISkill } from "@/interface/cv";
 
 interface OverviewBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function SkillBlock({ value, onChange }: OverviewBlockProps) {
+export function SkillBlock({ value, setCvData }: OverviewBlockProps) {
   const [project, setProject] = useState<ISkill>({
     description: "",
   });

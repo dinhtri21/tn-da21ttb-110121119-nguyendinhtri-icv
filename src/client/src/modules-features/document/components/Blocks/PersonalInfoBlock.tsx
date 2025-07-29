@@ -1,21 +1,13 @@
-import { IPersonalInfo } from "@/interface/cv";
+import { ICV, IPersonalInfo } from "@/interface/cv";
 import { IconCalendarEvent, IconMail, IconMapPin, IconPhone } from "@tabler/icons-react";
 import { useState } from "react";
 
 interface PersonalInfoBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function PersonalInfoBlock({ value, onChange }: PersonalInfoBlockProps) {
-  const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>({
-    fullName: "",
-    jobTitle: "",
-    dateOfBirth: "",
-    address: "",
-    phone: "",
-    email: "",
-  });
+export function PersonalInfoBlock({ value, setCvData }: PersonalInfoBlockProps) {
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       {/* Thông tin liên hệ */}
@@ -26,8 +18,13 @@ export function PersonalInfoBlock({ value, onChange }: PersonalInfoBlockProps) {
           <IconMapPin stroke={1} size={18} />
           <input
             type="text"
-            value={personalInfo.address}
-            onChange={(e) => setPersonalInfo({ ...personalInfo, address: e.target.value })}
+            value={value.personalInfo?.address || ""}
+            onChange={(e) =>
+              setCvData((prev) => ({
+                ...prev,
+                personalInfo: { ...prev.personalInfo, address: e.target.value },
+              }))
+            }
             placeholder="Địa chỉ"
             style={{
               color: "#737373",
@@ -41,8 +38,13 @@ export function PersonalInfoBlock({ value, onChange }: PersonalInfoBlockProps) {
           <IconCalendarEvent stroke={1} size={18} />
           <input
             type="date"
-            value={personalInfo.dateOfBirth}
-            onChange={(e) => setPersonalInfo({ ...personalInfo, dateOfBirth: e.target.value })}
+            value={value.personalInfo?.dateOfBirth || ""}
+            onChange={(e) =>
+              setCvData((prev) => ({
+                ...prev,
+                personalInfo: { ...prev.personalInfo, dateOfBirth: e.target.value },
+              }))
+            }
             placeholder="Ngày sinh"
             style={{
               color: "#737373",
@@ -56,8 +58,13 @@ export function PersonalInfoBlock({ value, onChange }: PersonalInfoBlockProps) {
           <IconMail stroke={1} size={18} />
           <input
             type="email"
-            value={personalInfo.email}
-            onChange={(e) => setPersonalInfo({ ...personalInfo, email: e.target.value })}
+            value={value.personalInfo?.email || ""}
+            onChange={(e) =>
+              setCvData((prev) => ({
+                ...prev,
+                personalInfo: { ...prev.personalInfo, email: e.target.value },
+              }))
+            }
             placeholder="Email"
             style={{
               color: "#737373",
@@ -71,8 +78,13 @@ export function PersonalInfoBlock({ value, onChange }: PersonalInfoBlockProps) {
           <IconPhone stroke={1} size={18} />
           <input
             type="tel"
-            value={personalInfo.phone}
-            onChange={(e) => setPersonalInfo({ ...personalInfo, phone: e.target.value })}
+            value={value.personalInfo?.phone || ""}
+            onChange={(e) =>
+              setCvData((prev) => ({
+                ...prev,
+                personalInfo: { ...prev.personalInfo, phone: e.target.value },
+              }))
+            }
             placeholder="Số điện thoại"
             style={{
               color: "#737373",

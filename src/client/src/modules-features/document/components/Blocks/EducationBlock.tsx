@@ -1,13 +1,13 @@
-import { IEducation } from "@/interface/cv";
+import { ICV, IEducation } from "@/interface/cv";
 import { BLOCKS } from "../../constants/blocks";
 import { useState } from "react";
 
 interface EducationBlockProps {
-  value: string;
-  onChange: (value: string) => void;
+  value: ICV;
+  setCvData: React.Dispatch<React.SetStateAction<ICV>>;
 }
 
-export function EducationBlock({ value, onChange }: EducationBlockProps) {
+export function EducationBlock({ value, setCvData }: EducationBlockProps) {
   const [education, setEducation] = useState<IEducation>({
     universityName: "",
     startDate: "",
