@@ -1,12 +1,12 @@
-import { useRef, useState, useEffect } from "react";
+import IBlock from "@/interface/cv";
+import { useEffect, useRef, useState } from "react";
 import { BLOCKS } from "../constants/blocks";
-import { Block } from "../interfaces/types";
 
 export interface ResizablePreviewProps {
   leftWidth: number;
   onWidthChange: (width: number) => void;
-  leftBlocks: Block[];
-  rightBlocks: Block[];
+  leftBlocks: IBlock[];
+  rightBlocks: IBlock[];
 }
 
 export default function ResizablePreview({

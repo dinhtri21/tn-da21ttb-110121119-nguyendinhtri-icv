@@ -1,4 +1,4 @@
-import { ICV } from "@/interface/cv";
+import IBlock, { ICV } from "@/interface/cv";
 import { AvatarBlock } from "./Blocks/AvatarBlock";
 import { AwardBlock } from "./Blocks/AwardBlock";
 import { BusinessCardBlock } from "./Blocks/BusinessCardBlock";
@@ -15,10 +15,26 @@ import { SpacerBlock } from "./Blocks/SpacerBlock";
 export interface BlockEditorProps {
   type: string;
   value: ICV;
+  blockIndex?: number;
+  column?: string;
   setCvData: React.Dispatch<React.SetStateAction<ICV>>;
+  setLeftBlocks?: React.Dispatch<React.SetStateAction<IBlock[]>>;
+  setRightBlocks?: React.Dispatch<React.SetStateAction<IBlock[]>>;
+  leftBlocks?: IBlock[];
+  rightBlocks?: IBlock[];
 }
 
-export default function BlockEditor({ type, value, setCvData }: BlockEditorProps) {
+export default function BlockEditor({
+  type,
+  value,
+  setCvData,
+  blockIndex,
+  column,
+  setLeftBlocks,
+  setRightBlocks,
+  leftBlocks,
+  rightBlocks,
+}: BlockEditorProps) {
   switch (type) {
     case "education":
       return <EducationBlock value={value} setCvData={setCvData} />;
@@ -41,32 +57,19 @@ export default function BlockEditor({ type, value, setCvData }: BlockEditorProps
     case "certificate":
       return <CertificateBlock value={value} setCvData={setCvData} />;
     case "spacer": {
-      let height = 20;
-      try {
-        const parsed =
-          value.template?.leftColumn?.find((block) => block.type === "spacer")?.height ||
-          value.template?.rightColumn?.find((block) => block.type === "spacer")?.height;
-        height = parsed ?? 20;
-      } catch (e) {
-        console.error("Failed to parse spacer height:", e);
-      }
       return (
         <SpacerBlock
-          height={height}
-          onHeightChange={(newHeight) => {
-            setCvData((prevData) => ({
-              ...prevData,
-              template: {
-                ...prevData.template,
-                leftColumn: prevData.template?.leftColumn?.map((block) =>
-                  block.type === "spacer" ? { ...block, height: newHeight } : block
-                ),
-                rightColumn: prevData.template?.rightColumn?.map((block) =>
-                  block.type === "spacer" ? { ...block, height: newHeight } : block
-                ),
-              },
-            }));
-          }}
+          blockIndex={blockIndex}
+          setLeftBlocks={setLeftBlocks}
+          setRightBlocks={setRightBlocks}
+          column={column}
+          height={
+            column == "leftColumn" && leftBlocks?.[blockIndex ?? -1]?.height
+              ? leftBlocks[blockIndex ?? -1].height
+              : column == "rightColumn" && rightBlocks?.[blockIndex ?? -1]?.height
+              ? rightBlocks[blockIndex ?? -1].height
+              : 20
+          }
         />
       );
     }

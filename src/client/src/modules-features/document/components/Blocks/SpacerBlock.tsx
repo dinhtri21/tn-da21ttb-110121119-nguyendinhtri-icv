@@ -1,15 +1,46 @@
+import IBlock from "@/interface/cv";
 import { ActionIcon } from "@mantine/core";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 
 interface SpacerBlockProps {
   height?: number;
-  onHeightChange?: (height: number) => void;
+  blockIndex?: number;
+  column?: string;
+  setLeftBlocks?: React.Dispatch<React.SetStateAction<IBlock[]>>;
+  setRightBlocks?: React.Dispatch<React.SetStateAction<IBlock[]>>;
 }
 
-export function SpacerBlock({ height = 20, onHeightChange }: SpacerBlockProps) {
+export function SpacerBlock({
+  height = 20,
+  blockIndex,
+  column,
+  setLeftBlocks,
+  setRightBlocks,
+}: SpacerBlockProps) {
   const handleHeightChange = (delta: number) => {
-    const newHeight = Math.max(1, height + delta); // Minimum height of 10px
-    onHeightChange?.(newHeight);
+    const newHeight = Math.max(1, height + delta); // Minimum height of 1px
+
+    if (column == "leftColumn" && setLeftBlocks) {
+      setLeftBlocks((prev) => {
+        return prev.map((block, idx) => {
+          if (idx === blockIndex) {
+            return { ...block, height: newHeight };
+          }
+          return block;
+        });
+      });
+    }
+
+    if (column == "rightColumn" && setRightBlocks) {
+      setRightBlocks((prev) => {
+        return prev.map((block, idx) => {
+          if (idx === blockIndex) {
+            return { ...block, height: newHeight };
+          }
+          return block;
+        });
+      });
+    }
   };
 
   return (
