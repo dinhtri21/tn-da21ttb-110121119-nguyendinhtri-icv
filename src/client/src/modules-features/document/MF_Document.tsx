@@ -1,5 +1,6 @@
 "use client";
 import MyToolBar from "@/components/Toolbar/MyToolBar";
+import IBlock, { ICV } from "@/interface/cv";
 import {
   closestCenter,
   DndContext,
@@ -12,7 +13,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Group } from "@mantine/core";
+import { Button, Group } from "@mantine/core";
 import { IconLayoutGrid } from "@tabler/icons-react";
 import React, { useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";
@@ -21,8 +22,6 @@ import ResizablePreview from "./components/ResizablePreview";
 import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
 import { BLOCKS } from "./constants/blocks";
-import { Block } from "./interfaces/types";
-import IBlock, { ICV, Template1CV } from "@/interface/cv";
 
 export default function MF_Document() {
   const [leftBlocks, setLeftBlocks] = useState<IBlock[]>([]);
@@ -33,13 +32,16 @@ export default function MF_Document() {
   const [isOverEmpty, setIsOverEmpty] = useState(false);
   const [overColumn, setOverColumn] = useState<"left" | "right" | null>(null);
   const [leftWidth, setLeftWidth] = useState(35);
+  const printRef = useRef<HTMLDivElement>(null);
 
   // Track which blocks are used
   const usedBlocks = [...leftBlocks, ...rightBlocks]
     .map((block) => block.type)
     .filter((type): type is string => type !== undefined);
-  const printRef = useRef<HTMLDivElement>(null);
   const [cvData, setCvData] = useState<ICV>({
+    file: {
+      fileName: "Chưa đặt tên",
+    },
     template: {
       id: 1,
       leftSizeColum: leftWidth,
@@ -366,34 +368,32 @@ export default function MF_Document() {
         {/* Main content */}
         <main className="flex-1 p-8 bg-gray-100 min-h-screen flex flex-col items-center">
           <div
-            className="cv-container"
+            className="cv-container shadow-2xl"
             style={{
-              width: "794px",
-              minHeight: "1123px",
+              width: "815px",
+              minHeight: "1056px",
               margin: "0 auto",
-              position: "relative",
             }}
           >
+            {/* Print */}
             <div
-              // id="print-section"
               ref={printRef}
-              className="drop-zone-area shadow-2xl"
+              className="drop-zone-area"
               style={{
                 width: "815px",
                 minHeight: "1056px",
                 maxWidth: "815px",
-                // padding: "32px",
                 boxSizing: "border-box",
                 margin: "0",
-                position: "relative",
                 fontSize: "14px",
                 lineHeight: "1.4",
                 display: "flex",
                 fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
               }}
             >
+              {/* Left Column */}
               <div
-                className="cv-left-column bg-[#F7F7F7] pl-[24px] pr-[15px] pt-[24px] pb-[24px]"
+                className="cv-left-column bg-white pl-[24px] pr-[10px] pt-[24px] pb-[24px]"
                 style={{
                   width: `${leftWidth}%`,
                   minHeight: "100%",
@@ -442,9 +442,9 @@ export default function MF_Document() {
                   </div>
                 )}
               </div>
-
+              {/* Right Column */}
               <div
-                className="cv-right-column bg-white px-2 pl-[15px] pr-[24px] pt-[24px] pb-[24px]"
+                className="cv-right-column bg-white px-2 pl-[10px] pr-[24px] pt-[24px] pb-[24px]"
                 style={{
                   width: `${100 - leftWidth}%`,
                   minHeight: "100%",

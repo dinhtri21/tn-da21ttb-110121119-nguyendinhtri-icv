@@ -1,13 +1,22 @@
-import { Button, Flex, Group, Text } from "@mantine/core";
+import { Button, Flex, Group, Input, Text, Tooltip } from "@mantine/core";
 import { IconDownload, IconFileCv, IconInputAi, IconPalette, IconWorld } from "@tabler/icons-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import MySelectCvTheme from "../Select/MySelectCvTheme";
 import { ICV } from "@/interface/cv";
 
-export default function MyToolBar({ printRef, cv }: { printRef?: React.RefObject<HTMLDivElement>; cv?: ICV }) {
+export default function MyToolBar({
+  printRef,
+  cv,
+}: {
+  printRef?: React.RefObject<HTMLDivElement>;
+  cv?: ICV;
+}) {
   const [isExporting, setIsExporting] = useState(false);
-
+  const editableRef = useRef<HTMLDivElement>(null);
+  if (editableRef.current) {
+    editableRef.current.innerText = "Chưa đặt tên";
+  }
   // Move useReactToPrint hook to component level
   const handlePrint = useReactToPrint({
     contentRef: printRef,
@@ -16,6 +25,13 @@ export default function MyToolBar({ printRef, cv }: { printRef?: React.RefObject
   const handleSaveCV = () => {
     // Logic to save the CV
     console.log("Saving CV:", cv);
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (cv && cv.file) {
+      const text = e.currentTarget.innerText;
+      cv.file.fileName = text;
+    }
   };
 
   return (
@@ -31,7 +47,14 @@ export default function MyToolBar({ printRef, cv }: { printRef?: React.RefObject
     >
       <Group gap={4}>
         <IconFileCv color="blue" stroke={1} size={24} />
-        <Text>Tên file</Text>
+        <div
+          ref={editableRef}
+          contentEditable="true"
+          onInput={(e) => {
+            handleTitleChange(e as React.ChangeEvent<HTMLInputElement>);
+          }}
+          className="min-w-[100px] max-w-[200px] inline-block px-1 py-[2px] border border-transparent hover:border-gray-300 focus:border-gray-300 rounded overflow-hidden break-words whitespace-nowrap focus:outline-none"
+        ></div>
         <IconWorld stroke={1} size={24} />
       </Group>
       <Group gap={4}>
@@ -39,15 +62,23 @@ export default function MyToolBar({ printRef, cv }: { printRef?: React.RefObject
         <Button leftSection={<IconPalette size={16} />} variant="default">
           Màu sắc
         </Button>
-        <Button
-          onClick={handlePrint}
-          leftSection={<IconDownload size={16} />}
-          variant="default"
-          loading={isExporting}
-          disabled={isExporting}
+        <Tooltip
+          label={
+            <Text size="sm">Vui lòng chọn 'Lưu dưới dạng PDF' hoặc 'Save as PDF' trong hộp thoại In.</Text>
+          }
         >
-          {isExporting ? "Đang tải..." : "Tải xuống"}
-        </Button>
+          <Button
+            onClick={() => {
+              handlePrint();
+            }}
+            leftSection={<IconDownload size={16} />}
+            variant="default"
+            loading={isExporting}
+            disabled={isExporting}
+          >
+            {isExporting ? "Đang tải..." : "Tải xuống"}
+          </Button>
+        </Tooltip>
         <Button leftSection={<IconInputAi size={16} />} variant="default">
           Đánh giá
         </Button>
