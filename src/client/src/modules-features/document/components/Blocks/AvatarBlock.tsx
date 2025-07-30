@@ -1,6 +1,6 @@
 import { IAvatar, ICV } from "@/interface/cv";
 import { IconUpload, IconUserCircle } from "@tabler/icons-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface AvatarBlockProps {
   value: ICV;
@@ -9,8 +9,9 @@ interface AvatarBlockProps {
 
 export function AvatarBlock({ value, setCvData }: AvatarBlockProps) {
   const [avatar, setAvatar] = useState<IAvatar>({
-    file: undefined,
-    path: "",
+    file: value.avatar?.file || undefined,
+    path: value.avatar?.path || "",
+    fileName: value.avatar?.fileName || "",
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +41,15 @@ export function AvatarBlock({ value, setCvData }: AvatarBlockProps) {
       reader.readAsDataURL(file);
     }
   };
+
+  // Đồng bộ state khi có thay đổi
+  useEffect(() => { 
+    setCvData((prev) => ({
+      ...prev,
+      avatar: avatar,
+    }));
+  }, [avatar, setCvData]);
+    
 
   return (
     <div className="hover:border flex items-center justify-center hover:border-gray-300 bg-transparent border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">

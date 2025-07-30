@@ -9,9 +9,7 @@ interface OverviewBlockProps {
 }
 
 export function SkillBlock({ value, setCvData }: OverviewBlockProps) {
-  const [project, setProject] = useState<ISkill>({
-    description: "",
-  });
+ 
 
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
@@ -20,10 +18,17 @@ export function SkillBlock({ value, setCvData }: OverviewBlockProps) {
       </label>
       <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
       <TiptapEditor
-        placeholder="Giới thiệu chung mục tiêu nghề nghiệp..."
-        content="<p><strong>Ngôn ngữ</strong></p><p>HTML, CSS, JavaScript, TypeScript, C#, SQL, NoSQL (MongoDB). <strong>Frontend</strong> </p><p>ReactJS, Next.js, React-Native. </p><p><strong>Backend</strong></p><p>.Net, NodeJS (ExpressJS), RESTful API, N-layer, Clean Architecture SQL Server, MySQL</p><p><strong>Công cụ</strong></p><p>Visual Studio, VS Code, GIT, Fork, Postman, Figma. </p><p><strong>Khác</strong></p><p>Mantine UI, Shadcn UI, Tailwind CSS.</p>"
+        placeholder="Mô tả kỹ năng"
+        content={value.skill?.description || ""}
+        // content="<p><strong>Ngôn ngữ</strong></p><p>HTML, CSS, JavaScript, TypeScript, C#, SQL, NoSQL (MongoDB). <strong>Frontend</strong> </p><p>ReactJS, Next.js, React-Native. </p><p><strong>Backend</strong></p><p>.Net, NodeJS (ExpressJS), RESTful API, N-layer, Clean Architecture SQL Server, MySQL</p><p><strong>Công cụ</strong></p><p>Visual Studio, VS Code, GIT, Fork, Postman, Figma. </p><p><strong>Khác</strong></p><p>Mantine UI, Shadcn UI, Tailwind CSS.</p>"
         onChange={(content) => {
-          setProject({ ...project, description: content });
+          setCvData((prev) => ({
+            ...prev,
+            skill: {
+              ...prev.skill,
+              description: content,
+            },
+          }));
         }}
       />
     </div>

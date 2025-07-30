@@ -1,5 +1,5 @@
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
 import { ICV, IPersonalInfo } from "@/interface/cv";
 
@@ -9,6 +9,18 @@ interface OverviewBlockProps {
 }
 
 export function OverviewBlock({ value, setCvData }: OverviewBlockProps) {
+  const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>({
+    overview: value.personalInfo?.overview || "",
+  });
+
+  // Đồng bộ state khi có thay đổi
+  useEffect(() => {
+    setCvData((prev) => ({
+      ...prev,
+      personalInfo: personalInfo,
+    }));
+  }, [personalInfo, setCvData]);
+
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <label className="block mb-1 font-medium text-[18px] text-[#404041]">
