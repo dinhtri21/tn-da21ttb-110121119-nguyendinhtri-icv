@@ -5,8 +5,7 @@
 
 # User-specific files
 /iCV.API/appsettings.json
-/iCV.API/wwwroot/images/brands
-/iCV.API/wwwroot/images/products
+/iCV.API/wwwroot/images/avatars
 /iCV.API/appsettings*.json
 
 # User-specific files

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace iCV.Domain.Entities
 {
-    public class Skill
+    public class Block
     {
-        public string? Description { get; set; }
+        public int? Id { get; set; }
+        public string? Type { get; set; }
+        public int? Height { get; set; }
     }
 }

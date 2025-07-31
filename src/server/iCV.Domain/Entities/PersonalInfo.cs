@@ -8,13 +8,12 @@ namespace iCV.Domain.Entities
 {
     public class PersonalInfo
     {
-        public string? id { get; set; }
-        public string documentId { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string jobTitle { get; set; }
-        public string address { get; set; }
-        public string phone { get; set; }
-        public string email { get; set; }
+        public string? FullName { get; set; }
+        public string? JobTitle { get; set; }
+        public string? DateOfBirth { get; set; }
+        public string? Address { get; set; }
+        public string? Phone { get; set; }
+        public string? Email { get; set; }
+        public string? Overview { get; set; }
     }
 }

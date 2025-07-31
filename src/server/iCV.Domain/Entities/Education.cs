@@ -8,12 +8,10 @@ namespace iCV.Domain.Entities
 {
     public class Education
     {
-        public string? id { get; set; }
-        public string documentId { get; set; }
-        public string universityName { get; set; }
-        public string degree { get; set; }
-        public string major { get; set; }
-        public DateTime startDate { get; set; } = DateTime.UtcNow;
-        public DateTime endDate { get; set; } = DateTime.UtcNow;
+        public int? Id { get; set; }
+        public string? UniversityName { get; set; }
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
+        public string? Major { get; set; }
     }
 }

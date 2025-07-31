@@ -1,5 +1,7 @@
 ﻿using iCV.Application.Common.DTOs;
+using iCV.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,58 +12,25 @@ namespace iCV.Application.CVs.Commands.Create
 {
     public class CreateCVCommand : IRequest<CVDto>
     {
-        public DocumentRequest Document { get; set; }
-        public PersonalInfoRequest? PersonalInfo { get; set; }
-        public List<ExperienceRequest>? Experiences { get; set; }
-        public List<EducationRequest>? Educations { get; set; }
-        public List<SkillRequest>? Skills { get; set; }
+        public string? UserId { get; set; }
+        public FileData? File { get; set; }
+        public Template? Template { get; set; }
+        public AvatarRequest? Avatar { get; set; }
+        public List<Award>? Awards { get; set; }
+        public List<Certificate>? Certificates { get; set; }
+        public PersonalInfo? PersonalInfo { get; set; }
+        public List<Project>? Projects { get; set; }
+        public List<Education>? Education { get; set; }
+        public List<Experience>? Experiences { get; set; }
+        public Skill? Skill { get; set; }
+
     }
 
-    public class DocumentRequest
+    public class AvatarRequest
     {
-        public string userId { get; set; }
-        public string title { get; set; }
-        public string summary { get; set; }
-        public string themeColor { get; set; }
-        public string thumbnail { get; set; }
-        public int currentPosition { get; set; }
-        public string authorName { get; set; }
-        public string authorEmail { get; set; }
+        public IFormFile? File { get; set; }
+        public string? FileBase64String { get; set; }
+        public string? FileName { get; set; }
+        public string? Path { get; set; }
     }
-
-    public class ExperienceRequest
-    {
-        public string title { get; set; }
-        public string position { get; set; }
-        public bool currentlyWorking { get; set; }
-        public string description { get; set; }
-        public DateTime startDate { get; set; }
-        public DateTime endDate { get; set; }
-    }
-
-    public class EducationRequest
-    {
-        public string universityName { get; set; }
-        public string degree { get; set; }
-        public string major { get; set; }
-        public DateTime startDate { get; set; }
-        public DateTime endDate { get; set; }
-    }
-
-    public class SkillRequest
-    {
-        public string name { get; set; }
-        public bool main { get; set; }
-    }
-
-    public class PersonalInfoRequest
-    {
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-        public string jobTitle { get; set; }
-        public string address { get; set; }
-        public string phone { get; set; }
-        public string email { get; set; }
-    }
-
 }

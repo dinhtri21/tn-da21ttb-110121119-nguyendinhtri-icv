@@ -1,7 +1,9 @@
 ﻿using iCV.Application.CVs.Commands.Create;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace iCV.API.Controllers
 {
@@ -15,10 +17,14 @@ namespace iCV.API.Controllers
             _mediator = mediator;
         }
 
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateCV([FromBody] CreateCVCommand command)
+        public async Task<IActionResult> CreateCV([FromForm] CreateCVCommand command)
         {
-            if (command == null) return BadRequest("Invalid CV data.");
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("Missing user ID in token.");
+
+            command.UserId = userIdClaim;
             var result = await _mediator.Send(command);
             return Ok(result);
         }

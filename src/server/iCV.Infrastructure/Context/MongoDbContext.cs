@@ -21,11 +21,7 @@ namespace iCV.Infrastructure.Context
         }
 
         public IMongoCollection<User> Users => _database.GetCollection<User>("users");
-        public IMongoCollection<Skills> Skills => _database.GetCollection<Skills>("skills");
-        public IMongoCollection<Experience> Experiences => _database.GetCollection<Experience>("experiences");
-        public IMongoCollection<Education> Educations => _database.GetCollection<Education>("educations");
-        public IMongoCollection<PersonalInfo> PersonalInfos => _database.GetCollection<PersonalInfo>("personalInfos");
-        public IMongoCollection<Document> Documents => _database.GetCollection<Document>("documents");
+        public IMongoCollection<CV> CV => _database.GetCollection<CV>("cv");
 
         public IMongoCollection<T> GetCollection<T>(string collectionName)
         {

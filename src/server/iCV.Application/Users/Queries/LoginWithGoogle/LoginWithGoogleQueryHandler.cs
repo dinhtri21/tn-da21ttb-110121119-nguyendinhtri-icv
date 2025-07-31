@@ -39,12 +39,20 @@ namespace iCV.Application.Users.Queries.LoginWithGoogle
                 user = newUser;
             }
 
+            // Create claims
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.id), 
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Name, user.name),
+            };
+
             // Create token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                //Subject = new ClaimsIdentity(claims),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

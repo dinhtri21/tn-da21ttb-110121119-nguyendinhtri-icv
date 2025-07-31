@@ -1,15 +1,14 @@
-﻿using iCV.Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCV.Application.Common.DTOs
+namespace iCV.Domain.Entities
 {
-    public class CVDto
+    public class CV
     {
-        public string? Id { get; set; }
+        public string Id { get; set; }
         public string? UserId { get; set; }
         public FileData? File { get; set; }
         public Template? Template { get; set; }

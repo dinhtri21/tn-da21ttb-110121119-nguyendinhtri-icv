@@ -14,8 +14,11 @@ export default function MyToolBar({
 }) {
   const [isExporting, setIsExporting] = useState(false);
   const editableRef = useRef<HTMLDivElement>(null);
+  
   if (editableRef.current) {
-    editableRef.current.innerText = "Chưa đặt tên";
+    if (cv && cv.file) {
+      editableRef.current.innerText = cv.file.fileName || "Chưa đặt tên";
+    }
   }
   // Move useReactToPrint hook to component level
   const handlePrint = useReactToPrint({
@@ -64,7 +67,9 @@ export default function MyToolBar({
         </Button>
         <Tooltip
           label={
-            <Text size="sm">Vui lòng chọn 'Lưu dưới dạng PDF' hoặc 'Save as PDF' trong hộp thoại In.</Text>
+            <Text size="sm">
+              Vui lòng chọn 'Lưu dưới dạng PDF' hoặc 'Save as PDF' trong hộp thoại In.
+            </Text>
           }
         >
           <Button

@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace iCV.Domain.Entities
 {
-    public class Experience
+    public class Award
     {
-        public int? Id { get; set; }
+        public string? Id { get; set; }
         public string? Title { get; set; }
-        public bool? CurrentlyWorking { get; set; }
+        public string? Date { get; set; }
         public string? Description { get; set; }
-        public string? StartDate { get; set; }
-        public string? EndDate { get; set; }
     }
 }

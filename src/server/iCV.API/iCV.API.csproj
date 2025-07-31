@@ -27,6 +27,8 @@
   <ItemGroup>
     <Folder Include="Configuration\Authorization\" />
     <Folder Include="Configuration\HttpClient\" />
+    <Folder Include="wwwroot\images\avatars\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>

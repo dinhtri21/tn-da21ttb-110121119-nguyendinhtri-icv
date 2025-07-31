@@ -13,7 +13,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Button, Group } from "@mantine/core";
+import { Group } from "@mantine/core";
 import { IconLayoutGrid } from "@tabler/icons-react";
 import React, { useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";

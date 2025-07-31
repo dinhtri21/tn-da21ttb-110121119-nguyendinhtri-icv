@@ -6,9 +6,7 @@ import MyReactQueryProvider from "./MyReactQueryProvider";
 export default function MyProvider({ children }: { children?: ReactNode }) {
   return (
     <MyReactQueryProvider>
-      <MyMantineProvider>
-        <MyAuthRouter>{children}</MyAuthRouter>
-      </MyMantineProvider>
+      <MyMantineProvider>{children}</MyMantineProvider>
     </MyReactQueryProvider>
   );
 }

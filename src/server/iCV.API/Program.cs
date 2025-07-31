@@ -86,6 +86,8 @@ builder.Services.AddSwaggerDocumentation();
 //builder.Services.AddSwaggerGen();
 //builder.Services.AddSession();
 
+builder.Services.AddAutoMapper(typeof(IApplicationMarker).Assembly);
+
 var app = builder.Build();
 
 // Middleware
@@ -97,6 +99,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// Static Files
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

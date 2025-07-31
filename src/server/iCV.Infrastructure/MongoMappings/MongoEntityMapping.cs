@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iCV.Infrastructure.Configurations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,12 +16,7 @@ namespace iCV.Infrastructure.MongoMappings
             if (_mapped) return;
 
             UserMongoConfiguration.Configure();
-            SkillsMongoConfiguration.Configure();
-            ExperienceMongoConfiguration.Configure();
-            PersonalInfoMongoConfiguration.Configure();
-            EducationMongoConfiguration.Configure();
-            DocumentMongoConfiguration.Configure();
-
+            CVMongoConfiguration.Configure();
             _mapped = true;
         }
     }

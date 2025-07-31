@@ -1,4 +1,5 @@
 ﻿using iCV.Application.Common.DTOs;
+using iCV.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace iCV.Application.Common.Interfaces
 {
     public interface ICVRepository
     {
-        Task<CVDto?> GetCVByDocumentIdAsync(string id);
+        Task<CV?> GetCVByIdAsync(string id);
+        Task CreateCVAsync(CV cv);
     }
 }

@@ -1,6 +1,6 @@
 export interface ICV {
   file?: IFile;
-  template?: Template1CV;
+  template?: Template;
   avatar?: IAvatar;
   awards?: IAward[];
   certificates?: ICertificate[];
@@ -22,7 +22,7 @@ export default interface IBlock {
   height?: number;
 }
 
-export interface Template1CV {
+export interface Template {
   id?: number;
   leftSizeColum?: number;
   rightSizeColum?: number;
