@@ -3,6 +3,7 @@ import { BLOCKS } from "../../constants/blocks";
 import { ActionIcon } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
+import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 
 interface EducationBlockProps {
   value: ICV;
@@ -12,21 +13,23 @@ interface EducationBlockProps {
 export function EducationBlock({ value, setCvData }: EducationBlockProps) {
   // Khởi tạo từ value.education hoặc mặc định nếu không có
   const [education, setEducation] = useState<IEducation[]>(
-    value?.education?.length 
-      ? value.education 
-      : [{
-          universityName: "",
-          startDate: "",
-          endDate: "",
-          major: "",
-        }]
+    value?.education?.length
+      ? value.education
+      : [
+          {
+            universityName: "",
+            startDate: "",
+            endDate: "",
+            description: "",
+          },
+        ]
   );
 
   // Đồng bộ state khi có thay đổi
   useEffect(() => {
-    setCvData(prev => ({
+    setCvData((prev) => ({
       ...prev,
-      education: education
+      education: education,
     }));
   }, [education, setCvData]);
 
@@ -72,7 +75,7 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
                     const newEducation = [...education];
                     newEducation[index] = {
                       ...newEducation[index],
-                      universityName: e.target.value
+                      universityName: e.target.value,
                     };
                     setEducation(newEducation);
                   }}
@@ -91,7 +94,7 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
                     const newEducation = [...education];
                     newEducation[index] = {
                       ...newEducation[index],
-                      startDate: e.target.value
+                      startDate: e.target.value,
                     };
                     setEducation(newEducation);
                   }}
@@ -113,7 +116,7 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
                     const newEducation = [...education];
                     newEducation[index] = {
                       ...newEducation[index],
-                      endDate: e.target.value
+                      endDate: e.target.value,
                     };
                     setEducation(newEducation);
                   }}
@@ -143,24 +146,22 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
             </div>
 
             {/* Ngành học */}
-            <div className="mt-1">
-              <input
-                value={edu.major || ""}
-                onChange={(e) => {
-                  const newEducation = [...education];
-                  newEducation[index] = {
-                    ...newEducation[index],
-                    major: e.target.value
-                  };
-                  setEducation(newEducation);
-                }}
-                type="text"
-                style={{
-                  color: "#737373",
-                }}
-                placeholder="Ngành học"
-                className="cv-input text-gray-600 w-full border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
-              />
+             <div className="mt-1">
+            <TiptapEditor
+              placeholder="Mô tả công việc"
+              content={
+                edu.description ||
+                '<p>Ngành Công nhệ thông tin</p><p>GPA: 3.2</p>'
+              }
+              onChange={(e) => {
+                const newEducation = [...education];
+                newEducation[index] = {
+                  ...newEducation[index],
+                  description: e,
+                };
+                setEducation(newEducation);
+              }}
+            />
             </div>
           </div>
         ))}

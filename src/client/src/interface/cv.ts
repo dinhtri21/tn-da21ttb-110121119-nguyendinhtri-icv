@@ -72,7 +72,7 @@ export interface IEducation {
   universityName?: string;
   startDate?: string;
   endDate?: string;
-  major?: string;
+  description?: string;
 }
 
 export interface IExperience {
