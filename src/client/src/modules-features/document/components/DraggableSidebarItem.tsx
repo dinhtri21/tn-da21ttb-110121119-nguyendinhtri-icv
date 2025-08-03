@@ -31,7 +31,7 @@ export default function DraggableSidebarItem({ block, onAddBlock, isDisabled }: 
         cursor: isDisabled ? 'not-allowed' : 'move'
       }}
       {...(isDisabled ? {} : { ...attributes, ...listeners })}
-      className={`bg-gray-100 rounded px-3 py-2 text-left ${
+      className={`bg-gray-100 rounded px-3 py-2 text-left text-sm ${
         isDisabled ? 'cursor-not-allowed' : 'hover:bg-blue-100 cursor-move'
       }`}
       onClick={() => !isDisabled && onAddBlock(block.type)}

@@ -13,8 +13,16 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Group } from "@mantine/core";
-import { IconLayoutGrid } from "@tabler/icons-react";
+import { Accordion, Button, Group, Stack, Tabs, Tooltip } from "@mantine/core";
+import {
+  IconComponents,
+  IconFileCv,
+  IconLayoutGrid,
+  IconMessageCircle,
+  IconPhoto,
+  IconSettings,
+  IconWorld,
+} from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";
 import EmptyDropZone from "./components/EmptyDropZone";
@@ -22,6 +30,10 @@ import ResizablePreview from "./components/ResizablePreview";
 import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
 import { BLOCKS } from "./constants/blocks";
+import { Text } from "@mantine/core";
+import Menu from "./components/MyMenu";
+import MyMenu from "./components/MyMenu";
+import EvaluationTab from "./components/EvaluationTab";
 
 interface IProps {
   data: ICV;
@@ -37,6 +49,7 @@ export default function MF_Document({ data }: IProps) {
   const [overColumn, setOverColumn] = useState<"left" | "right" | null>(null);
   const [leftWidth, setLeftWidth] = useState(35);
   const printRef = useRef<HTMLDivElement>(null);
+  const editableRef = useRef<HTMLDivElement>(null);
 
   // Track which blocks are used
   const usedBlocks = [...leftBlocks, ...rightBlocks]
@@ -45,22 +58,18 @@ export default function MF_Document({ data }: IProps) {
 
   // Initialize cvData with default values
   const [cvData, setCvData] = useState<ICV>();
-  //   {
-  //   fileName: data?.fileName || "Chưa đặt tên",
-  //   template: data?.template || {
-  //     id: 1,
-  //     leftSizeColum: leftWidth,
-  //     rightSizeColum: 100 - leftWidth,
-  //     leftColumn: leftBlocks.map((block, index) => ({
-  //       id: index,
-  //       type: block.type || undefined,
-  //     })),
-  //     rightColumn: rightBlocks.map((block, index) => ({
-  //       id: index,
-  //       type: block.type || undefined,
-  //     })),
-  //   },
-  // }
+
+  if (editableRef.current) {
+    if (cvData && cvData.fileName) {
+      editableRef.current.innerText = cvData.fileName || "Chưa đặt tên";
+    }
+  }
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (cvData && cvData.fileName) {
+      const text = e.currentTarget.innerText;
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -186,6 +195,7 @@ export default function MF_Document({ data }: IProps) {
       }
     }
   };
+  console.log(cvData);
 
   const handleDragEnd = (event: DragEndEvent): void => {
     const cvArea = document.querySelector(".drop-zone-area");
@@ -326,11 +336,10 @@ export default function MF_Document({ data }: IProps) {
       }
     }
   };
+  console.log(editableRef.current?.innerText);
 
   useEffect(() => {
-    setCvData(
-      data
-    );
+    setCvData(data);
     setLeftBlocks(data?.template?.leftColumn || []);
     setRightBlocks(data?.template?.rightColumn || []);
     setLeftWidth(data?.template?.leftSizeColum || 35);
@@ -344,44 +353,39 @@ export default function MF_Document({ data }: IProps) {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
-      <div className="border-b border-gray-300 ">
-        <MyToolBar
-          printRef={printRef as React.RefObject<HTMLDivElement>}
-          cv={{
-            ...cvData,
-            template: {
-              ...cvData?.template,
-              leftSizeColum: Math.round(leftWidth),
-              rightSizeColum: 100 - Math.round(leftWidth),
-              leftColumn: leftBlocks.map((block, index) => ({
-                id: index,
-                type: block.type || undefined,
-                ...(block.type === "spacer" && {
-                  height: block.height || 20,
-                }),
-              })),
-              rightColumn: rightBlocks.map((block, index) => ({
-                id: index,
-                type: block.type || undefined,
-                ...(block.type === "spacer" && {
-                  height: block.height || 20,
-                }),
-              })),
-            },
-          }}
-        />
-      </div>
+      <div className="border-b border-gray-300 "></div>
       <div className="flex min-h-screen bg-gray-50">
         {/* Sidebar */}
-        <Sidebar onAddBlock={(type) => addBlock(type, "left")} usedBlocks={usedBlocks} />
+        <Stack gap={4} className="border-r border-gray-300  p-4">
+          <Group gap={4} className="border-b border-gray-300 pb-4 mb-2">
+            <IconFileCv color="blue" stroke={1} size={20} />
+            <Group gap={0} className="border   border-gray-300 rounded">
+              <input
+                value={cvData?.fileName || ""}
+                onChange={(e) =>
+                  setCvData((prev) => ({
+                    ...prev,
+                    fileName: e.target.value,
+                  }))
+                }
+                placeholder="Chưa đặt tên"
+                className="text-[14px] min-w-[50px] text-gray-700 inline-block px-1 py-[2px]  overflow-hidden break-words whitespace-nowrap focus:outline-none"
+              />
+            </Group>
+            <IconWorld stroke={1} size={20} color="gray" />
+          </Group>
+          <Sidebar onAddBlock={(type) => addBlock(type, "left")} usedBlocks={usedBlocks} />
+        </Stack>
         {/* Main content */}
-        <main className="flex-1 p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+        <main className="flex-1 p-4 bg-gray-100 min-h-screen flex flex-col items-center">
           <div
             className="cv-container shadow-2xl"
             style={{
               width: "815px",
               minHeight: "1056px",
               margin: "0 auto",
+              transform: "scale(0.9)",
+              transformOrigin: "top",
             }}
           >
             {/* Print */}
@@ -509,34 +513,60 @@ export default function MF_Document({ data }: IProps) {
         </main>
 
         {/* Right sidebar */}
-        <div className="w-64 bg-white border-l border-gray-300 p-4">
-          <Group gap={4} align="center" mb={"xs"} justify="space-between">
-            <h2 className="font-medium">Bố cục</h2>
-            <IconLayoutGrid stroke={2} size={16} color="gray" />
-          </Group>
-          <div className="space-y-4">
-            <ResizablePreview
-              leftWidth={leftWidth}
-              onWidthChange={setLeftWidth}
-              leftBlocks={leftBlocks}
-              rightBlocks={rightBlocks}
-            />
+        <div className="max-w-90 w-full bg-white border-l border-gray-300 p-4">
+          <MyMenu
+            printRef={printRef as React.RefObject<HTMLDivElement>}
+            cv={{
+              ...cvData,
+              template: {
+                ...cvData?.template,
+                leftSizeColum: Math.round(leftWidth),
+                rightSizeColum: 100 - Math.round(leftWidth),
+                leftColumn: leftBlocks.map((block, index) => ({
+                  id: index,
+                  type: block.type || undefined,
+                  ...(block.type === "spacer" && {
+                    height: block.height || 20,
+                  }),
+                })),
+                rightColumn: rightBlocks.map((block, index) => ({
+                  id: index,
+                  type: block.type || undefined,
+                  ...(block.type === "spacer" && {
+                    height: block.height || 20,
+                  }),
+                })),
+              },
+            }}
+          />
 
-            {/* <div>
-              <h3 className="text-sm font-medium mb-2">Danh sách block</h3>
-              <div className="space-y-2 max-h-96 overflow-y-auto">
-                {leftBlocks.map((block, idx) => (
-                  <PreviewBlock key={`left-${idx}`} block={block} column="left" />
-                ))}
-                {rightBlocks.map((block, idx) => (
-                  <PreviewBlock key={`right-${idx}`} block={block} column="right" />
-                ))}
-                {leftBlocks.length === 0 && rightBlocks.length === 0 && (
-                  <div className="text-gray-400 text-center py-4 text-sm">Chưa có block nào</div>
-                )}
-              </div>
-            </div> */}
-          </div>
+          <Tabs defaultValue="bocuc" mt={8}>
+            <Tabs.List>
+              <Tabs.Tab value="bocuc" leftSection={<IconComponents size={12} />}>
+                Bố cục
+              </Tabs.Tab>
+              <Tabs.Tab value="danhgia" leftSection={<IconMessageCircle size={12} />}>
+                Đánh giá
+              </Tabs.Tab>
+              <Tabs.Tab value="settings" leftSection={<IconSettings size={12} />}>
+                Settings
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="bocuc" mt={8}>
+              <ResizablePreview
+                leftWidth={leftWidth}
+                onWidthChange={setLeftWidth}
+                leftBlocks={leftBlocks}
+                rightBlocks={rightBlocks}
+              />
+            </Tabs.Panel>
+            <Tabs.Panel value="danhgia" mt={8}>
+              <EvaluationTab id={cvData?.id!} />
+            </Tabs.Panel>
+            <Tabs.Panel value="settings" mt={8}>
+              Settings tab content
+            </Tabs.Panel>
+          </Tabs>
         </div>
       </div>
 

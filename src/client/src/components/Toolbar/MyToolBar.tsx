@@ -50,7 +50,6 @@ export default function MyToolBar({
   });
 
   const handleSaveCV = () => {
-    console.log("Saving CV:", cv);
     if (cv) {
       mutate.mutate(cv);
     }
@@ -71,8 +70,9 @@ export default function MyToolBar({
       align="center"
       wrap="wrap"
       gap={16}
-      py={16}
+      py={12}
       px={16}
+      className="fixed top-0"
     >
       <Group gap={4}>
         <IconFileCv color="blue" stroke={1} size={24} />
@@ -82,15 +82,15 @@ export default function MyToolBar({
           onInput={(e) => {
             handleTitleChange(e as React.ChangeEvent<HTMLInputElement>);
           }}
-          className="min-w-[100px] max-w-[200px] inline-block px-1 py-[2px] border border-transparent hover:border-gray-300 focus:border-gray-300 rounded overflow-hidden break-words whitespace-nowrap focus:outline-none"
+          className="min-w-[50px] max-w-[200px] inline-block px-1 py-[2px] border border-transparent hover:border-gray-300 focus:border-gray-300 rounded overflow-hidden break-words whitespace-nowrap focus:outline-none"
         ></div>
         <IconWorld stroke={1} size={24} />
       </Group>
       <Group gap={4}>
-        <MySelectCvTheme />
-        <Button leftSection={<IconPalette size={16} />} variant="default">
+        {/* <MySelectCvTheme /> */}
+        {/* <Button leftSection={<IconPalette size={16} />} variant="default">
           Màu sắc
-        </Button>
+        </Button> */}
         <Tooltip
           label={
             <Text size="sm">

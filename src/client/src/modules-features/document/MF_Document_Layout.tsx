@@ -10,18 +10,20 @@ interface IProp {
   id: string;
 }
 export default function MF_Document_Layout({ id }: IProp) {
-   const [visible, { open: showOverlay, close: hideOverlay }] = useDisclosure(false);
   const query = useQuery<ICV>({
-    queryKey: ["MF_Document_Layout",id],
+    queryKey: ["MF_Document_Layout", id],
     queryFn: async () => {
       const response = await cvService.getCVById(id);
       return response.data;
     },
   });
 
-  if (query.isLoading) return <Center h={"100vh"} w="100%">
-    Loading...
-  </Center>;
+  if (query.isLoading)
+    return (
+      <Center h={"100vh"} w="100%">
+        Loading...
+      </Center>
+    );
   if (query.isError) return "Không có dữ liệu...";
 
   return <MF_Document data={query.data!} />;
