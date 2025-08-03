@@ -150,8 +150,9 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
             <TiptapEditor
               placeholder="Mô tả công việc"
               content={
-                edu.description ||
-                '<p>Ngành Công nhệ thông tin</p><p>GPA: 3.2</p>'
+                edu.description 
+                // ||
+                // '<p>Ngành Công nhệ thông tin</p><p>GPA: 3.2</p>'
               }
               onChange={(e) => {
                 const newEducation = [...education];

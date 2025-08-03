@@ -63,7 +63,7 @@ export function ProjectBlock({ value, setCvData }: ProjectBlockProps) {
         </ActionIcon>
       </div>
       <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
-      <div className="space-y-4 relative">
+      <div className="space-y-1 relative">
         {/* Timeline vertical line */}
         {showTimeline && (
           <div
@@ -166,7 +166,7 @@ export function ProjectBlock({ value, setCvData }: ProjectBlockProps) {
             </div>
 
             {/* Mô tả */}
-            <div className="mt-2">
+            <div className="">
               <TiptapEditor
                 placeholder="Mô tả về dự án"
                 content={

@@ -62,8 +62,6 @@ export default function MF_Document({ data }: IProps) {
   //   },
   // }
 
-  console.log("CV Data:", cvData);
-
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {

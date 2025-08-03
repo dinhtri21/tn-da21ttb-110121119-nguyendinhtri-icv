@@ -3,11 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import MF_Document from "./MF_Document";
 import cvService from "@/api/services/cvService";
 import { ICV } from "@/interface/cv";
+import { useDisclosure } from "@mantine/hooks";
+import { Center } from "@mantine/core";
 
 interface IProp {
   id: string;
 }
 export default function MF_Document_Layout({ id }: IProp) {
+   const [visible, { open: showOverlay, close: hideOverlay }] = useDisclosure(false);
   const query = useQuery<ICV>({
     queryKey: ["MF_Document_Layout",id],
     queryFn: async () => {
@@ -16,10 +19,10 @@ export default function MF_Document_Layout({ id }: IProp) {
     },
   });
 
-  if (query.isLoading) return "Loading...";
+  if (query.isLoading) return <Center h={"100vh"} w="100%">
+    Loading...
+  </Center>;
   if (query.isError) return "Không có dữ liệu...";
-
-  console.log("query.data", query.data);
 
   return <MF_Document data={query.data!} />;
 }
