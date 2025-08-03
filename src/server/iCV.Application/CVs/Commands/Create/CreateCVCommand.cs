@@ -13,9 +13,10 @@ namespace iCV.Application.CVs.Commands.Create
     public class CreateCVCommand : IRequest<CVDto>
     {
         public string? UserId { get; set; }
-        public FileData? File { get; set; }
+        public string FileName { get; set; }
+        public DateTime CreateWhen { get; set; }
         public Template? Template { get; set; }
-        public AvatarRequest? Avatar { get; set; }
+        public Avatar? Avatar { get; set; }
         public List<Award>? Awards { get; set; }
         public List<Certificate>? Certificates { get; set; }
         public PersonalInfo? PersonalInfo { get; set; }
@@ -26,11 +27,4 @@ namespace iCV.Application.CVs.Commands.Create
 
     }
 
-    public class AvatarRequest
-    {
-        public IFormFile? File { get; set; }
-        public string? FileBase64String { get; set; }
-        public string? FileName { get; set; }
-        public string? Path { get; set; }
-    }
 }

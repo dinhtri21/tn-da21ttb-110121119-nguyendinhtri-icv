@@ -12,6 +12,6 @@ namespace iCV.Domain.Entities
         public string? UniversityName { get; set; }
         public string? StartDate { get; set; }
         public string? EndDate { get; set; }
-        public string? Major { get; set; }
+        public string? Description { get; set; }
     }
 }

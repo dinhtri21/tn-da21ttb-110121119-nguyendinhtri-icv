@@ -1,5 +1,9 @@
+import avatarService from "@/api/services/avatarService";
+import cvService from "@/api/services/cvService";
 import { IAvatar, ICV } from "@/interface/cv";
+import { notifications } from "@mantine/notifications";
 import { IconUpload, IconUserCircle } from "@tabler/icons-react";
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 
 interface AvatarBlockProps {
@@ -20,65 +24,76 @@ export function AvatarBlock({ value, setCvData }: AvatarBlockProps) {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
+      reader.onloadend = async () => {
         const path = reader.result as string;
-        setAvatar({ file, path });
-        setCvData(
-          (prevData) => ({
-            ...prevData,
-            avatar: { 
-              file,
-              fileName: file.name,
 
-            }, // Cập nhật dữ liệu CV với ảnh đại diện mới
+        const form = new FormData();
+        form.append("file", file);
+        form.append("fileName", file.name);
+        form.append("CVId", value.id || "");
+        // Gọi API để lưu avatar
+        await avatarService
+          .createAvatar(form)
+          .then((e) => {
+            notifications.show({
+              title: "Thành công",
+              message: "Đăng tải ảnh đại diện thành công!",
+              color: "green",
+            });
+            setCvData((prevData) => ({
+              ...prevData,
+              avatar: {
+                fileName: e.data.fileName,
+                path: e.data.path,
+              }, 
+            })); 
           })
-        ); // Gửi path của ảnh lên component cha
+          .catch((error) => {
+            notifications.show({
+              title: "Lỗi",
+              message: "Không thể đăng tải ảnh đại diện. Vui lòng thử lại sau.",
+              color: "red",
+            });
+          });
       };
       reader.readAsDataURL(file);
     }
   };
 
   // Đồng bộ state khi có thay đổi
-  useEffect(() => { 
+  useEffect(() => {
     setCvData((prev) => ({
       ...prev,
       avatar: avatar,
     }));
   }, [avatar, setCvData]);
-    
 
   return (
     <div className="hover:border flex items-center justify-center hover:border-gray-300 bg-transparent border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
-      <div 
+      <div
         className="relative flex items-center justify-center bg-transparent w-40 h-40 mx-auto cursor-pointer group border-[6px] border-gray-300 rounded-full"
         onClick={handleImageClick}
       >
         {/* Ảnh hiển thị */}
-        {avatar.path ? (
+        {value.avatar?.path ? (
           <img
-            src={avatar.path}
+            src={`${process.env.NEXT_PUBLIC_API}${value.avatar.path}`}
             alt="Avatar"
             className="w-full h-full object-cover rounded-full"
           />
         ) : (
           <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center">
-            <IconUserCircle 
-              size={80} 
-              className="text-gray-400"
-            />
+            <IconUserCircle size={80} className="text-gray-400" />
           </div>
         )}
 
         {/* Overlay khi hover */}
         <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity">
-          <IconUpload 
-            size={24} 
-            className="text-white"
-          />
+          <IconUpload size={24} className="text-white" />
         </div>
 
         {/* Input file ẩn */}
@@ -90,7 +105,6 @@ export function AvatarBlock({ value, setCvData }: AvatarBlockProps) {
           onChange={handleFileChange}
         />
       </div>
-
     </div>
   );
 }

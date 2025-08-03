@@ -11,7 +11,8 @@ namespace iCV.Application.Common.DTOs
     {
         public string? Id { get; set; }
         public string? UserId { get; set; }
-        public FileData? File { get; set; }
+        public string? FileName { get; set; }
+        public DateTime? CreateWhen { get; set; }
         public Template? Template { get; set; }
         public Avatar? Avatar { get; set; }
         public List<Award>? Awards { get; set; }

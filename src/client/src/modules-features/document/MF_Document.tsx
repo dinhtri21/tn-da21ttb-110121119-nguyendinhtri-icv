@@ -15,7 +15,7 @@ import {
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Group } from "@mantine/core";
 import { IconLayoutGrid } from "@tabler/icons-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";
 import EmptyDropZone from "./components/EmptyDropZone";
 import ResizablePreview from "./components/ResizablePreview";
@@ -23,7 +23,11 @@ import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
 import { BLOCKS } from "./constants/blocks";
 
-export default function MF_Document() {
+interface IProps {
+  data: ICV;
+}
+
+export default function MF_Document({ data }: IProps) {
   const [leftBlocks, setLeftBlocks] = useState<IBlock[]>([]);
   const [rightBlocks, setRightBlocks] = useState<IBlock[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -38,24 +42,27 @@ export default function MF_Document() {
   const usedBlocks = [...leftBlocks, ...rightBlocks]
     .map((block) => block.type)
     .filter((type): type is string => type !== undefined);
-  const [cvData, setCvData] = useState<ICV>({
-    file: {
-      fileName: "Chưa đặt tên",
-    },
-    template: {
-      id: 1,
-      leftSizeColum: leftWidth,
-      rightSizeColum: 100 - leftWidth,
-      leftColumn: leftBlocks.map((block, index) => ({
-        id: index,
-        type: block.type || undefined,
-      })),
-      rightColumn: rightBlocks.map((block, index) => ({
-        id: index,
-        type: block.type || undefined,
-      })),
-    },
-  });
+
+  // Initialize cvData with default values
+  const [cvData, setCvData] = useState<ICV>();
+  //   {
+  //   fileName: data?.fileName || "Chưa đặt tên",
+  //   template: data?.template || {
+  //     id: 1,
+  //     leftSizeColum: leftWidth,
+  //     rightSizeColum: 100 - leftWidth,
+  //     leftColumn: leftBlocks.map((block, index) => ({
+  //       id: index,
+  //       type: block.type || undefined,
+  //     })),
+  //     rightColumn: rightBlocks.map((block, index) => ({
+  //       id: index,
+  //       type: block.type || undefined,
+  //     })),
+  //   },
+  // }
+
+  console.log("CV Data:", cvData);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -302,11 +309,6 @@ export default function MF_Document() {
           finalIndex = targetIndex + 1;
         }
 
-        // Quan trọng: Không cần điều chỉnh finalIndex khi di chuyển trong cùng một cột
-        // if (activeColumn === targetColumn && activeIndex < finalIndex) {
-        //   finalIndex -= 1;
-        // }
-
         // Chỉ di chuyển nếu vị trí thực sự thay đổi
         if (finalIndex !== activeIndex || activeColumn !== targetColumn) {
           // Xử lý đặc biệt khi di chuyển trong cùng một cột
@@ -327,6 +329,15 @@ export default function MF_Document() {
     }
   };
 
+  useEffect(() => {
+    setCvData(
+      data
+    );
+    setLeftBlocks(data?.template?.leftColumn || []);
+    setRightBlocks(data?.template?.rightColumn || []);
+    setLeftWidth(data?.template?.leftSizeColum || 35);
+  }, [data]);
+
   return (
     <DndContext
       sensors={sensors}
@@ -341,9 +352,9 @@ export default function MF_Document() {
           cv={{
             ...cvData,
             template: {
-              id: 1,
-              leftSizeColum: leftWidth,
-              rightSizeColum: 100 - leftWidth,
+              ...cvData?.template,
+              leftSizeColum: Math.round(leftWidth),
+              rightSizeColum: 100 - Math.round(leftWidth),
               leftColumn: leftBlocks.map((block, index) => ({
                 id: index,
                 type: block.type || undefined,
@@ -427,8 +438,8 @@ export default function MF_Document() {
                         type={block.type!}
                         column="leftColumn"
                         blockIndex={idx}
-                        value={cvData}
-                        setCvData={setCvData}
+                        value={cvData!}
+                        setCvData={setCvData as React.Dispatch<React.SetStateAction<ICV>>}
                         leftBlocks={leftBlocks}
                         rightBlocks={rightBlocks}
                       />
@@ -472,17 +483,19 @@ export default function MF_Document() {
                       isOverTop={overId === `right-block-${idx}` && overPosition === "top"}
                       isOverBottom={overId === `right-block-${idx}` && overPosition === "bottom"}
                     >
-                      <BlockEditor
-                        type={block.type!}
-                        column="rightColumn"
-                        blockIndex={idx}
-                        value={cvData}
-                        setCvData={setCvData}
-                        setLeftBlocks={setLeftBlocks}
-                        setRightBlocks={setRightBlocks}
-                        leftBlocks={leftBlocks}
-                        rightBlocks={rightBlocks}
-                      />
+                      {cvData && (
+                        <BlockEditor
+                          type={block.type!}
+                          column="rightColumn"
+                          blockIndex={idx}
+                          value={cvData}
+                          setCvData={setCvData as React.Dispatch<React.SetStateAction<ICV>>}
+                          setLeftBlocks={setLeftBlocks}
+                          setRightBlocks={setRightBlocks}
+                          leftBlocks={leftBlocks}
+                          rightBlocks={rightBlocks}
+                        />
+                      )}
                     </SortableBlock>
                   ))}
                 </SortableContext>

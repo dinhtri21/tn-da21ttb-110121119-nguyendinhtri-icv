@@ -1,6 +1,6 @@
 "use client";
 
-import { authServices } from "@/api/services/authServices";
+import { authService } from "@/api/services/authService";
 import { setToken } from "@/redux/slices/authSlice";
 import { setUser } from "@/redux/slices/userSlide";
 import {
@@ -55,7 +55,7 @@ export default function AuthenticationForm() {
   const handleGoogleLogin = async () => {
     showOverlay();
     try {
-      const res = await authServices.getGoogleLoginUrl();
+      const res = await authService.getGoogleLoginUrl();
       const googleUrl = res.data.redirectUrl;
 
       // Tạo popup window

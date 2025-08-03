@@ -4,6 +4,9 @@ import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import MySelectCvTheme from "../Select/MySelectCvTheme";
 import { ICV } from "@/interface/cv";
+import { useMutation } from "@tanstack/react-query";
+import { notifications } from "@mantine/notifications";
+import cvService from "@/api/services/cvService";
 
 export default function MyToolBar({
   printRef,
@@ -14,10 +17,31 @@ export default function MyToolBar({
 }) {
   const [isExporting, setIsExporting] = useState(false);
   const editableRef = useRef<HTMLDivElement>(null);
+
+  const mutate = useMutation({
+      mutationFn: async (cv: ICV) => {
+        if (!cv.id) throw new Error('CV ID is required');
+        return await cvService.updateCV(cv.id, cv);
+      },
+      onSuccess: () => {
+        notifications.show({
+          title: "Thành công",
+          message: "Cập nhật CV thành công!",
+          color: "green",
+        });
+      },
+      onError: (error: any) => {
+        notifications.show({
+          title: "Lỗi",
+          message: "Không thể cập nhật CV. Vui lòng thử lại sau.",
+          color: "red",
+        });
+      },
+    });
   
   if (editableRef.current) {
-    if (cv && cv.file) {
-      editableRef.current.innerText = cv.file.fileName || "Chưa đặt tên";
+    if (cv && cv.fileName) {
+      editableRef.current.innerText = cv.fileName || "Chưa đặt tên";
     }
   }
   // Move useReactToPrint hook to component level
@@ -26,14 +50,16 @@ export default function MyToolBar({
   });
 
   const handleSaveCV = () => {
-    // Logic to save the CV
     console.log("Saving CV:", cv);
+    if (cv) {
+      mutate.mutate(cv);
+    }
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (cv && cv.file) {
+    if (cv && cv.fileName) {
       const text = e.currentTarget.innerText;
-      cv.file.fileName = text;
+      cv.fileName = text;
     }
   };
 

@@ -11,6 +11,8 @@ namespace iCV.Application.Common.Interfaces
     public interface ICVRepository
     {
         Task<CV?> GetCVByIdAsync(string id);
+        Task<IList<CV?>> GetCVsAsync(string userId);
+        Task<CV?> UpdateCVAsync(CV cv);
         Task CreateCVAsync(CV cv);
     }
 }

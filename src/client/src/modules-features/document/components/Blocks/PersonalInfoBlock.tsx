@@ -8,21 +8,21 @@ interface PersonalInfoBlockProps {
 }
 
 export function PersonalInfoBlock({ value, setCvData }: PersonalInfoBlockProps) {
-  const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>(
-    {
-    address: value.personalInfo?.address || "",
-    dateOfBirth: value.personalInfo?.dateOfBirth || "",
-    email: value.personalInfo?.email || "",
-    phone: value.personalInfo?.phone || "",
-  });
+  // const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>(
+  //   {
+  //   address: value.personalInfo?.address || "",
+  //   dateOfBirth: value.personalInfo?.dateOfBirth || "",
+  //   email: value.personalInfo?.email || "",
+  //   phone: value.personalInfo?.phone || "",
+  // });
 
-  // Đồng bộ state khi có thay đổi
-  useEffect(() => {
-    setCvData((prev) => ({
-      ...prev,
-      personalInfo: personalInfo,
-    }));
-  }, [personalInfo, setCvData]);
+  // // Đồng bộ state khi có thay đổi
+  // useEffect(() => {
+  //   setCvData((prev) => ({
+  //     ...prev,
+  //     personalInfo: personalInfo,
+  //   }));
+  // }, [personalInfo, setCvData]);
 
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">

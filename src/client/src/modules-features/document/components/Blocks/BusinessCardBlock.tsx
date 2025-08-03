@@ -7,18 +7,15 @@ interface PersonalInfoBlockProps {
 }
 
 export function BusinessCardBlock({ value, setCvData }: PersonalInfoBlockProps) {
-  const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>({
-    fullName: value.personalInfo?.fullName || "",
-    jobTitle: value.personalInfo?.jobTitle || "",
-  });
+  // const [personalInfo, setPersonalInfo] = useState<IPersonalInfo>();
 
-  // Đồng bộ state khi có thay đổi
-  useEffect(() => {
-    setCvData((prev) => ({
-      ...prev,
-      personalInfo: personalInfo,
-    }));
-  }, [personalInfo, setCvData]);
+  // // Đồng bộ state khi có thay đổi
+  // useEffect(() => {
+  //   setCvData((prev) => ({
+  //     ...prev,
+  //     personalInfo: personalInfo,
+  //   }));
+  // }, [personalInfo, setCvData]);
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       {/* Thông tin liên hệ */}

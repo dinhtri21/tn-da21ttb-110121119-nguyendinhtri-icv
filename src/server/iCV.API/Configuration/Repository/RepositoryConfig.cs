@@ -9,6 +9,7 @@ namespace iCV.API.Configuration.Repository
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICVRepository, CVRepository>();
+            services.AddScoped<IAvatarRepository, AvatarRepository>();
 
             return services;
         }

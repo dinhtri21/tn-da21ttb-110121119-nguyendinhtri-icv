@@ -1,4 +1,5 @@
 "use client";
+import cvService from "@/api/services/cvService";
 import { ICV } from "@/interface/cv";
 import {
   Box,
@@ -7,35 +8,72 @@ import {
   Container,
   Flex,
   Grid,
-  Image,
   Menu,
   Stack,
   Text,
   useMantineColorScheme,
 } from "@mantine/core";
-import { IconDotsVertical, IconEye, IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
+import { notifications } from "@mantine/notifications";
+import {
+  IconDotsVertical,
+  IconEye,
+  IconFileCv,
+  IconPencil,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import styles from "./css.module.css";
+import { SkeletonCard } from "./SkeletonCard";
+import { utils_date_DateToDDMMYYYYHHMMString } from "@/utils/date";
 
 export default function MF_Dashboard() {
   const { colorScheme } = useMantineColorScheme();
   const router = useRouter();
 
   const query = useQuery<ICV[]>({
-    queryKey: ["F_14w3vwnnfy_Read"],
+    queryKey: ["MF_Dashboard"],
     queryFn: async () => {
-      return mockData;
+      const response = await cvService.getCVs();
+      return response.data;
     },
   });
 
-  function handleCardClick(id: any) {
+  const mutate = useMutation({
+    mutationFn: async (cv: ICV) => {
+      return await cvService.createCV(cv);
+    },
+    onSuccess: () => {
+      notifications.show({
+        title: "Thành công",
+        message: "Đã tạo CV mới thành công!",
+        color: "green",
+      });
+    },
+    onError: (error: any) => {
+      notifications.show({
+        title: "Lỗi",
+        message: "Không thể tạo CV mới. Vui lòng thử lại sau.",
+        color: "red",
+      });
+    },
+  });
+
+  const handleCardClick = (id: any) => {
     router.push(`/document/${id}`);
-  }
+  };
+
+  const handleCreateNew = async () => {
+    await mutate.mutate({ fileName: "Chưa đặt tên", createWhen: new Date() });
+  };
 
   if (query.isLoading) return "Loading...";
   if (query.isError) return "Không có dữ liệu...";
+
+  if (mutate.isSuccess) {
+    window.location.href = `/document/${mutate.data?.data?.id}`;
+  }
 
   return (
     <Container px={16} size="80rem" pb={16} mt={16}>
@@ -62,18 +100,18 @@ export default function MF_Dashboard() {
         <Box>
           <Grid mt={16}>
             <Grid.Col span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
-              <Link href={`/document/1`}>
-                <Center
-                  h={220}
-                  bg={colorScheme === "dark" ? "#1A1B1E" : "#F3F4F6"}
-                  className={styles.cvNewCard}
-                >
-                  <Stack align="center" gap={4}>
-                    <IconPlus size={32} stroke={1} />
-                    <Text size="sm">Tạo mới</Text>
-                  </Stack>
-                </Center>
-              </Link>
+              <Center
+                style={{ cursor: "pointer" }}
+                h={220}
+                bg={colorScheme === "dark" ? "#1A1B1E" : "#F3F4F6"}
+                className={styles.cvNewCard}
+                onClick={handleCreateNew}
+              >
+                <Stack align="center" gap={4}>
+                  <IconPlus size={32} stroke={1} />
+                  <Text size="sm">Tạo mới</Text>
+                </Stack>
+              </Center>
             </Grid.Col>
             {query?.data &&
               query.data.map((cv, i) => {
@@ -88,25 +126,18 @@ export default function MF_Dashboard() {
                         cursor: "pointer",
                         height: 220,
                       }}
-                      onClick={() => handleCardClick(cv.document.id)}
+                      onClick={() => handleCardClick(cv.id)}
                     >
-                      <Image
-                        src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-7.png"
-                        h={170}
-                        fit="cover"
-                      />
-                      <Box px={12} py={4}>
+                      <Center h={170}>
+                        <IconFileCv size={60} stroke={0.3} />
+                      </Center>
+                      <Box px={12} py={4} className="border-t border-gray-200">
                         <Text fw={500} size="sm" c="gray.8" lineClamp={1}>
-                          {cv.document.title}
+                          {cv.fileName}
                         </Text>
                         <Flex justify="space-between" align="center">
                           <Text size="xs" c="dimmed" lineClamp={2}>
-                            Cập nhật:{" "}
-                            {new Date(cv.document.updatedAt ?? "").toLocaleDateString("vi-VN", {
-                              year: "numeric",
-                              month: "2-digit",
-                              day: "2-digit",
-                            })}
+                            {utils_date_DateToDDMMYYYYHHMMString(cv.createWhen!)}
                           </Text>
                           <Box>
                             <div
@@ -120,7 +151,7 @@ export default function MF_Dashboard() {
                                 </Menu.Target>
                                 <Menu.Dropdown>
                                   <Menu.Item
-                                    onClick={() => handleCardClick(cv.document.id)}
+                                    onClick={() => handleCardClick(cv.id)}
                                     leftSection={<IconPencil size={14} color="blue" />}
                                   >
                                     Sửa
@@ -142,356 +173,16 @@ export default function MF_Dashboard() {
                   </Grid.Col>
                 );
               })}
+
+            {query?.data &&
+              Array.from({ length: Math.max(0, 11 - query.data.length) }).map((_, i) => (
+                <Grid.Col key={`skeleton-${i}`} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
+                  <SkeletonCard isAnimation={false} />
+                </Grid.Col>
+              ))}
           </Grid>
         </Box>
       </Flex>
     </Container>
   );
 }
-
-const mockData: ICV[] = [
-  // {
-  //   document: {
-  //     id: "doc1",
-  //     userId: "u1",
-  //     title: "CV Nguyen Van A",
-  //     summary:
-  //       "Senior Frontend Developer with 5 years of experience in building scalable web applications using React and TypeScript.",
-  //     themeColor: "#4A90E2",
-  //     thumbnail: "https://example.com/thumbnail.jpg",
-  //     currentPosition: 1,
-  //     authorName: "Nguyen Van A",
-  //     authorEmail: "vanA@gmail.com",
-  //     createdAt: "2023-10-01T12:00:00Z",
-  //     updatedAt: "2023-10-02T12:00:00Z",
-  //   },
-  //   pesonalInfo: {
-  //     id: "pi1",
-  //     documentId: "doc1",
-  //     fullName: "Nguyen Van A",
-  //     jobTitle: "Senior Frontend Developer",
-  //     address: "123 Đường ABC, Phường XYZ, Quận 1, TP.HCM",
-  //     phone: "0123456789",
-  //     email: "nguyenvana@example.com",
-  //   },
-  //   experiences: [
-  //     {
-  //       id: "exp1",
-  //       documentId: "doc1",
-  //       title: "Công ty ABC Technology",
-  //       position: "Senior Frontend Developer",
-  //       currentlyWorking: true,
-  //       startDate: "2023-01-01",
-  //       description: "Phát triển và tối ưu hóa các ứng dụng web quy mô lớn",
-  //       endDate: undefined,
-  //     },
-  //   ],
-  //   skills: [
-  //     {
-  //       id: "skill1",
-  //       documentId: "doc1",
-  //       name: "React",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript2",
-  //       main: false,
-  //     },
-  //   ],
-  //   education: [
-  //     {
-  //       id: "edu1",
-  //       documentId: "doc1",
-  //       universityName: "Đại học Công nghệ",
-  //       degree: "Cử nhân",
-  //       major: "Công nghệ Thông tin",
-  //       startDate: "2017-09-01",
-  //       endDate: "2021-06-01",
-  //     },
-  //   ],
-  // },
-  // {
-  //   document: {
-  //     id: "doc1",
-  //     userId: "u1",
-  //     title: "CV Nguyen Van A",
-  //     summary:
-  //       "Senior Frontend Developer with 5 years of experience in building scalable web applications using React and TypeScript.",
-  //     themeColor: "#4A90E2",
-  //     thumbnail: "https://example.com/thumbnail.jpg",
-  //     currentPosition: 1,
-  //     authorName: "Nguyen Van A",
-  //     authorEmail: "vanA@gmail.com",
-  //     createdAt: "2023-10-01T12:00:00Z",
-  //     updatedAt: "2023-10-02T12:00:00Z",
-  //   },
-  //   pesonalInfo: {
-  //     id: "pi1",
-  //     documentId: "doc1",
-  //     firstName: "Nguyen Van",
-  //     lastName: "A",
-  //     jobTitle: "Senior Frontend Developer",
-  //     address: "123 Đường ABC, Phường XYZ, Quận 1, TP.HCM",
-  //     phone: "0123456789",
-  //     email: "nguyenvana@example.com",
-  //   },
-  //   experiences: [
-  //     {
-  //       id: "exp1",
-  //       documentId: "doc1",
-  //       title: "Công ty ABC Technology",
-  //       position: "Senior Frontend Developer",
-  //       currentlyWorking: true,
-  //       startDate: "2023-01-01",
-  //       description: "Phát triển và tối ưu hóa các ứng dụng web quy mô lớn",
-  //       endDate: undefined,
-  //     },
-  //   ],
-  //   skills: [
-  //     {
-  //       id: "skill1",
-  //       documentId: "doc1",
-  //       name: "React",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript2",
-  //       main: false,
-  //     },
-  //   ],
-  //   education: [
-  //     {
-  //       id: "edu1",
-  //       documentId: "doc1",
-  //       universityName: "Đại học Công nghệ",
-  //       degree: "Cử nhân",
-  //       major: "Công nghệ Thông tin",
-  //       startDate: "2017-09-01",
-  //       endDate: "2021-06-01",
-  //     },
-  //   ],
-  // },
-  // {
-  //   document: {
-  //     id: "doc1",
-  //     userId: "u1",
-  //     title: "CV Nguyen Van A",
-  //     summary:
-  //       "Senior Frontend Developer with 5 years of experience in building scalable web applications using React and TypeScript.",
-  //     themeColor: "#4A90E2",
-  //     thumbnail: "https://example.com/thumbnail.jpg",
-  //     currentPosition: 1,
-  //     authorName: "Nguyen Van A",
-  //     authorEmail: "vanA@gmail.com",
-  //     createdAt: "2023-10-01T12:00:00Z",
-  //     updatedAt: "2023-10-02T12:00:00Z",
-  //   },
-  //   pesonalInfo: {
-  //     id: "pi1",
-  //     documentId: "doc1",
-  //     firstName: "Nguyen Van",
-  //     lastName: "A",
-  //     jobTitle: "Senior Frontend Developer",
-  //     address: "123 Đường ABC, Phường XYZ, Quận 1, TP.HCM",
-  //     phone: "0123456789",
-  //     email: "nguyenvana@example.com",
-  //   },
-  //   experiences: [
-  //     {
-  //       id: "exp1",
-  //       documentId: "doc1",
-  //       title: "Công ty ABC Technology",
-  //       position: "Senior Frontend Developer",
-  //       currentlyWorking: true,
-  //       startDate: "2023-01-01",
-  //       description: "Phát triển và tối ưu hóa các ứng dụng web quy mô lớn",
-  //       endDate: undefined,
-  //     },
-  //   ],
-  //   skills: [
-  //     {
-  //       id: "skill1",
-  //       documentId: "doc1",
-  //       name: "React",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript2",
-  //       main: false,
-  //     },
-  //   ],
-  //   education: [
-  //     {
-  //       id: "edu1",
-  //       documentId: "doc1",
-  //       universityName: "Đại học Công nghệ",
-  //       degree: "Cử nhân",
-  //       major: "Công nghệ Thông tin",
-  //       startDate: "2017-09-01",
-  //       endDate: "2021-06-01",
-  //     },
-  //   ],
-  // },
-  // {
-  //   document: {
-  //     id: "doc1",
-  //     userId: "u1",
-  //     title: "CV Nguyen Van A",
-  //     summary:
-  //       "Senior Frontend Developer with 5 years of experience in building scalable web applications using React and TypeScript.",
-  //     themeColor: "#4A90E2",
-  //     thumbnail: "https://example.com/thumbnail.jpg",
-  //     currentPosition: 1,
-  //     authorName: "Nguyen Van A",
-  //     authorEmail: "vanA@gmail.com",
-  //     createdAt: "2023-10-01T12:00:00Z",
-  //     updatedAt: "2023-10-02T12:00:00Z",
-  //   },
-  //   pesonalInfo: {
-  //     id: "pi1",
-  //     documentId: "doc1",
-  //     firstName: "Nguyen Van",
-  //     lastName: "A",
-  //     jobTitle: "Senior Frontend Developer",
-  //     address: "123 Đường ABC, Phường XYZ, Quận 1, TP.HCM",
-  //     phone: "0123456789",
-  //     email: "nguyenvana@example.com",
-  //   },
-  //   experiences: [
-  //     {
-  //       id: "exp1",
-  //       documentId: "doc1",
-  //       title: "Công ty ABC Technology",
-  //       position: "Senior Frontend Developer",
-  //       currentlyWorking: true,
-  //       startDate: "2023-01-01",
-  //       description: "Phát triển và tối ưu hóa các ứng dụng web quy mô lớn",
-  //       endDate: undefined,
-  //     },
-  //   ],
-  //   skills: [
-  //     {
-  //       id: "skill1",
-  //       documentId: "doc1",
-  //       name: "React",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript2",
-  //       main: false,
-  //     },
-  //   ],
-  //   education: [
-  //     {
-  //       id: "edu1",
-  //       documentId: "doc1",
-  //       universityName: "Đại học Công nghệ",
-  //       degree: "Cử nhân",
-  //       major: "Công nghệ Thông tin",
-  //       startDate: "2017-09-01",
-  //       endDate: "2021-06-01",
-  //     },
-  //   ],
-  // },
-  // {
-  //   document: {
-  //     id: "doc1",
-  //     userId: "u1",
-  //     title: "CV Nguyen Van A",
-  //     summary:
-  //       "Senior Frontend Developer with 5 years of experience in building scalable web applications using React and TypeScript.",
-  //     themeColor: "#4A90E2",
-  //     thumbnail: "https://example.com/thumbnail.jpg",
-  //     currentPosition: 1,
-  //     authorName: "Nguyen Van A",
-  //     authorEmail: "vanA@gmail.com",
-  //     createdAt: "2023-10-01T12:00:00Z",
-  //     updatedAt: "2023-10-02T12:00:00Z",
-  //   },
-  //   pesonalInfo: {
-  //     id: "pi1",
-  //     documentId: "doc1",
-  //     firstName: "Nguyen Van",
-  //     lastName: "A",
-  //     jobTitle: "Senior Frontend Developer",
-  //     address: "123 Đường ABC, Phường XYZ, Quận 1, TP.HCM",
-  //     phone: "0123456789",
-  //     email: "nguyenvana@example.com",
-  //   },
-  //   experiences: [
-  //     {
-  //       id: "exp1",
-  //       documentId: "doc1",
-  //       title: "Công ty ABC Technology",
-  //       position: "Senior Frontend Developer",
-  //       currentlyWorking: true,
-  //       startDate: "2023-01-01",
-  //       description: "Phát triển và tối ưu hóa các ứng dụng web quy mô lớn",
-  //       endDate: undefined,
-  //     },
-  //   ],
-  //   skills: [
-  //     {
-  //       id: "skill1",
-  //       documentId: "doc1",
-  //       name: "React",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript",
-  //       main: true,
-  //     },
-  //     {
-  //       id: "skill2",
-  //       documentId: "doc1",
-  //       name: "TypeScript2",
-  //       main: false,
-  //     },
-  //   ],
-  //   education: [
-  //     {
-  //       id: "edu1",
-  //       documentId: "doc1",
-  //       universityName: "Đại học Công nghệ",
-  //       degree: "Cử nhân",
-  //       major: "Công nghệ Thông tin",
-  //       startDate: "2017-09-01",
-  //       endDate: "2021-06-01",
-  //     },
-  //   ],
-  // },
-];

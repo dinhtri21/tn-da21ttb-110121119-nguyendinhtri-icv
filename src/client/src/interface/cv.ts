@@ -1,5 +1,8 @@
 export interface ICV {
-  file?: IFile;
+  id?: string;
+  userId?: string;
+  fileName?: string;
+  createWhen?: Date;
   template?: Template;
   avatar?: IAvatar;
   awards?: IAward[];
@@ -31,7 +34,6 @@ export interface Template {
 }
 export interface IAvatar {
   file?: File;
-  fileBase64String?: string;
   fileName?: string;
   path?: string;
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using iCV.Application.Common.DTOs;
 using iCV.Application.Common.Interfaces;
 using iCV.Domain.Entities;
@@ -11,9 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace iCV.Application.CVs.Commands.Create
+namespace iCV.Application.CVs.Commands.Update
 {
-    public class UpdateCVCommandHandler : IRequestHandler<CreateCVCommand, CVDto>, IApplicationMarker
+    public class UpdateCVCommandHandler : IRequestHandler<UpdateCVCommand, CVDto>, IApplicationMarker
     {
         private readonly ICVRepository _cvRepository;
         private readonly IMapper _mapper;
@@ -22,14 +23,13 @@ namespace iCV.Application.CVs.Commands.Create
         {
             _mapper = mapper;
             _cvRepository = cvRepository;
-           
         }
-        public async Task<CVDto> Handle(CreateCVCommand request, CancellationToken cancellationToken)
+
+        public async Task<CVDto> Handle(UpdateCVCommand request, CancellationToken cancellationToken)
         {
-           
-            //Create CV
             var cv = new CV
             {
+                Id = request.Id,
                 UserId = request.UserId,
                 FileName = request.FileName,
                 CreateWhen = request.CreateWhen,
@@ -43,11 +43,10 @@ namespace iCV.Application.CVs.Commands.Create
                 Experiences = request.Experiences,
                 Skill = request.Skill
             };
-            await _cvRepository.CreateCVAsync(cv);
 
-            var cvRes = await _cvRepository.GetCVByIdAsync(cv.Id);
+            var cvUpdate = await _cvRepository.UpdateCVAsync(cv);
 
-            var cvDtoRes = _mapper.Map<CVDto>(cvRes);
+            var cvDtoRes = _mapper.Map<CVDto>(cvUpdate);
             return cvDtoRes;
         }
     }

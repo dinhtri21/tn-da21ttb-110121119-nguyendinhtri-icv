@@ -1,12 +1,15 @@
-﻿using System;
+﻿using iCV.Application.Common.DTOs;
+using iCV.Domain.Entities;
+using MediatR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCV.Domain.Entities
+namespace iCV.Application.CVs.Commands.Update
 {
-    public class CV
+    public class UpdateCVCommand : IRequest<CVDto>
     {
         public string Id { get; set; }
         public string? UserId { get; set; }

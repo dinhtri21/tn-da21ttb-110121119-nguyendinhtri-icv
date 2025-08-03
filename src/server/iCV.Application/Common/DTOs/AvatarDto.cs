@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace iCV.Domain.Entities
+namespace iCV.Application.Common.DTOs
 {
-    public class FileData
+    public class AvatarDto
     {
         public string? FileName { get; set; }
-        public string? CreateWhen { get; set; }
-        public string? FileBase64String { get; set; }
         public string? Path { get; set; }
     }
 }

@@ -1,9 +1,16 @@
-import MF_Document from "@/modules-features/document/MF_Document";
+"use client";
+import MF_Document_Layout from "@/modules-features/document/MF_Document_Layout";
+import React from "react";
 
-export default function Page() {
+interface IProp {
+  params: Promise<{ id: string }>;
+}
+
+export default function Page({ params }: IProp) {
+  const { id } = React.use(params);
   return (
     <>
-      <MF_Document />
+      <MF_Document_Layout id={id} />
     </>
   );
 }
