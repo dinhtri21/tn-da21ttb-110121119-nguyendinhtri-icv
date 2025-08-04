@@ -36,7 +36,7 @@ export default function MF_Dashboard() {
     queryKey: ["MF_Dashboard"],
     queryFn: async () => {
       const response = await cvService.getCVs();
-      return response.data;
+      return response.data.data || [];
     },
   });
 
@@ -72,7 +72,7 @@ export default function MF_Dashboard() {
   if (query.isError) return "Không có dữ liệu...";
 
   if (mutate.isSuccess) {
-    window.location.href = `/document/${mutate.data?.data?.id}`;
+    window.location.href = `/document/${mutate.data?.data?.data?.id}`;
   }
 
   return (

@@ -336,7 +336,6 @@ export default function MF_Document({ data }: IProps) {
       }
     }
   };
-  console.log(editableRef.current?.innerText);
 
   useEffect(() => {
     setCvData(data);
@@ -357,23 +356,21 @@ export default function MF_Document({ data }: IProps) {
       <div className="flex min-h-screen bg-gray-50">
         {/* Sidebar */}
         <Stack gap={4} className="border-r border-gray-300  p-4">
-          <Group gap={4} className="border-b border-gray-300 pb-4 mb-2">
+          <div className="flex items-center justify-between mb-2">
             <IconFileCv color="blue" stroke={1} size={20} />
-            <Group gap={0} className="border   border-gray-300 rounded">
-              <input
-                value={cvData?.fileName || ""}
-                onChange={(e) =>
-                  setCvData((prev) => ({
-                    ...prev,
-                    fileName: e.target.value,
-                  }))
-                }
-                placeholder="Chưa đặt tên"
-                className="text-[14px] min-w-[50px] text-gray-700 inline-block px-1 py-[2px]  overflow-hidden break-words whitespace-nowrap focus:outline-none"
-              />
-            </Group>
+            <input
+              value={cvData?.fileName || ""}
+              onChange={(e) =>
+                setCvData((prev) => ({
+                  ...prev,
+                  fileName: e.target.value,
+                }))
+              }
+              placeholder="Chưa đặt tên"
+              className="text-[14px] flex-1 text-gray-700 inline-block px-1 py-[2px] rounded border-transparent hover:border-gray-300 overflow-hidden break-words whitespace-nowrap border focus:border-gray-300 focus:outline-none"
+            />
             <IconWorld stroke={1} size={20} color="gray" />
-          </Group>
+          </div>
           <Sidebar onAddBlock={(type) => addBlock(type, "left")} usedBlocks={usedBlocks} />
         </Stack>
         {/* Main content */}

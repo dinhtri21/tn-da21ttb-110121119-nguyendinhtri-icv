@@ -19,7 +19,14 @@ namespace iCV.API.Controllers
         {
             var query = new EvaluateWithGeminiQuery { id = id };
             var result = await _mediator.Send(query);
-            return Ok(result);
+            return Ok(
+                new
+                {
+                    isSuccess = true,
+                    message = "Evaluation completed successfully.",
+                    data = result.Areas
+                }
+            );
         }
     }
 }

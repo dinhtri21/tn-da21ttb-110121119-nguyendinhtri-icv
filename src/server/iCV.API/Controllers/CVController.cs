@@ -28,7 +28,13 @@ namespace iCV.API.Controllers
             if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("Missing user ID in token.");
             var query = new GetCVsQuery { UserId = userIdClaim };
             var result = await _mediator.Send(query);
-            return Ok(result);
+            return Ok(new
+            {
+                isSuccess = true,
+                message = "CVs retrieved successfully.",
+                data = result
+            }
+             );
         }
 
         [HttpGet("{id}")]
@@ -37,7 +43,14 @@ namespace iCV.API.Controllers
             var query = new GetCVByIdQuery { id = id };
             var result = await _mediator.Send(query);
             if (result == null) return NotFound("CV not found.");
-            return Ok(result);
+            return Ok(
+                new
+                {
+                    isSuccess = true,
+                    message = "CV retrieved successfully.",
+                    data = result
+                }
+            );
         }
 
         [Authorize]
@@ -49,7 +62,14 @@ namespace iCV.API.Controllers
 
             command.UserId = userIdClaim;
             var result = await _mediator.Send(command);
-            return Ok(result);
+            return Ok(
+                new
+                {
+                    iSuccess = true,
+                    message = "CV created successfully.",
+                    data = result
+                }
+                );
         }
 
         [Authorize]
@@ -62,7 +82,14 @@ namespace iCV.API.Controllers
             command.UserId = userIdClaim;
             command.Id = id;
             var result = await _mediator.Send(command);
-            return Ok(result);
+            return Ok(
+                new
+                {
+                    isSuccess = true,
+                    message = "CV updated successfully.",
+                    data = result
+                }
+                );
         }
     }
 }

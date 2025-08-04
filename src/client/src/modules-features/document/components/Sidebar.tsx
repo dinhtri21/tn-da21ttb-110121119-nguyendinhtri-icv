@@ -12,7 +12,7 @@ export default function Sidebar({ onAddBlock, usedBlocks }: SidebarProps) {
   return (
     <div className="max-w-60 w-full bg-white ">
       <Group gap={4} align="center" mb="" justify="space-between">
-        <h2 className="font-medium">Thành phần</h2>
+        <h2 className="text-sm font-medium text-gray-600 mb-1">Thành phần</h2>
         <IconLayoutList stroke={2} size={16} color="gray" />
       </Group>
       <p className="text-gray-400 text-xs mb-2">💡 Kéo thả vào vào cv để chỉnh sửa</p>

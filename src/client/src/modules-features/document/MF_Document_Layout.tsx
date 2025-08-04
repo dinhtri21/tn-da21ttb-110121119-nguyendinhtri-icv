@@ -14,7 +14,7 @@ export default function MF_Document_Layout({ id }: IProp) {
     queryKey: ["MF_Document_Layout", id],
     queryFn: async () => {
       const response = await cvService.getCVById(id);
-      return response.data;
+      return response.data.data || {};
     },
   });
 

@@ -1,7 +1,3 @@
-export interface IEvaluates {
-    areas: IEvaluate[]; 
-}
-
 export interface IEvaluate {
     area: string;        // Khu vực
     score: number;       // Điểm

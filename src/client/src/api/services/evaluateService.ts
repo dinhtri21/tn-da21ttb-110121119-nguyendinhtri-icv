@@ -1,5 +1,6 @@
 import baseAxios from "@/api/config/baseAxios";
-import { IEvaluate, IEvaluates } from "@/interface/evaluate";
+import { IEvaluate } from "@/interface/evaluate";
+import IMyResponse from "@/interface/response";
 
 const Controller = "evaluate";
 interface param {
@@ -9,7 +10,7 @@ interface param {
 const evaluateService = {
   // Get evaluations
   getEvaluations: async (params: param) => {
-    return await baseAxios.get<IEvaluates>(`${Controller}`, { params });
+    return await baseAxios.get<IMyResponse<IEvaluate[]>>(`${Controller}`, { params });
   },
 };
 

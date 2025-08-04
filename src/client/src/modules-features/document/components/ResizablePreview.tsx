@@ -53,7 +53,7 @@ export default function ResizablePreview({
 
   return (
     <div className="bg-gray-50 rounded">
-      <h3 className="text-sm font-medium text-gray-600">Tuỳ chỉnh tỉ lệ</h3>
+      <h3 className="text-sm font-medium text-gray-600 mb-1">Tuỳ chỉnh tỉ lệ</h3>
       <p className="text-gray-400 text-xs mb-2">💡 Kéo thanh để điều chỉnh</p>
       <div ref={containerRef} className="relative h-[440px] overflow-y-auto border border-gray-300 rounded">
         {/* Resizable preview */}
