@@ -1,20 +1,22 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using iCV.Application.Common.DTOs;
-using MediatR;
-using iCV.Application.Users.Queries.LoginWithGoogle;
+﻿using iCV.Application.Common.DTOs;
 using iCV.Application.Common.Interfaces;
+using iCV.Application.Users.Commands.Create.CreateUserCommand;
+using iCV.Application.Users.Queries.LoginLocal;
+using iCV.Application.Users.Queries.LoginWithGoogle;
 using iCV.Domain.Entities;
 using iCV.Infrastructure.Repositories;
-using System.Text.Json;
+using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using System.Web;
 
 namespace iCV.API.Controllers
@@ -30,6 +32,44 @@ namespace iCV.API.Controllers
         {
             _mediator = mediator;
             _configuration = configuration;
+        }
+
+        [HttpPost("signUp")]
+        public async Task<IActionResult> AddUser(CreateUserCommand command)
+        {
+            var userId = await _mediator.Send(command);
+            if (userId == null)
+            {
+                return BadRequest(new { message = "Đăng ký tài khoản không thành công!" });
+            }
+            return Ok(new
+            {
+                isSuccess = true,
+                message = "Đăng ký tài khoản thành công!",
+                data = new { id = userId }
+            });
+        }
+
+        [HttpPost("signIn")]
+        public async Task<IActionResult> Login([FromBody] LoginLocalQuery query)
+        {
+            var loginData = await _mediator.Send(query);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                Expires = DateTime.UtcNow.AddHours(12),
+                SameSite = SameSiteMode.None,
+                MaxAge = TimeSpan.FromHours(12),
+            };
+            Response.Cookies.Append("accessToken", loginData.token, cookieOptions);
+
+            return Ok(new
+            {
+                isSuccess = true,
+                message = "Đăng nhập thành công!",
+                data = loginData
+            });
         }
 
         [HttpGet("google-login")]

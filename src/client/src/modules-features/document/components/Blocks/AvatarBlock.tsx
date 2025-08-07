@@ -75,7 +75,7 @@ export function AvatarBlock({ value, setCvData }: AvatarBlockProps) {
   return (
     <div className="hover:border flex items-center justify-center hover:border-gray-300 bg-transparent border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <div
-        className="relative flex items-center justify-center bg-transparent w-40 h-40 mx-auto cursor-pointer group border-[6px] border-gray-300 rounded-full"
+        className="relative flex items-center justify-center bg-transparent w-40 h-40 mx-auto cursor-pointer group border-[4px] border-gray-300 rounded-full"
         onClick={handleImageClick}
       >
         {/* Ảnh hiển thị */}

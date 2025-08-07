@@ -1,9 +1,10 @@
-import { Box, Flex, Skeleton, Stack } from "@mantine/core";
+import { Box, Flex, Skeleton, Stack, useMantineColorScheme, useMantineTheme } from "@mantine/core";
 
 interface SkeletonCardProp {
-    isAnimation?: boolean;
+  isAnimation?: boolean;
 }
 export function SkeletonCard({ isAnimation }: SkeletonCardProp) {
+  const { colorScheme } = useMantineColorScheme();
   return (
     <Box
       style={{
@@ -13,8 +14,9 @@ export function SkeletonCard({ isAnimation }: SkeletonCardProp) {
         height: 220,
         backgroundColor: "#F3F4F6",
       }}
+      bg={colorScheme === "dark" ? "gray.7" : "#F3F4F6"}
     >
-      <Skeleton animate={isAnimation} height={170} />
+      <Skeleton animate={isAnimation} height={170}  />
       <Box px={12} py={8}>
         <Stack gap={4}>
           <Skeleton animate={isAnimation} height={8} radius="xl" />

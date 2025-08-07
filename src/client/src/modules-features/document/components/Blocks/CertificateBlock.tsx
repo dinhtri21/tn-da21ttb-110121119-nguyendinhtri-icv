@@ -15,18 +15,20 @@ export function CertificateBlock({ value, setCvData }: CertificateBlockProps) {
   const [certificates, setCertificates] = useState<ICertificate[]>(
     value?.certificates?.length
       ? value.certificates
-      : [{
-          title: "",
-          date: "",
-          description: "",
-        }]
+      : [
+          {
+            title: "",
+            date: "",
+            description: "",
+          },
+        ]
   );
 
   // Đồng bộ state khi có thay đổi
   useEffect(() => {
-    setCvData(prev => ({
+    setCvData((prev) => ({
       ...prev,
-      certificates: certificates
+      certificates: certificates,
     }));
   }, [certificates, setCvData]);
 
@@ -56,7 +58,12 @@ export function CertificateBlock({ value, setCvData }: CertificateBlockProps) {
           <IconPlus stroke={1.5} />
         </ActionIcon>
       </div>
-      <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
+      <div
+        className="w-full h-[2px] mb-1"
+        style={{
+          backgroundColor: value.template?.color || "#608ABE",
+        }}
+      ></div>
       <div className="space-y-4">
         {certificates.map((certificate, index) => (
           <div key={index} className="group relative">
@@ -70,7 +77,7 @@ export function CertificateBlock({ value, setCvData }: CertificateBlockProps) {
                     const newCertificates = [...certificates];
                     newCertificates[index] = {
                       ...newCertificates[index],
-                      title: e.target.value
+                      title: e.target.value,
                     };
                     setCertificates(newCertificates);
                   }}
@@ -89,7 +96,7 @@ export function CertificateBlock({ value, setCvData }: CertificateBlockProps) {
                     const newCertificates = [...certificates];
                     newCertificates[index] = {
                       ...newCertificates[index],
-                      date: e.target.value
+                      date: e.target.value,
                     };
                     setCertificates(newCertificates);
                   }}
@@ -128,7 +135,7 @@ export function CertificateBlock({ value, setCvData }: CertificateBlockProps) {
                   const newCertificates = [...certificates];
                   newCertificates[index] = {
                     ...newCertificates[index],
-                    description: content
+                    description: content,
                   };
                   setCertificates(newCertificates);
                 }}
@@ -140,5 +147,3 @@ export function CertificateBlock({ value, setCvData }: CertificateBlockProps) {
     </div>
   );
 }
-
-  

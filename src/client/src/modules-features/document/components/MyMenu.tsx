@@ -71,7 +71,6 @@ export default function MyMenu({
   });
 
   const handleSaveCV = () => {
-    console.log("Saving CV:", cv);
     if (cv) {
       mutate.mutate(cv);
     }
@@ -171,7 +170,8 @@ export default function MyMenu({
               }}
               size="xs"
               // leftSection={<IconDownload size={16} />}
-              variant="default"
+              color="green"
+              variant="outline"
               loading={isExporting}
               disabled={isExporting}
             >

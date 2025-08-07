@@ -69,7 +69,12 @@ export function ExperienceBlock({ value, setCvData }: ExperienceBlockProps) {
           <IconPlus stroke={1.5} />
         </ActionIcon>
       </div>
-      <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
+      <div
+        className="w-full h-[2px] mb-1"
+        style={{
+          backgroundColor: value.template?.color || "#608ABE",
+        }}
+      ></div>
       <div className="space-y-1">
         {experience.map((exp, index) => (
           <div key={index}>
@@ -137,14 +142,14 @@ export function ExperienceBlock({ value, setCvData }: ExperienceBlockProps) {
                         };
                         setExperience(newExperience);
                       }}
-                      placeholder="2024"
+                      placeholder="12/2024"
                       maxLength={10}
                       type="text"
                       style={{
                         color: "#a5a5a5",
                         height: "20px",
                       }}
-                      className="cv-input max-w-[32px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
+                      className="cv-input max-w-[52px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
                     />
                   )}
                 </div>

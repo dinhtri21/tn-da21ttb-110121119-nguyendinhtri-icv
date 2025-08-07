@@ -26,7 +26,12 @@ export function OverviewBlock({ value, setCvData }: OverviewBlockProps) {
       <label className="block mb-1 font-medium text-[18px] text-[#404041]">
         {BLOCKS.find((b) => b.type === "overview")?.label}
       </label>
-      <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
+      <div
+        className="w-full h-[2px] mb-1"
+        style={{
+          backgroundColor: value.template?.color || "#608ABE",
+        }}
+      ></div>
       <TiptapEditor
         onChange={(content) =>
           setCvData((prev) => ({

@@ -31,7 +31,7 @@ import { useDispatch } from "react-redux";
 export default function AuthenticationForm() {
   const router = useRouter();
   const dispatch = useDispatch();
-  
+
   const { setColorScheme } = useMantineColorScheme();
   const [visible, { open: showOverlay, close: hideOverlay }] = useDisclosure(false);
   const computedColorScheme = useComputedColorScheme("light", {
@@ -48,9 +48,94 @@ export default function AuthenticationForm() {
     },
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : "Invalid email"),
-      password: (val) => (val.length <= 6 ? "Password should include at least 6 characters" : null),
+      password: (val) => (val.length <= 2 ? "Password should include at least 2 characters" : null),
     },
   });
+
+  const handleSignUp = async (values: typeof form.values) => {
+    try {
+      showOverlay();
+      const res = await authService.signUp({
+        name: values.name,
+        email: values.email,
+        passWord: values.password,
+      });
+
+      if (res.status === 200 && res.data.isSuccess) {
+        notifications.show({
+          title: "Đăng ký thành công",
+          message: `Bây giờ bạn có thể tiến hành đăng nhập vào iCV!`,
+          color: "green",
+        });
+
+        // Chuyển hướng về dashboard
+        router.replace("/dashboard");
+      } else {
+        notifications.show({
+          title: "Lỗi đăng ký",
+          message: res.data.message || "Có lỗi xảy ra trong quá trình đăng ký",
+          color: "red",
+        });
+      }
+    } catch (error: any) {
+      notifications.show({
+        title: "Lỗi đăng ký",
+        message:
+          error.response?.data?.message || error.message || "Có lỗi xảy ra trong quá trình đăng ký",
+        color: "red",
+      });
+    } finally {
+      hideOverlay(); // Ẩn loading khi hoàn thành
+    }
+  };
+
+  const handleLogin = async (values: typeof form.values) => {
+    try {
+      showOverlay();
+      const res = await authService.login({
+        email: values.email,
+        passWord: values.password,
+      });
+
+      if (res.status === 200 && res.data.isSuccess) {
+        if (res.data?.data?.token && res.data?.data?.user) {
+          // Lưu thông tin đăng nhập
+          localStorage.setItem("authToken", res.data.data.token);
+          localStorage.setItem("userData", JSON.stringify(res.data.data.user));
+
+          // Cập nhật Redux state
+          dispatch(setToken(res.data.data.token));
+          dispatch(setUser(res.data.data.user));
+        }
+
+        notifications.show({
+          title: "Đăng nhập thành công",
+          message: `Chào mừng ${res.data?.data?.user?.name}!`,
+          color: "green",
+        });
+
+        // Chuyển hướng về dashboard
+        router.replace("/dashboard");
+      } else {
+        notifications.show({
+          title: "Lỗi đăng nhập",
+          message: res.data.message || "Có lỗi xảy ra trong quá trình đăng nhập",
+          color: "red",
+        });
+      }
+    } catch (error: any) {
+      notifications.show({
+        title: "Lỗi đăng nhập",
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Có lỗi xảy ra trong quá trình đăng nhập",
+        color: "red",
+      });
+    } finally {
+      hideOverlay(); // Ẩn loading khi hoàn thành
+    }
+  };
 
   const handleGoogleLogin = async () => {
     showOverlay();
@@ -63,7 +148,7 @@ export default function AuthenticationForm() {
       const height = 600;
       const left = window.screenX + (window.outerWidth - width) / 2;
       const top = window.screenY + (window.outerHeight - height) / 2;
-      
+
       const popup = window.open(
         googleUrl,
         "GoogleLogin",
@@ -80,9 +165,9 @@ export default function AuthenticationForm() {
         if (event.origin !== window.location.origin) {
           return;
         }
-        
+
         const { success, token, user, error } = event.data || {};
-        
+
         if (error) {
           console.error("Google login error:", error);
           notifications.show({
@@ -93,26 +178,26 @@ export default function AuthenticationForm() {
           hideOverlay();
           return;
         }
-        
+
         if (success && token && user) {
           // Lưu thông tin đăng nhập
           localStorage.setItem("authToken", token);
           localStorage.setItem("userData", JSON.stringify(user));
-          
+
           // Cập nhật Redux state
           dispatch(setToken(token));
           dispatch(setUser(user));
-          
+
           notifications.show({
             title: "Đăng nhập thành công",
             message: `Chào mừng ${user.name}!`,
             color: "green",
           });
-          
+
           // Chuyển hướng về dashboard
           router.replace("/dashboard");
         }
-        
+
         hideOverlay();
         cleanup();
       };
@@ -134,7 +219,7 @@ export default function AuthenticationForm() {
       };
 
       window.addEventListener("message", handleMessage);
-      
+
       // Timeout sau 5 phút
       setTimeout(() => {
         if (popup && !popup.closed) {
@@ -148,7 +233,6 @@ export default function AuthenticationForm() {
           color: "orange",
         });
       }, 300000); // 5 phút
-
     } catch (error) {
       console.error("Login failed:", error);
       notifications.show({
@@ -170,7 +254,10 @@ export default function AuthenticationForm() {
       authentication_failed: "Xác thực thất bại",
       access_denied: "Người dùng từ chối truy cập",
     };
-    return errorMessages[error as keyof typeof errorMessages] || "Có lỗi xảy ra trong quá trình đăng nhập";
+    return (
+      errorMessages[error as keyof typeof errorMessages] ||
+      "Có lỗi xảy ra trong quá trình đăng nhập"
+    );
   };
 
   return (
@@ -182,7 +269,7 @@ export default function AuthenticationForm() {
           overlayProps={{ radius: "sm", blur: 2 }}
           loaderProps={{ color: "blue", type: "bars" }}
         />
-        
+
         <Flex direction="row" justify="space-between" mb="xl">
           <Text size="lg" fw={500}>
             Chào mừng đến với iCV
@@ -196,23 +283,20 @@ export default function AuthenticationForm() {
             {computedColorScheme === "light" ? <IconSun stroke={1.5} /> : <IconMoon stroke={1.5} />}
           </ActionIcon>
         </Flex>
-        
+
         <Text size="sm" fw={400} c="gray">
           {type} với
         </Text>
 
         <Group grow mb="md" mt="md">
-          <Button 
-            variant="default" 
-            w="100%" 
-            radius="xl" 
+          <Button
+            variant="default"
+            w="100%"
+            radius="xl"
             onClick={handleGoogleLogin}
             disabled={visible}
           >
             <img src="/icons/google.svg" alt="Google" width={16} height={16} />
-          </Button>
-          <Button variant="default" w="100%" radius="xl" disabled>
-            <img src="/icons/facebook.svg" alt="Facebook" width={16} height={16} />
           </Button>
         </Group>
 
@@ -226,7 +310,14 @@ export default function AuthenticationForm() {
           my="lg"
         />
 
-        <form onSubmit={form.onSubmit(() => {})}>
+        <form
+          onSubmit={form.onSubmit(() => {
+            if (type === "Đăng ký") {
+              return handleSignUp(form.values);
+            }
+            return handleLogin(form.values);
+          })}
+        >
           <Stack>
             {type === "Đăng ký" && (
               <TextInput
@@ -254,7 +345,7 @@ export default function AuthenticationForm() {
               placeholder="Nhập mật khẩu"
               value={form.values.password}
               onChange={(event) => form.setFieldValue("password", event.currentTarget.value)}
-              error={form.errors.password && "Mật khẩu phải có ít nhất 6 ký tự"}
+              error={form.errors.password && "Mật khẩu phải có ít nhất 2 ký tự"}
               radius="md"
             />
 
@@ -268,16 +359,8 @@ export default function AuthenticationForm() {
           </Stack>
 
           <Group justify="space-between" mt="xl">
-            <Anchor 
-              component="button" 
-              type="button" 
-              c="dimmed" 
-              onClick={() => toggle()} 
-              size="xs"
-            >
-              {type === "Đăng ký"
-                ? "Đã có tài khoản? Đăng nhập"
-                : "Chưa có tài khoản? Đăng ký"}
+            <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
+              {type === "Đăng ký" ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký"}
             </Anchor>
             <Button type="submit" radius="xl">
               {upperFirst(type)}

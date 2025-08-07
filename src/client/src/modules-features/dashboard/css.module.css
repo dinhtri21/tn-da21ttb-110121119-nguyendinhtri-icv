@@ -1,5 +1,5 @@
 .cvCard {
-  border: 1px solid #c4c4c4;
+  border: 1px solid #dbdada;
   transition: border-color 0.3s linear;
 }
 
@@ -10,7 +10,7 @@
 
 .cvNewCard {
   border-radius: 12;
-  border: 1px solid #c4c4c4;
+  border: 1px solid #dbdada;
   transition: border-color 0.3s linear;
 }
 

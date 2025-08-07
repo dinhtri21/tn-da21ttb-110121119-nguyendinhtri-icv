@@ -60,7 +60,12 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
           <IconPlus stroke={1.5} />
         </ActionIcon>
       </div>
-      <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
+      <div
+        className="w-full h-[2px] mb-1"
+        style={{
+          backgroundColor: value.template?.color || "#608ABE",
+        }}
+      ></div>
       <div className="space-y-4">
         {education.map((edu, index) => (
           <div key={index} className="group">
@@ -146,23 +151,23 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
             </div>
 
             {/* Ngành học */}
-             <div className="mt-1">
-            <TiptapEditor
-              placeholder="Mô tả công việc"
-              content={
-                edu.description 
-                // ||
-                // '<p>Ngành Công nhệ thông tin</p><p>GPA: 3.2</p>'
-              }
-              onChange={(e) => {
-                const newEducation = [...education];
-                newEducation[index] = {
-                  ...newEducation[index],
-                  description: e,
-                };
-                setEducation(newEducation);
-              }}
-            />
+            <div className="mt-1">
+              <TiptapEditor
+                placeholder="Mô tả công việc"
+                content={
+                  edu.description
+                  // ||
+                  // '<p>Ngành Công nhệ thông tin</p><p>GPA: 3.2</p>'
+                }
+                onChange={(e) => {
+                  const newEducation = [...education];
+                  newEducation[index] = {
+                    ...newEducation[index],
+                    description: e,
+                  };
+                  setEducation(newEducation);
+                }}
+              />
             </div>
           </div>
         ))}

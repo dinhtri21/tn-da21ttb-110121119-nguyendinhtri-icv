@@ -1,5 +1,4 @@
 "use client";
-import MyToolBar from "@/components/Toolbar/MyToolBar";
 import IBlock, { ICV } from "@/interface/cv";
 import {
   closestCenter,
@@ -13,27 +12,33 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Accordion, Button, Group, Stack, Tabs, Tooltip } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Input,
+  Stack,
+  Tabs,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from "@mantine/core";
 import {
   IconComponents,
   IconFileCv,
-  IconLayoutGrid,
-  IconMessageCircle,
-  IconPhoto,
+  IconMessage2Star,
+  IconMoon,
   IconSettings,
+  IconSun,
   IconWorld,
 } from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";
 import EmptyDropZone from "./components/EmptyDropZone";
+import EvaluationTab from "./components/EvaluationTab";
+import MyMenu from "./components/MyMenu";
 import ResizablePreview from "./components/ResizablePreview";
 import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
 import { BLOCKS } from "./constants/blocks";
-import { Text } from "@mantine/core";
-import Menu from "./components/MyMenu";
-import MyMenu from "./components/MyMenu";
-import EvaluationTab from "./components/EvaluationTab";
 
 interface IProps {
   data: ICV;
@@ -50,6 +55,10 @@ export default function MF_Document({ data }: IProps) {
   const [leftWidth, setLeftWidth] = useState(35);
   const printRef = useRef<HTMLDivElement>(null);
   const editableRef = useRef<HTMLDivElement>(null);
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: true,
+  });
 
   // Track which blocks are used
   const usedBlocks = [...leftBlocks, ...rightBlocks]
@@ -195,7 +204,6 @@ export default function MF_Document({ data }: IProps) {
       }
     }
   };
-  console.log(cvData);
 
   const handleDragEnd = (event: DragEndEvent): void => {
     const cvArea = document.querySelector(".drop-zone-area");
@@ -353,12 +361,16 @@ export default function MF_Document({ data }: IProps) {
       onDragEnd={handleDragEnd}
     >
       <div className="border-b border-gray-300 "></div>
-      <div className="flex min-h-screen bg-gray-50">
-        {/* Sidebar */}
-        <Stack gap={4} className="border-r border-gray-300  p-4">
-          <div className="flex items-center justify-between mb-2">
-            <IconFileCv color="blue" stroke={1} size={20} />
-            <input
+      <Box className="flex min-h-screen bg-gray-50">
+        {/* Left Sidebar */}
+
+        <Stack
+          bg={colorScheme === "dark" ? "dark.5" : "white"}
+          gap={4}
+          className="border-r border-gray-300  p-4"
+        >
+          <div className="flex items-center justify-between mb-2 gap-1">
+            <Input
               value={cvData?.fileName || ""}
               onChange={(e) =>
                 setCvData((prev) => ({
@@ -366,15 +378,29 @@ export default function MF_Document({ data }: IProps) {
                   fileName: e.target.value,
                 }))
               }
+              size="sm"
               placeholder="Chưa đặt tên"
-              className="text-[14px] flex-1 text-gray-700 inline-block px-1 py-[2px] rounded border-transparent hover:border-gray-300 overflow-hidden break-words whitespace-nowrap border focus:border-gray-300 focus:outline-none"
             />
-            <IconWorld stroke={1} size={20} color="gray" />
+            <ActionIcon
+              onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")}
+              variant="default"
+              size="lg"
+              aria-label="Toggle color scheme"
+            >
+              {computedColorScheme === "light" ? (
+                <IconSun stroke={1.5} />
+              ) : (
+                <IconMoon stroke={1.5} />
+              )}
+            </ActionIcon>
           </div>
           <Sidebar onAddBlock={(type) => addBlock(type, "left")} usedBlocks={usedBlocks} />
         </Stack>
         {/* Main content */}
-        <main className="flex-1 p-4 bg-gray-100 min-h-screen flex flex-col items-center">
+        <Box
+          bg={colorScheme === "dark" ? "dark.6" : "gray.1"}
+          className="flex-1 p-4  min-h-screen flex flex-col items-center"
+        >
           <div
             className="cv-container shadow-2xl"
             style={{
@@ -507,10 +533,13 @@ export default function MF_Document({ data }: IProps) {
               </div>
             </div>
           </div>
-        </main>
+        </Box>
 
         {/* Right sidebar */}
-        <div className="max-w-90 w-full bg-white border-l border-gray-300 p-4">
+        <Box
+          bg={colorScheme === "dark" ? "dark.5" : "white"}
+          className={`w-100 border-l border-gray-300 p-4`}
+        >
           <MyMenu
             printRef={printRef as React.RefObject<HTMLDivElement>}
             cv={{
@@ -540,32 +569,34 @@ export default function MF_Document({ data }: IProps) {
           <Tabs defaultValue="bocuc" mt={8}>
             <Tabs.List>
               <Tabs.Tab value="bocuc" leftSection={<IconComponents size={12} />}>
-                Bố cục
+                Tuỳ chỉnh
               </Tabs.Tab>
-              <Tabs.Tab value="danhgia" leftSection={<IconMessageCircle size={12} />}>
+              <Tabs.Tab value="danhgia" leftSection={<IconMessage2Star size={12} />}>
                 Đánh giá
               </Tabs.Tab>
               <Tabs.Tab value="settings" leftSection={<IconSettings size={12} />}>
                 Settings
               </Tabs.Tab>
             </Tabs.List>
-            <Tabs.Panel value="bocuc" mt={8}>
+            <Tabs.Panel value="bocuc" mt={10}>
               <ResizablePreview
                 leftWidth={leftWidth}
                 onWidthChange={setLeftWidth}
                 leftBlocks={leftBlocks}
                 rightBlocks={rightBlocks}
+                value={cvData!}
+                setCvData={setCvData as React.Dispatch<React.SetStateAction<ICV>>}
               />
             </Tabs.Panel>
-            <Tabs.Panel value="danhgia" mt={8}>
+            <Tabs.Panel value="danhgia" mt={10}>
               <EvaluationTab id={cvData?.id!} />
             </Tabs.Panel>
-            <Tabs.Panel value="settings" mt={8}>
+            <Tabs.Panel value="settings" mt={10}>
               Settings tab content
             </Tabs.Panel>
           </Tabs>
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       <DragOverlay>
         {activeId ? (

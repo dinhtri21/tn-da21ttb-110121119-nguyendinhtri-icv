@@ -244,24 +244,29 @@ namespace iCV.Infrastructure.Services.GeminiService
         private string GenerateEvaluationPromptFromNormalized(string normalizedJson)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Bạn là chuyên gia nhân sự. Hãy đánh giá CV dưới đây theo các khu vực: Thông tin, Kinh nghiệm, Kĩ năng, Học vấn, Mục tiêu nghề nghiệp, Thành tích, và bất kỳ trường nào khác mà bạn phát hiện.");
-            sb.AppendLine("Nếu phát hiện các nhóm kỹ năng hoặc thông tin đặc biệt (ví dụ: Ngôn ngữ, Frontend, Backend, Công cụ, Framework, Database, v.v.), hãy đánh giá riêng từng nhóm.");
+            sb.AppendLine("Bạn là chuyên gia nhân sự. Hãy đánh giá CV dưới đây theo các khu vực: Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thuởng."); //và bất kỳ trường nào khác mà bạn phát hiện.
+            sb.AppendLine("Nếu khu vực nào không có thông tin, hãy chấm điểm 0 và nêu gợi ý.");
+            sb.AppendLine("Riêng phần 'Thông tin', KHÔNG cần gợi ý bổ sung các liên kết như LinkedIn, GitHub cá nhân, trừ khi chúng đã có sẵn trong dữ liệu CV.");
+            sb.AppendLine("Sau đó, quan trọng hãy kiểm tra và nhận xét về lỗi **chính tả tiếng việt, tiếng anh, ngữ pháp, từ vựng hoặc diễn đạt chưa tự nhiên** trong từng khu vực nếu có và ghi nó vào correction, nếu không có thì trả về null.");
             sb.AppendLine("Trả về kết quả dưới dạng JSON không có giải thích hay markdown bọc ngoài, chỉ JSON thuần túy với cấu trúc:");
             sb.AppendLine(@"
-{
-  ""areas"": [
-    {
-      ""area"": ""Tên khu vực"",
-      ""score"": 10,
-      ""description"": ""..."",
-      ""suggestion"": ""..."",
-      ""example"": ""..."",
-      ""correction"": ""...""
-    }
-    // ...
-  ]
-}
-");
+            {
+             ""areas"": [
+               {
+                 ""area"": ""Tên khu vực"",
+                 ""score"": 10,
+                 ""description"": ""..."",
+                 ""suggestion"": ""..."",
+                 ""example"": ""..."",
+                 ""correction"": ""...""
+               }
+             // ...
+             ]
+            }
+            ");
+            sb.AppendLine("Trong phần phản hồi:");
+            sb.AppendLine("- Trường `suggestion` chỉ nên đưa ra gợi ý cải thiện tổng quát, KHÔNG bao gồm ví dụ cụ thể.");
+            sb.AppendLine("- Trường `example` mới là nơi đưa ra một ví dụ minh họa cụ thể cho phần nội dung tốt.");
             sb.AppendLine("Dữ liệu CV chuẩn hóa:");
             sb.AppendLine(normalizedJson);
             return sb.ToString();

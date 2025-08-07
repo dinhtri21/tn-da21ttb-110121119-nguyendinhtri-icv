@@ -1,7 +1,8 @@
-import { Group } from "@mantine/core";
+import { Box, Group, useMantineColorScheme } from "@mantine/core";
 import { IconLayoutList } from "@tabler/icons-react";
 import { BLOCKS } from "../constants/blocks";
 import DraggableSidebarItem from "./DraggableSidebarItem";
+import { Text } from "@mantine/core";
 
 export interface SidebarProps {
   onAddBlock: (type: string) => void;
@@ -9,14 +10,17 @@ export interface SidebarProps {
 }
 
 export default function Sidebar({ onAddBlock, usedBlocks }: SidebarProps) {
+
   return (
-    <div className="max-w-60 w-full bg-white ">
-      <Group gap={4} align="center" mb="" justify="space-between">
-        <h2 className="text-sm font-medium text-gray-600 mb-1">Thành phần</h2>
+    <Box className="max-w-60 w-full ">
+      <Group gap={4} align="center" justify="space-between">
+        <Text mb={1} fz={"sm"} fw={500}>
+          Thành phần
+        </Text>
         <IconLayoutList stroke={2} size={16} color="gray" />
       </Group>
       <p className="text-gray-400 text-xs mb-2">💡 Kéo thả vào vào cv để chỉnh sửa</p>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-[10px]  ">
         {BLOCKS.map((block) => (
           <DraggableSidebarItem
             key={block.type}
@@ -26,6 +30,6 @@ export default function Sidebar({ onAddBlock, usedBlocks }: SidebarProps) {
           />
         ))}
       </div>
-    </div>
+    </Box>
   );
 }

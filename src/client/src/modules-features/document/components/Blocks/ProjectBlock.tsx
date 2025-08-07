@@ -62,7 +62,12 @@ export function ProjectBlock({ value, setCvData }: ProjectBlockProps) {
           <IconPlus stroke={1.5} />
         </ActionIcon>
       </div>
-      <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
+      <div
+        className="w-full h-[2px] mb-1"
+        style={{
+          backgroundColor: value.template?.color || "#608ABE",
+        }}
+      ></div>
       <div className="space-y-1 relative">
         {/* Timeline vertical line */}
         {showTimeline && (
@@ -70,6 +75,7 @@ export function ProjectBlock({ value, setCvData }: ProjectBlockProps) {
             className="absolute left-[10px] top-[10px] bottom-0 w-[1.2px] bg-[#A6C2E4]"
             style={{
               height: "calc(100% - 10px)",
+              backgroundColor: value?.template?.color || "#608ABE",
             }}
           ></div>
         )}
@@ -78,7 +84,12 @@ export function ProjectBlock({ value, setCvData }: ProjectBlockProps) {
           <div key={index} className={`${showTimeline ? "pl-6" : ""} relative group`}>
             {/* Timeline bullet */}
             {showTimeline && (
-              <div className="absolute left-[6px] top-[10px] w-[9.2px] h-[9.2px] rounded-full bg-white border-2 border-[#608ABE]"></div>
+              <div
+                style={{
+                  borderColor: value?.template?.color || "#608ABE",
+                }}
+                className="absolute left-[6px] top-[10px] w-[9.2px] h-[9.2px] rounded-full bg-white border-2 "
+              ></div>
             )}
 
             {/* Dự án và thời gian */}

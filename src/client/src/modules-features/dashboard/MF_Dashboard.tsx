@@ -103,7 +103,7 @@ export default function MF_Dashboard() {
               <Center
                 style={{ cursor: "pointer" }}
                 h={220}
-                bg={colorScheme === "dark" ? "#1A1B1E" : "#F3F4F6"}
+                bg={colorScheme === "dark" ? "gray.8" : "#F3F4F6"}
                 className={styles.cvNewCard}
                 onClick={handleCreateNew}
               >
@@ -127,16 +127,26 @@ export default function MF_Dashboard() {
                         height: 220,
                       }}
                       onClick={() => handleCardClick(cv.id)}
+                      
                     >
-                      <Center h={170}>
+                      <Center h={170}  bg={colorScheme === "dark" ? "gray.8" : "#F3F4F6"}>
                         <IconFileCv size={60} stroke={0.3} />
                       </Center>
                       <Box px={12} py={4} className="border-t border-gray-200">
-                        <Text fw={500} size="sm" c="gray.8" lineClamp={1}>
+                        <Text
+                          fw={500}
+                          size="sm"
+                          c={colorScheme === "dark" ? "gray.4" : "gray.8"}
+                          lineClamp={1}
+                        >
                           {cv.fileName}
                         </Text>
                         <Flex justify="space-between" align="center">
-                          <Text size="xs" c="dimmed" lineClamp={2}>
+                          <Text
+                            size="xs"
+                            c={colorScheme === "dark" ? "gray.4" : "gray.8"}
+                            lineClamp={2}
+                          >
                             {utils_date_DateToDDMMYYYYHHMMString(cv.createWhen!)}
                           </Text>
                           <Box>

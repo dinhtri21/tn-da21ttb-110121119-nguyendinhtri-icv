@@ -27,6 +27,7 @@ export default interface IBlock {
 
 export interface Template {
   id?: number;
+  color?: string;
   leftSizeColum?: number;
   rightSizeColum?: number;
   leftColumn?: IBlock[];

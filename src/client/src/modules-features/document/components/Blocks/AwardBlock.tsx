@@ -56,7 +56,12 @@ export function AwardBlock({ value, setCvData }: AwardBlockProps) {
           <IconPlus stroke={1.5} />
         </ActionIcon>
       </div>
-      <div className="w-full h-[2px] mb-1 bg-[#608ABE]"></div>
+      <div 
+        className="w-full h-[2px] mb-1" 
+        style={{ 
+          backgroundColor: value.template?.color || '#608ABE'
+        }}
+      ></div>
       <div className="space-y-4">
         {awards.map((award, index) => (
           <div key={index} className="group relative">

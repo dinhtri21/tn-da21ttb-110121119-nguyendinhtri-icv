@@ -9,6 +9,7 @@ namespace iCV.Domain.Entities
     public class Template
     {
         public int? Id { get; set; }
+        public string? Color { get; set; }
         public int? LeftSizeColum { get; set; }
         public int? RightSizeColum { get; set; }
         public List<Block>? LeftColumn { get; set; }
