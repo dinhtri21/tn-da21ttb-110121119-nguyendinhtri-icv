@@ -31,6 +31,7 @@ namespace iCV.API.Configuration.Swagger
                     Description = "Nhập JWT Token ở định dạng: Bearer {token}"
                 });
 
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {

@@ -21,6 +21,21 @@ const cvService = {
   updateCV: async (id: string, cv: ICV) => {
     return await baseAxios.put<IMyResponse<ICV>>(`${Controller}/${id}`, cv);
   },  
+  // Delete CV
+  deleteCV: async (id: string) => {
+    return await baseAxios.delete<IMyResponse<ICV>>(`${Controller}/${id}`);
+  },
+  // Import CV from PDF file
+  importPDF: async (pdfFile: File) => {
+    const formData = new FormData();
+    formData.append("PdfFile", pdfFile);
+    
+    return await baseAxios.post<IMyResponse<ICV>>(`${Controller}/import-pdf`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
 };
 
 export default cvService;

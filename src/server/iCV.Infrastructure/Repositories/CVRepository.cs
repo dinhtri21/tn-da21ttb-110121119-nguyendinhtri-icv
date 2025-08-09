@@ -52,5 +52,11 @@ namespace iCV.Infrastructure.Repositories
             }
             return null;
         }
+
+        public async Task DeleteCVAsync(string id)
+        {
+            var filter = Builders<CV>.Filter.Eq(c => c.Id, id);
+            await _cv.DeleteOneAsync(filter);
+        }
     }
 }

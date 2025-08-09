@@ -1,5 +1,6 @@
 ﻿using iCV.Application.Common.Interfaces;
 using iCV.Infrastructure.Repositories;
+using iCV.Infrastructure.Services.CVImportService;
 using iCV.Infrastructure.Services.GeminiService;
 using iCV.Infrastructure.Services.TavilyService;
 
@@ -14,6 +15,7 @@ namespace iCV.API.Configuration.Repository
             services.AddScoped<IAvatarRepository, AvatarRepository>();
             services.AddHttpClient<IGeminiEvaluationService, GeminiEvaluationService>();
             services.AddHttpClient<IJobSuggestionService, TavilyJobSuggestionService>();
+            services.AddScoped<IPdfCVImportService, PdfCVImportService>();
 
             return services;
         }

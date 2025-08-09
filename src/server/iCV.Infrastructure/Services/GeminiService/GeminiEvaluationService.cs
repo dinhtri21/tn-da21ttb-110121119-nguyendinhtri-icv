@@ -1,5 +1,6 @@
 ﻿using iCV.Application.Common.DTOs;
 using iCV.Application.Common.Interfaces;
+using iCV.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Text;
@@ -391,6 +392,318 @@ namespace iCV.Infrastructure.Services.GeminiService
             return sb.ToString();
         }
 
+        public async Task<CVDto> ExtractCVDataFromPdfTextAsync(CVDto emptyCV, string pdfText)
+        {
+            try
+            {
+                string prompt = GenerateExtractCVDataPrompt(emptyCV, pdfText);
+
+                var requestBody = new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            parts = new[]
+                            {
+                                new { text = prompt }
+                            }
+                        }
+                    }
+                };
+
+                string json = JsonSerializer.Serialize(requestBody);
+                var request = new HttpRequestMessage(HttpMethod.Post, $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}")
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
+
+                var response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+
+                // Kiểm tra response rỗng
+                if (string.IsNullOrWhiteSpace(jsonResponse))
+                    return emptyCV;
+
+                using var doc = JsonDocument.Parse(jsonResponse);
+                var text = doc.RootElement
+                              .GetProperty("candidates")[0]
+                              .GetProperty("content")
+                              .GetProperty("parts")[0]
+                              .GetProperty("text")
+                              .GetString();
+
+                if (string.IsNullOrWhiteSpace(text))
+                    return emptyCV;
+
+                // Làm sạch JSON response từ Gemini
+                text = CleanJsonResponse(text);
+
+                // Phân tích JSON và cập nhật emptyCV
+                return UpdateCVFromGeminiResponse(emptyCV, text);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ExtractCVDataFromPdfTextAsync error: {ex.Message}");
+                return emptyCV; // Trả về CV ban đầu nếu có lỗi
+            }
+        }
+
+        private string GenerateExtractCVDataPrompt(CVDto emptyCV, string pdfText)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Bạn là một AI chuyên gia trong việc phân tích CV. Tôi đã gửi cho bạn nội dung văn bản từ một file PDF CV.");
+            sb.AppendLine("Vui lòng phân tích nội dung văn bản này và điền thông tin vào các trường cụ thể sau đây:");
+            sb.AppendLine();
+            sb.AppendLine("1. PersonalInfo (thông tin cá nhân):");
+            sb.AppendLine("   - FullName: Họ và tên của ứng viên");
+            sb.AppendLine("   - JobTitle: Vị trí/chức danh ứng viên đang tìm kiếm");
+            sb.AppendLine("   - Email: Địa chỉ email");
+            sb.AppendLine("   - Phone: Số điện thoại");
+            sb.AppendLine("   - Address: Địa chỉ (nếu có)");
+            sb.AppendLine("   - Overview: Tóm tắt về bản thân, mục tiêu nghề nghiệp");
+            sb.AppendLine();
+            sb.AppendLine("2. Experiences (kinh nghiệm làm việc): Liệt kê các kinh nghiệm làm việc dưới dạng mảng, mỗi phần tử có:");
+            sb.AppendLine("   - Title: Tên công ty và vị trí");
+            sb.AppendLine("   - Description: Mô tả công việc (nếu có)");
+            sb.AppendLine("   - StartDate: Thời gian bắt đầu (tháng/năm hoặc năm)");
+            sb.AppendLine("   - EndDate: Thời gian kết thúc (tháng/năm hoặc năm)");
+            sb.AppendLine();
+            sb.AppendLine("3. Education (học vấn): Liệt kê học vấn dưới dạng mảng, mỗi phần tử có:");
+            sb.AppendLine("   - UniversityName: Tên trường");
+            sb.AppendLine("   - Description: Thông tin về ngành học, điểm số, v.v.");
+            sb.AppendLine("   - StartDate: Thời gian bắt đầu (năm)");
+            sb.AppendLine("   - EndDate: Thời gian kết thúc (năm)");
+            sb.AppendLine();
+            sb.AppendLine("4. Projects (dự án): Liệt kê các dự án dưới dạng mảng, mỗi phần tử có:");
+            sb.AppendLine("   - Title: Tên dự án");
+            sb.AppendLine("   - Description: Mô tả dự án");
+            sb.AppendLine("   - StartDate: Thời gian bắt đầu (nếu có)");
+            sb.AppendLine("   - EndDate: Thời gian kết thúc (nếu có)");
+            sb.AppendLine();
+            sb.AppendLine("5. Skills (kỹ năng):");
+            sb.AppendLine("   - Description: Liệt kê các kỹ năng với format dạng danh sách '-' cho mỗi kỹ năng");
+            sb.AppendLine();
+            sb.AppendLine("6. Certificates (chứng chỉ): Liệt kê các chứng chỉ dưới dạng mảng, mỗi phần tử có:");
+            sb.AppendLine("   - Title: Tên chứng chỉ");
+            sb.AppendLine("   - Date: Ngày cấp (nếu có)");
+            sb.AppendLine("   - Description: Mô tả thêm (nếu có)");
+            sb.AppendLine();
+            sb.AppendLine("7. Awards (giải thưởng): Liệt kê các giải thưởng dưới dạng mảng, mỗi phần tử có:");
+            sb.AppendLine("   - Title: Tên giải thưởng");
+            sb.AppendLine("   - Date: Ngày đạt được (nếu có)");
+            sb.AppendLine("   - Description: Mô tả thêm (nếu có)");
+            sb.AppendLine();
+            sb.AppendLine("Đảm bảo format data phù hợp để có thể parse thành JSON. Trả về kết quả là một đối tượng JSON hoàn chỉnh có tất cả các trường trên (nếu không tìm thấy thông tin, hãy để trống hoặc null).");
+            sb.AppendLine("Nội dung CV từ PDF:");
+            sb.AppendLine(pdfText);
+            
+            return sb.ToString();
+        }
+
+        private CVDto UpdateCVFromGeminiResponse(CVDto cvDto, string jsonResponse)
+        {
+            try
+            {
+                using (JsonDocument doc = JsonDocument.Parse(jsonResponse))
+                {
+                    var root = doc.RootElement;
+
+                    // Cập nhật thông tin cá nhân
+                    if (root.TryGetProperty("PersonalInfo", out var personalInfoElement) && personalInfoElement.ValueKind == JsonValueKind.Object)
+                    {
+                        if (personalInfoElement.TryGetProperty("FullName", out var fullNameElement) && fullNameElement.ValueKind == JsonValueKind.String)
+                            cvDto.PersonalInfo.FullName = fullNameElement.GetString();
+
+                        if (personalInfoElement.TryGetProperty("JobTitle", out var jobTitleElement) && jobTitleElement.ValueKind == JsonValueKind.String)
+                            cvDto.PersonalInfo.JobTitle = jobTitleElement.GetString();
+
+                        if (personalInfoElement.TryGetProperty("Email", out var emailElement) && emailElement.ValueKind == JsonValueKind.String)
+                            cvDto.PersonalInfo.Email = emailElement.GetString();
+
+                        if (personalInfoElement.TryGetProperty("Phone", out var phoneElement) && phoneElement.ValueKind == JsonValueKind.String)
+                            cvDto.PersonalInfo.Phone = phoneElement.GetString();
+
+                        if (personalInfoElement.TryGetProperty("Address", out var addressElement) && addressElement.ValueKind == JsonValueKind.String)
+                            cvDto.PersonalInfo.Address = addressElement.GetString();
+
+                        if (personalInfoElement.TryGetProperty("Overview", out var overviewElement) && overviewElement.ValueKind == JsonValueKind.String)
+                            cvDto.PersonalInfo.Overview = overviewElement.GetString();
+                    }
+
+                    // Cập nhật kinh nghiệm làm việc
+                    if (root.TryGetProperty("Experiences", out var experiencesElement) && experiencesElement.ValueKind == JsonValueKind.Array)
+                    {
+                        cvDto.Experiences = new List<Experience>();
+                        int expId = 1;
+
+                        foreach (var expElement in experiencesElement.EnumerateArray())
+                        {
+                            var experience = new Experience { Id = expId++ };
+
+                            if (expElement.TryGetProperty("Title", out var titleElement) && titleElement.ValueKind == JsonValueKind.String)
+                                experience.Title = titleElement.GetString();
+
+                            if (expElement.TryGetProperty("Description", out var descElement) && descElement.ValueKind == JsonValueKind.String)
+                                experience.Description = descElement.GetString();
+
+                            if (expElement.TryGetProperty("StartDate", out var startElement) && startElement.ValueKind == JsonValueKind.String)
+                                experience.StartDate = startElement.GetString();
+
+                            if (expElement.TryGetProperty("EndDate", out var endElement) && endElement.ValueKind == JsonValueKind.String)
+                                experience.EndDate = endElement.GetString();
+                            else if (expElement.TryGetProperty("CurrentlyWorking", out var currentWorkingElement) && 
+                                     currentWorkingElement.ValueKind == JsonValueKind.True)
+                                experience.CurrentlyWorking = true;
+
+                            cvDto.Experiences.Add(experience);
+                        }
+                    }
+
+                    // Cập nhật học vấn
+                    if (root.TryGetProperty("Education", out var educationElement) && educationElement.ValueKind == JsonValueKind.Array)
+                    {
+                        cvDto.Education = new List<Education>();
+                        int eduId = 1;
+
+                        foreach (var eduElement in educationElement.EnumerateArray())
+                        {
+                            var education = new Education { Id = eduId++ };
+
+                            if (eduElement.TryGetProperty("UniversityName", out var uniElement) && uniElement.ValueKind == JsonValueKind.String)
+                                education.UniversityName = uniElement.GetString();
+                            else if (eduElement.TryGetProperty("School", out var schoolElement) && schoolElement.ValueKind == JsonValueKind.String)
+                                education.UniversityName = schoolElement.GetString();
+
+                            if (eduElement.TryGetProperty("Description", out var descElement) && descElement.ValueKind == JsonValueKind.String)
+                                education.Description = descElement.GetString();
+
+                            if (eduElement.TryGetProperty("StartDate", out var startElement) && startElement.ValueKind == JsonValueKind.String)
+                                education.StartDate = startElement.GetString();
+
+                            if (eduElement.TryGetProperty("EndDate", out var endElement) && endElement.ValueKind == JsonValueKind.String)
+                                education.EndDate = endElement.GetString();
+
+                            cvDto.Education.Add(education);
+                        }
+                    }
+
+                    // Cập nhật dự án
+                    if (root.TryGetProperty("Projects", out var projectsElement) && projectsElement.ValueKind == JsonValueKind.Array)
+                    {
+                        cvDto.Projects = new List<Project>();
+                        int projId = 1;
+
+                        foreach (var projElement in projectsElement.EnumerateArray())
+                        {
+                            var project = new Project { Id = projId++ };
+
+                            if (projElement.TryGetProperty("Title", out var titleElement) && titleElement.ValueKind == JsonValueKind.String)
+                                project.Title = titleElement.GetString();
+
+                            if (projElement.TryGetProperty("Description", out var descElement) && descElement.ValueKind == JsonValueKind.String)
+                                project.Description = descElement.GetString();
+
+                            if (projElement.TryGetProperty("StartDate", out var startElement) && startElement.ValueKind == JsonValueKind.String)
+                                project.StartDate = startElement.GetString();
+
+                            if (projElement.TryGetProperty("EndDate", out var endElement) && endElement.ValueKind == JsonValueKind.String)
+                                project.EndDate = endElement.GetString();
+
+                            cvDto.Projects.Add(project);
+                        }
+                    }
+
+                    // Cập nhật kỹ năng
+                    if (root.TryGetProperty("Skills", out var skillsElement))
+                    {
+                        if (skillsElement.TryGetProperty("Description", out var descElement) && descElement.ValueKind == JsonValueKind.String)
+                        {
+                            cvDto.Skill.Description = descElement.GetString();
+                        }
+                        else if (skillsElement.ValueKind == JsonValueKind.Array)
+                        {
+                            // Nếu kỹ năng là một mảng, chuyển đổi thành danh sách có định dạng
+                            StringBuilder skillBuilder = new StringBuilder();
+                            foreach (var skill in skillsElement.EnumerateArray())
+                            {
+                                if (skill.ValueKind == JsonValueKind.String)
+                                    skillBuilder.AppendLine($"- {skill.GetString()}");
+                            }
+                            cvDto.Skill.Description = skillBuilder.ToString();
+                        }
+                    }
+
+                    // Cập nhật chứng chỉ
+                    if (root.TryGetProperty("Certificates", out var certsElement) && certsElement.ValueKind == JsonValueKind.Array)
+                    {
+                        cvDto.Certificates = new List<Certificate>();
+                        int certId = 1;
+
+                        foreach (var certElement in certsElement.EnumerateArray())
+                        {
+                            var certificate = new Certificate { Id = certId++ };
+
+                            if (certElement.ValueKind == JsonValueKind.String)
+                            {
+                                certificate.Title = certElement.GetString();
+                            }
+                            else
+                            {
+                                if (certElement.TryGetProperty("Title", out var titleElement) && titleElement.ValueKind == JsonValueKind.String)
+                                    certificate.Title = titleElement.GetString();
+
+                                if (certElement.TryGetProperty("Date", out var dateElement) && dateElement.ValueKind == JsonValueKind.String)
+                                    certificate.Date = dateElement.GetString();
+
+                                if (certElement.TryGetProperty("Description", out var descElement) && descElement.ValueKind == JsonValueKind.String)
+                                    certificate.Description = descElement.GetString();
+                            }
+
+                            cvDto.Certificates.Add(certificate);
+                        }
+                    }
+
+                    // Cập nhật giải thưởng
+                    if (root.TryGetProperty("Awards", out var awardsElement) && awardsElement.ValueKind == JsonValueKind.Array)
+                    {
+                        cvDto.Awards = new List<Award>();
+
+                        foreach (var awardElement in awardsElement.EnumerateArray())
+                        {
+                            var award = new Award { Id = Guid.NewGuid().ToString() };
+
+                            if (awardElement.ValueKind == JsonValueKind.String)
+                            {
+                                award.Title = awardElement.GetString();
+                            }
+                            else
+                            {
+                                if (awardElement.TryGetProperty("Title", out var titleElement) && titleElement.ValueKind == JsonValueKind.String)
+                                    award.Title = titleElement.GetString();
+
+                                if (awardElement.TryGetProperty("Date", out var dateElement) && dateElement.ValueKind == JsonValueKind.String)
+                                    award.Date = dateElement.GetString();
+
+                                if (awardElement.TryGetProperty("Description", out var descElement) && descElement.ValueKind == JsonValueKind.String)
+                                    award.Description = descElement.GetString();
+                            }
+
+                            cvDto.Awards.Add(award);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating CV from Gemini response: {ex.Message}");
+                // Giữ nguyên CVDto ban đầu nếu có lỗi
+            }
+
+            return cvDto;
+        }
     }
 
 

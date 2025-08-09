@@ -12,5 +12,6 @@ namespace iCV.Application.Common.Interfaces
         Task<CVEvaluationResultDto> EvaluateCVWithNormalizationAsync(CVDto cv);
         Task<string> NormalizeCVAsync(CVDto cv);
         Task<List<string>> SuggestJobsAsync(CVDto cv);
+        Task<CVDto> ExtractCVDataFromPdfTextAsync(CVDto emptyCV, string pdfText);
     }
 }

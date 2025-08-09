@@ -14,5 +14,6 @@ namespace iCV.Application.Common.Interfaces
         Task<IList<CV?>> GetCVsAsync(string userId);
         Task<CV?> UpdateCVAsync(CV cv);
         Task CreateCVAsync(CV cv);
+        Task DeleteCVAsync(string id);
     }
 }

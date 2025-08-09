@@ -1,7 +1,9 @@
 ﻿using iCV.Application.CVs.Commands.Create;
+using iCV.Application.CVs.Commands.Delete;
 using iCV.Application.CVs.Commands.Update;
 using iCV.Application.CVs.Queries.GetCVById;
 using iCV.Application.CVs.Queries.GetCVs;
+using iCV.Application.ExternalServices.PdfCVImport.Commands.Import;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -90,6 +92,58 @@ namespace iCV.API.Controllers
                     data = result
                 }
                 );
+        }
+
+        //[Authorize]
+        [HttpPost("import-pdf")]
+        public async Task<IActionResult> ImportPdfCV([FromForm] PdfCVImportCommand command)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim)) return Unauthorized("Missing user ID in token.");
+
+            command.UserId = userIdClaim;
+            var cvDto = await _mediator.Send(command);
+
+            return Ok(new
+            {
+                isSuccess = true,
+                message = "Import CV thành công!",
+                data = cvDto
+            });
+
+        }
+
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCV([FromRoute] string id)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim)) 
+                return Unauthorized("Missing user ID in token.");
+
+            var command = new DeleteCVCommand 
+            { 
+                Id = id,
+                UserId = userIdClaim 
+            };
+            
+            try
+            {
+                var result = await _mediator.Send(command);
+                return Ok(new
+                {
+                    isSuccess = true,
+                    message = "CV deleted successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                });
+            }
         }
     }
 }
