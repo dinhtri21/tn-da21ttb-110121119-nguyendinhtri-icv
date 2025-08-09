@@ -4,6 +4,7 @@ import { BLOCKS } from "../../constants/blocks";
 import { ICertificate, ICV } from "@/interface/cv";
 import { ActionIcon } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
+import { getBlockLabel } from "../../constants/blocksMultiLang";
 
 interface CertificateBlockProps {
   value: ICV;
@@ -36,7 +37,7 @@ export function CertificateBlock({ value, setCvData }: CertificateBlockProps) {
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <div className="flex justify-between items-center mb-1">
         <label className="block font-medium text-[18px] text-[#404041]">
-          {BLOCKS.find((b) => b.type === "certificate")?.label}
+          {getBlockLabel("certificate", value.template?.language || "vi")}
         </label>
         <ActionIcon
           size="sm"

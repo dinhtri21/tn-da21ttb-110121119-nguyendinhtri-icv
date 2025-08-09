@@ -39,6 +39,7 @@ import ResizablePreview from "./components/ResizablePreview";
 import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
 import { BLOCKS } from "./constants/blocks";
+import { getBlockLabel } from "./constants/blocksMultiLang";
 
 interface IProps {
   data: ICV;
@@ -394,7 +395,11 @@ export default function MF_Document({ data }: IProps) {
               )}
             </ActionIcon>
           </div>
-          <Sidebar onAddBlock={(type) => addBlock(type, "left")} usedBlocks={usedBlocks} />
+          <Sidebar 
+            onAddBlock={(type) => addBlock(type, "left")} 
+            usedBlocks={usedBlocks} 
+            language={cvData?.template?.language || 'vi'}
+          />
         </Stack>
         {/* Main content */}
         <Box
@@ -603,7 +608,7 @@ export default function MF_Document({ data }: IProps) {
           <div className="bg-white rounded shadow-lg p-4 opacity-90 scale-105">
             {activeId.startsWith("sidebar-") ? (
               <div className="px-3 py-2">
-                {BLOCKS.find((b) => `sidebar-${b.type}` === activeId)?.label}
+                {getBlockLabel(activeId.replace("sidebar-", ""), cvData?.template?.language || "vi")}
               </div>
             ) : (
               <div className="px-3 py-2">Block</div>

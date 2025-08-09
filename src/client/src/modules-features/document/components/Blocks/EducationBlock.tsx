@@ -4,6 +4,7 @@ import { ActionIcon } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
+import { getBlockLabel } from "../../constants/blocksMultiLang";
 
 interface EducationBlockProps {
   value: ICV;
@@ -37,7 +38,7 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <div className="flex justify-between items-center mb-1">
         <label className="block font-medium text-[18px] text-[#404041]">
-          {BLOCKS.find((b) => b.type === "education")?.label}
+          {getBlockLabel("education", value.template?.language || "vi")}
         </label>
         <ActionIcon
           size="sm"

@@ -1,5 +1,6 @@
 import { ICV } from "@/interface/cv";
 import { BLOCKS } from "../../constants/blocks";
+import { getBlockLabel } from "../../constants/blocksMultiLang";
 
 interface DefaultBlockProps {
   type: string;
@@ -34,7 +35,7 @@ export function DefaultBlock({ type, value, setCvData }: DefaultBlockProps) {
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <label className="block mb-2 font-medium text-gray-700">
-        {BLOCKS.find((b) => b.type === type)?.label}
+        {getBlockLabel(type, value.template?.language || "vi")}
       </label>
       <textarea
         value={""}

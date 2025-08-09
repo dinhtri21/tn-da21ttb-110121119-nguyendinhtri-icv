@@ -4,6 +4,7 @@ import { IconBrowserCheck, IconMinus, IconPlus } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
 import { ICV, IExperience } from "@/interface/cv";
+import { getBlockLabel } from "../../constants/blocksMultiLang";
 
 interface ExperienceBlockProps {
   value: ICV;
@@ -45,7 +46,7 @@ export function ExperienceBlock({ value, setCvData }: ExperienceBlockProps) {
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <div className="flex justify-between items-center mb-1">
         <label className="block font-medium text-[18px] text-[#404041]">
-          {BLOCKS.find((b) => b.type === "experience")?.label}
+         {getBlockLabel("experience", value.template?.language || "vi")}
         </label>
         <ActionIcon
           size="sm"

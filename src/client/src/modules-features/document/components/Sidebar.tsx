@@ -1,15 +1,17 @@
 import { Box, Group, useMantineColorScheme } from "@mantine/core";
 import { IconLayoutList } from "@tabler/icons-react";
 import { BLOCKS } from "../constants/blocks";
+import { getBlockLabel } from "../constants/blocksMultiLang";
 import DraggableSidebarItem from "./DraggableSidebarItem";
 import { Text } from "@mantine/core";
 
 export interface SidebarProps {
   onAddBlock: (type: string) => void;
   usedBlocks: string[];
+  language?: string;
 }
 
-export default function Sidebar({ onAddBlock, usedBlocks }: SidebarProps) {
+export default function Sidebar({ onAddBlock, usedBlocks, language = 'vi' }: SidebarProps) {
 
   return (
     <Box className="max-w-60 w-full ">
@@ -24,7 +26,10 @@ export default function Sidebar({ onAddBlock, usedBlocks }: SidebarProps) {
         {BLOCKS.map((block) => (
           <DraggableSidebarItem
             key={block.type}
-            block={block}
+            block={{
+              type: block.type,
+              label: getBlockLabel(block.type, language)
+            }}
             onAddBlock={onAddBlock}
             isDisabled={usedBlocks.includes(block.type) && block.type !== "spacer"}
           />

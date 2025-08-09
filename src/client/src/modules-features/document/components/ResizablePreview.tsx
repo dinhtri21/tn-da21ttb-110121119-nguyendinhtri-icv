@@ -1,8 +1,9 @@
 import IBlock, { ICV } from "@/interface/cv";
 import { useEffect, useRef, useState } from "react";
 import { BLOCKS } from "../constants/blocks";
-import { Box, Center, ColorPicker, Group, Stack, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Box, Center, ColorPicker, Group, Stack, useMantineColorScheme } from "@mantine/core";
 import { Text } from "@mantine/core";
+import { IconWorld } from "@tabler/icons-react";
 
 export interface ResizablePreviewProps {
   leftWidth: number;
@@ -181,6 +182,47 @@ export default function ResizablePreview({
             }}
           />
         </Center>
+      </Box>
+      
+      <Box mt={4}>
+        <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
+          Ngôn ngữ
+        </Text>
+        <p className="text-gray-400 text-xs mb-2">💡 Chọn ngôn ngữ hiển thị cho các thành phần</p>
+        <div className="flex gap-2">
+          <ActionIcon
+            variant={value?.template?.language === 'vi' ? 'filled' : 'light'}
+            color="blue"
+            size="lg"
+            onClick={() => {
+              setCvData((prev) => ({
+                ...prev,
+                template: {
+                  ...prev?.template,
+                  language: 'vi',
+                },
+              }));
+            }}
+          >
+            VI
+          </ActionIcon>
+          <ActionIcon
+            variant={value?.template?.language === 'en' ? 'filled' : 'light'}
+            color="blue"
+            size="lg"
+            onClick={() => {
+              setCvData((prev) => ({
+                ...prev,
+                template: {
+                  ...prev?.template,
+                  language: 'en',
+                },
+              }));
+            }}
+          >
+            EN
+          </ActionIcon>
+        </div>
       </Box>
     </Stack>
   );

@@ -14,5 +14,6 @@ namespace iCV.Domain.Entities
         public int? RightSizeColum { get; set; }
         public List<Block>? LeftColumn { get; set; }
         public List<Block>? RightColumn { get; set; }
+        public string? Language { get; set; }
     }
 }

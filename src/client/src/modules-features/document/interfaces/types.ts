@@ -11,6 +11,15 @@ export interface BlockType {
   label: string;
 }
 
+export interface BlockTypeMultiLang {
+  type: string;
+  labels: {
+    vi: string;
+    en: string;
+    [key: string]: string;
+  };
+}
+
 export interface MousePosition {
   x: number;
   y: number;

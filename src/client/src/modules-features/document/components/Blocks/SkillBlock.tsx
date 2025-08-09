@@ -2,6 +2,7 @@ import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 import { useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
 import { ICV, ISkill } from "@/interface/cv";
+import { getBlockLabel } from "../../constants/blocksMultiLang";
 
 interface OverviewBlockProps {
   value: ICV;
@@ -14,7 +15,7 @@ export function SkillBlock({ value, setCvData }: OverviewBlockProps) {
   return (
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <label className="block mb-1 font-medium text-[18px] text-[#404041]">
-        {BLOCKS.find((b) => b.type === "skills")?.label}
+        {getBlockLabel("skills", value.template?.language || "vi")}
       </label>
       <div
         className="w-full h-[2px] mb-1"

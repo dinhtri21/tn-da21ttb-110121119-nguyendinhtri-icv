@@ -1,6 +1,7 @@
 import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 import { useEffect, useState } from "react";
 import { BLOCKS } from "../../constants/blocks";
+import { getBlockLabel } from "../../constants/blocksMultiLang";
 import { ActionIcon } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import { ICV, IProject } from "@/interface/cv";
@@ -40,7 +41,7 @@ export function ProjectBlock({ value, setCvData }: ProjectBlockProps) {
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <div className="flex justify-between items-center mb-1">
         <label className="block font-medium text-[18px] text-[#404041]">
-          {BLOCKS.find((b) => b.type === "project")?.label}
+          {getBlockLabel("project", value.template?.language || "vi")}
         </label>
         <ActionIcon
           size="sm"

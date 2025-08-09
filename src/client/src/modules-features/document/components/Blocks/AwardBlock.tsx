@@ -4,6 +4,7 @@ import TiptapEditor from "@/components/Input/RichText/TiptapEditor";
 import { IAward, ICV } from "@/interface/cv";
 import { ActionIcon } from "@mantine/core";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
+import { getBlockLabel } from "../../constants/blocksMultiLang";
 
 interface AwardBlockProps {
   value: ICV;
@@ -34,7 +35,7 @@ export function AwardBlock({ value, setCvData }: AwardBlockProps) {
     <div className="hover:border hover:border-gray-300 border border-transparent p-1 rounded-md focus-within:border focus-within:border-gray-300">
       <div className="flex justify-between items-center mb-1">
         <label className="block font-medium text-[18px] text-[#404041]">
-          {BLOCKS.find((b) => b.type === "award")?.label}
+          {getBlockLabel("award", value.template?.language || "vi")}
         </label>
         <ActionIcon
           size="sm"

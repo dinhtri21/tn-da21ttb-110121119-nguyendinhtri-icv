@@ -455,7 +455,7 @@ namespace iCV.Infrastructure.Services.GeminiService
         {
             var sb = new StringBuilder();
             sb.AppendLine("Bạn là một AI chuyên gia trong việc phân tích CV. Tôi đã gửi cho bạn nội dung văn bản từ một file PDF CV.");
-            sb.AppendLine("Vui lòng phân tích nội dung văn bản này và điền thông tin vào các trường cụ thể sau đây:");
+            sb.AppendLine("Vui lòng phân tích nội dung văn bản này và trả về một JSON với các thông tin sau:");
             sb.AppendLine();
             sb.AppendLine("1. PersonalInfo (thông tin cá nhân):");
             sb.AppendLine("   - FullName: Họ và tên của ứng viên");
@@ -496,9 +496,12 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("   - Date: Ngày đạt được (nếu có)");
             sb.AppendLine("   - Description: Mô tả thêm (nếu có)");
             sb.AppendLine();
+            sb.AppendLine("8. Language (ngôn ngữ CV):");
+            sb.AppendLine("   - Xác định CV này viết bằng ngôn ngữ gì. Trả về 'vi' nếu là tiếng Việt, 'en' nếu là tiếng Anh");
+            sb.AppendLine();
             sb.AppendLine("Đảm bảo format data phù hợp để có thể parse thành JSON. Trả về kết quả là một đối tượng JSON hoàn chỉnh có tất cả các trường trên (nếu không tìm thấy thông tin, hãy để trống hoặc null).");
             sb.AppendLine("Nội dung CV từ PDF:");
-            sb.AppendLine(pdfText);
+            sb.AppendLine(pdfText.Length > 5000 ? pdfText.Substring(0, 5000) + "..." : pdfText);
             
             return sb.ToString();
         }
@@ -510,6 +513,16 @@ namespace iCV.Infrastructure.Services.GeminiService
                 using (JsonDocument doc = JsonDocument.Parse(jsonResponse))
                 {
                     var root = doc.RootElement;
+
+                    // Kiểm tra và cập nhật ngôn ngữ CV
+                    if (root.TryGetProperty("Language", out var languageElement) && languageElement.ValueKind == JsonValueKind.String)
+                    {
+                        string language = languageElement.GetString();
+                        if (!string.IsNullOrEmpty(language) && (language == "vi" || language == "en"))
+                        {
+                            cvDto.Template.Language = language;
+                        }
+                    }
 
                     // Cập nhật thông tin cá nhân
                     if (root.TryGetProperty("PersonalInfo", out var personalInfoElement) && personalInfoElement.ValueKind == JsonValueKind.Object)

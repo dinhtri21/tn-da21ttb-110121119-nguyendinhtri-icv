@@ -32,6 +32,7 @@ export interface Template {
   rightSizeColum?: number;
   leftColumn?: IBlock[];
   rightColumn?: IBlock[];
+  language?: string;
 }
 export interface IAvatar {
   file?: File;
