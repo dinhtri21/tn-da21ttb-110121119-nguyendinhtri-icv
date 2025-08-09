@@ -3,6 +3,7 @@ using iCV.Infrastructure.Repositories;
 using iCV.Infrastructure.Services.CVImportService;
 using iCV.Infrastructure.Services.GeminiService;
 using iCV.Infrastructure.Services.TavilyService;
+using iCV.Infrastructure.Services.TranslationService;
 
 namespace iCV.API.Configuration.Repository
 {
@@ -16,6 +17,7 @@ namespace iCV.API.Configuration.Repository
             services.AddHttpClient<IGeminiEvaluationService, GeminiEvaluationService>();
             services.AddHttpClient<IJobSuggestionService, TavilyJobSuggestionService>();
             services.AddScoped<IPdfCVImportService, PdfCVImportService>();
+            services.AddTransient<ICVTranslationService, GeminiCVTranslationService>();
 
             return services;
         }

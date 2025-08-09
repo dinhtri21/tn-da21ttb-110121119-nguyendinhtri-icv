@@ -1,5 +1,6 @@
 ﻿using iCV.Application.CVs.Commands.Create;
 using iCV.Application.CVs.Commands.Delete;
+using iCV.Application.CVs.Commands.Translate;
 using iCV.Application.CVs.Commands.Update;
 using iCV.Application.CVs.Queries.GetCVById;
 using iCV.Application.CVs.Queries.GetCVs;
@@ -134,6 +135,41 @@ namespace iCV.API.Controllers
                 {
                     isSuccess = true,
                     message = "CV deleted successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                });
+            }
+        }
+
+        [Authorize]
+        [HttpPost("{id}/translate")]
+        public async Task<IActionResult> TranslateCV([FromRoute] string id, [FromQuery] string targetLanguage)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userIdClaim)) 
+                return Unauthorized("Missing user ID in token.");
+
+            var command = new TranslateCVCommand 
+            { 
+                Id = id,
+                UserId = userIdClaim,
+                TargetLanguage = targetLanguage
+            };
+            
+            try
+            {
+                var translatedCV = await _mediator.Send(command);
+                return Ok(new
+                {
+                    isSuccess = true,
+                    message = $"CV đã được dịch sang tiếng {(targetLanguage == "vi" ? "Việt" : "Anh")}",
+                    data = translatedCV
                 });
             }
             catch (Exception ex)

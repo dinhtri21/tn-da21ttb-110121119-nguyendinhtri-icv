@@ -4,6 +4,8 @@ import IMyResponse from "@/interface/response";
 
 const Controller = "CV";
 
+
+
 const cvService = {
   // Create a new CV
   createCV: async (cv: ICV) => {
@@ -35,6 +37,10 @@ const cvService = {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+  // Translate CV content to a target language
+  translateCV: async (id: string, targetLanguage: string) => {
+    return await baseAxios.post<IMyResponse<ICV>>(`${Controller}/${id}/translate?targetLanguage=${targetLanguage}`);
   }
 };
 

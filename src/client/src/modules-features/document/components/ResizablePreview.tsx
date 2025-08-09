@@ -1,9 +1,11 @@
 import IBlock, { ICV } from "@/interface/cv";
 import { useEffect, useRef, useState } from "react";
 import { BLOCKS } from "../constants/blocks";
-import { ActionIcon, Box, Center, ColorPicker, Group, Stack, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, Box, Button, Center, ColorPicker, Group, Select, Stack, useMantineColorScheme } from "@mantine/core";
 import { Text } from "@mantine/core";
-import { IconWorld } from "@tabler/icons-react";
+import { IconLanguage, IconTransfer, IconWorld } from "@tabler/icons-react";
+import cvService from "@/api/services/cvService";
+import { notifications } from "@mantine/notifications";
 
 export interface ResizablePreviewProps {
   leftWidth: number;
@@ -25,11 +27,55 @@ export default function ResizablePreview({
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const [targetLanguage, setTargetLanguage] = useState<string>(value?.template?.language || 'vi');
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  const handleTranslate = async () => {
+    if (!value?.id) {
+      notifications.show({
+        title: "Lỗi",
+        message: "Không thể dịch CV vì không tìm thấy ID",
+        color: "red",
+      });
+      return;
+    }
+
+    try {
+      setIsTranslating(true);
+      const response = await cvService.translateCV(value.id, targetLanguage);
+      
+      if (response.data.isSuccess) {
+        if (response.data.data) {
+          setCvData(response.data.data);
+        }
+        notifications.show({
+          title: "Thành công",
+          message: "CV đã được dịch thành công!",
+          color: "green",
+        });
+      } else {
+        notifications.show({
+          title: "Lỗi",
+          message: response.data.message || "Không thể dịch CV. Vui lòng thử lại sau.",
+          color: "red",
+        });
+      }
+    } catch (error) {
+      notifications.show({
+        title: "Lỗi",
+        message: "Đã xảy ra lỗi khi dịch CV. Vui lòng thử lại sau.",
+        color: "red",
+      });
+      console.error("Lỗi khi dịch CV:", error);
+    } finally {
+      setIsTranslating(false);
+    }
   };
 
   useEffect(() => {
@@ -193,7 +239,7 @@ export default function ResizablePreview({
           <ActionIcon
             variant={value?.template?.language === 'vi' ? 'filled' : 'light'}
             color="blue"
-            size="lg"
+            size="md"
             onClick={() => {
               setCvData((prev) => ({
                 ...prev,
@@ -209,7 +255,7 @@ export default function ResizablePreview({
           <ActionIcon
             variant={value?.template?.language === 'en' ? 'filled' : 'light'}
             color="blue"
-            size="lg"
+            size="md"
             onClick={() => {
               setCvData((prev) => ({
                 ...prev,
@@ -222,6 +268,35 @@ export default function ResizablePreview({
           >
             EN
           </ActionIcon>
+        </div>
+      </Box>
+      
+      <Box mt={4}>
+        <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
+          Dịch nội dung
+        </Text>
+        <p className="text-gray-400 text-xs mb-2">💡 Dịch tất cả nội dung CV sang ngôn ngữ khác</p>
+        <div className="flex gap-2 items-end">
+          <Select
+            label="Ngôn ngữ đích"
+            placeholder="Chọn ngôn ngữ"
+            data={[
+              { value: 'vi', label: 'Tiếng Việt' },
+              { value: 'en', label: 'Tiếng Anh' },
+            ]}
+            value={targetLanguage}
+            onChange={(value) => setTargetLanguage(value || 'vi')}
+            className="flex-1"
+          />
+          <Button
+            variant="light"
+            color="blue"
+            onClick={handleTranslate}
+            loading={isTranslating}
+            leftSection={<IconTransfer size={16} />}
+          >
+            Dịch
+          </Button>
         </div>
       </Box>
     </Stack>

@@ -395,10 +395,10 @@ export default function MF_Document({ data }: IProps) {
               )}
             </ActionIcon>
           </div>
-          <Sidebar 
-            onAddBlock={(type) => addBlock(type, "left")} 
-            usedBlocks={usedBlocks} 
-            language={cvData?.template?.language || 'vi'}
+          <Sidebar
+            onAddBlock={(type) => addBlock(type, "left")}
+            usedBlocks={usedBlocks}
+            language={cvData?.template?.language || "vi"}
           />
         </Stack>
         {/* Main content */}
@@ -573,14 +573,17 @@ export default function MF_Document({ data }: IProps) {
 
           <Tabs defaultValue="bocuc" mt={8}>
             <Tabs.List>
-              <Tabs.Tab value="bocuc" leftSection={<IconComponents size={12} />}>
+              <Tabs.Tab
+                value="bocuc"
+                leftSection={<IconComponents size={12} />}
+              >
                 Tuỳ chỉnh
               </Tabs.Tab>
-              <Tabs.Tab value="danhgia" leftSection={<IconMessage2Star size={12} />}>
+              <Tabs.Tab
+                value="danhgia"
+                leftSection={<IconMessage2Star size={12} />}
+              >
                 Đánh giá
-              </Tabs.Tab>
-              <Tabs.Tab value="settings" leftSection={<IconSettings size={12} />}>
-                Settings
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="bocuc" mt={10}>
@@ -608,7 +611,10 @@ export default function MF_Document({ data }: IProps) {
           <div className="bg-white rounded shadow-lg p-4 opacity-90 scale-105">
             {activeId.startsWith("sidebar-") ? (
               <div className="px-3 py-2">
-                {getBlockLabel(activeId.replace("sidebar-", ""), cvData?.template?.language || "vi")}
+                {getBlockLabel(
+                  activeId.replace("sidebar-", ""),
+                  cvData?.template?.language || "vi"
+                )}
               </div>
             ) : (
               <div className="px-3 py-2">Block</div>
