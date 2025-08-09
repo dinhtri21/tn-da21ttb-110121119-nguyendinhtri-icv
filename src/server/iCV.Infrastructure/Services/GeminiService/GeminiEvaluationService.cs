@@ -280,5 +280,118 @@ namespace iCV.Infrastructure.Services.GeminiService
 
             return Regex.Replace(input, "<.*?>", string.Empty);
         }
+
+        ////////// Suggestion
+        public async Task<List<string>> SuggestJobsAsync(CVDto cv)
+        {
+            try
+            {
+                var prompt = GenerateJobSuggestionPrompt(cv);
+
+                var requestBody = new
+                {
+                    contents = new[]
+                    {
+                new
+                {
+                    parts = new[]
+                    {
+                        new { text = prompt }
+                    }
+                }
+            }
+                };
+
+                var json = JsonSerializer.Serialize(requestBody);
+                var request = new HttpRequestMessage(HttpMethod.Post, $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}")
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
+
+                var response = await _httpClient.SendAsync(request);
+                response.EnsureSuccessStatusCode();
+
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                if (string.IsNullOrWhiteSpace(jsonResponse))
+                    return new List<string>();
+
+                using var doc = JsonDocument.Parse(jsonResponse);
+                var text = doc.RootElement
+                              .GetProperty("candidates")[0]
+                              .GetProperty("content")
+                              .GetProperty("parts")[0]
+                              .GetProperty("text")
+                              .GetString();
+
+                if (string.IsNullOrWhiteSpace(text))
+                    return new List<string>();
+
+                text = CleanJsonResponse(text);
+
+                // Giả định Gemini trả về mảng JSON ["Job 1", "Job 2"]
+                try
+                {
+                    var suggestions = JsonSerializer.Deserialize<List<string>>(text);
+                    return suggestions ?? new List<string>();
+                }
+                catch (JsonException)
+                {
+                    Console.WriteLine($"Không thể parse JSON từ Gemini SuggestJobsAsync: {text}");
+                    return new List<string>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"SuggestJobsAsync error: {ex.Message}");
+                return new List<string>();
+            }
+        }
+
+        private string GenerateJobSuggestionPrompt(CVDto cv)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Bạn là AI chuyên gợi ý công việc cho ứng viên.");
+            sb.AppendLine("Dưới đây là thông tin CV, hãy phân tích và trả về danh sách 5-10 vị trí công việc phù hợp nhất với kỹ năng, kinh nghiệm, dự án và định hướng nghề nghiệp của ứng viên.");
+            sb.AppendLine("Trả về dưới dạng JSON array chỉ gồm tên công việc, không có markdown, không giải thích, không có thứ tự đánh số.");
+
+            sb.AppendLine($"Họ tên: {cv.PersonalInfo?.FullName}");
+            sb.AppendLine($"Vị trí mong muốn: {cv.PersonalInfo?.JobTitle}");
+            sb.AppendLine($"Tóm tắt bản thân: {StripHtml(cv.PersonalInfo?.Overview)}");
+
+            if (cv.Skill != null)
+                sb.AppendLine($"Kỹ năng: {StripHtml(cv.Skill.Description)}");
+
+            if (cv.Experiences != null)
+            {
+                sb.AppendLine("Kinh nghiệm:");
+                foreach (var exp in cv.Experiences)
+                {
+                    sb.AppendLine($"- {exp.Title}: {StripHtml(exp.Description)}");
+                }
+            }
+
+            if (cv.Projects != null)
+            {
+                sb.AppendLine("Dự án:");
+                foreach (var proj in cv.Projects)
+                {
+                    sb.AppendLine($"- {proj.Title}: {StripHtml(proj.Description)}");
+                }
+            }
+
+            if (cv.Certificates != null && cv.Certificates.Any(c => !string.IsNullOrEmpty(c.Title)))
+            {
+                sb.AppendLine("Chứng chỉ:");
+                foreach (var cert in cv.Certificates)
+                {
+                    sb.AppendLine($"- {cert.Title}");
+                }
+            }
+
+            return sb.ToString();
+        }
+
     }
+
+
 }

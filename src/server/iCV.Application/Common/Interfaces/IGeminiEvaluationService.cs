@@ -10,5 +10,7 @@ namespace iCV.Application.Common.Interfaces
     public interface IGeminiEvaluationService
     {
         Task<CVEvaluationResultDto> EvaluateCVWithNormalizationAsync(CVDto cv);
+        Task<string> NormalizeCVAsync(CVDto cv);
+        Task<List<string>> SuggestJobsAsync(CVDto cv);
     }
 }
