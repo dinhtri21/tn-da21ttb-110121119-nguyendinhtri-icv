@@ -29,7 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useReactToPrint } from "react-to-print";
 import classes from "./css.module.css";
 
-export default function MyMenu({
+export default function RightSidebarSetting({
   printRef,
   cv,
 }: {
@@ -170,7 +170,7 @@ export default function MyMenu({
               }}
               size="xs"
               // leftSection={<IconDownload size={16} />}
-              color="green"
+              color="blue"
               variant="outline"
               loading={isExporting}
               disabled={isExporting}
@@ -178,7 +178,7 @@ export default function MyMenu({
               {isExporting ? "Đang tải..." : "Tải xuống"}
             </Button>
           </Tooltip>
-          <Button size="xs" color="green" onClick={handleSaveCV}>
+          <Button size="xs" color="blue" onClick={handleSaveCV}>
             Lưu
           </Button>
         </Group>

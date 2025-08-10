@@ -124,7 +124,9 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500}>
           Tuỳ chỉnh tỉ lệ
         </Text>
-        <p className="text-gray-400 text-xs mb-2">Kéo thanh ở giữa để điều chỉnh</p>
+        <Text size="xs" c="gray.6" mb={8}>
+          Kéo thanh ở giữa để điều chỉnh
+        </Text>
         <Center>
           <div
             ref={containerRef}
@@ -205,7 +207,9 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500}>
           Màu chủ đạo
         </Text>
-        <p className="text-gray-400 text-xs mb-2">Chọn màu để làm chủ đạo cho toàn cv</p>
+         <Text size="xs" c="gray.6" mb={8}>
+          Chọn màu để làm chủ đạo cho toàn cv
+        </Text>
         <Center>
           <ColorPicker
             size="sm"
@@ -244,7 +248,9 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
           Ngôn ngữ
         </Text>
-        <p className="text-gray-400 text-xs mb-2">Chọn ngôn ngữ hiển thị cho các thành phần</p>
+          <Text size="xs" c="gray.6" mb={8}>
+            Chọn ngôn ngữ hiển thị cho các thành phần
+          </Text>
         <div className="flex gap-2">
           <ActionIcon
             variant={value?.template?.language === "vi" ? "filled" : "light"}
@@ -285,7 +291,9 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
           Dịch nội dung
         </Text>
-        <p className="text-gray-400 text-xs mb-2">Dịch nội dung CV sang ngôn ngữ khác</p>
+          <Text size="xs" c="gray.6" mb={8}>
+          Dịch nội dung CV sang ngôn ngữ khác
+        </Text>
         <div className="flex gap-2 items-end">
           <Select
             // label="Ngôn ngữ đích"
@@ -299,7 +307,7 @@ export default function ResizablePreview({
             onChange={(value) => setTargetLanguage(value || "vi")}
             className="flex-1"
             size="xs"
-          />  
+          />
           <Button
             variant="filled"
             color="blue"

@@ -23,29 +23,25 @@ import {
 } from "@mantine/core";
 import {
   IconComponents,
-  IconFileCv,
   IconMessage2Star,
   IconMoon,
-  IconSettings,
-  IconSun,
-  IconWorld,
+  IconSun
 } from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";
 import EmptyDropZone from "./components/EmptyDropZone";
 import EvaluationTab from "./components/EvaluationTab";
-import MyMenu from "./components/MyMenu";
 import ResizablePreview from "./components/ResizablePreview";
+import RightSidebarSetting from "./components/RightSidebarSetting";
 import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
-import { BLOCKS } from "./constants/blocks";
 import { getBlockLabel } from "./constants/blocksMultiLang";
 
 interface IProps {
   data: ICV;
 }
 
-export default function MF_Document({ data }: IProps) {
+export default function MF_CV({ data }: IProps) {
   const [leftBlocks, setLeftBlocks] = useState<IBlock[]>([]);
   const [rightBlocks, setRightBlocks] = useState<IBlock[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -545,7 +541,7 @@ export default function MF_Document({ data }: IProps) {
           bg={colorScheme === "dark" ? "dark.5" : "white"}
           className={`w-100 border-l border-gray-300 p-4`}
         >
-          <MyMenu
+          <RightSidebarSetting
             printRef={printRef as React.RefObject<HTMLDivElement>}
             cv={{
               ...cvData,

@@ -32,6 +32,7 @@ namespace iCV.Application.CVs.Commands.Create
             {
                 UserId = request.UserId,
                 FileName = request.FileName,
+                Status = request.Status ?? "Private",
                 CreateWhen = request.CreateWhen,
                 PersonalInfo = request.PersonalInfo,
                 Template = request.Template,

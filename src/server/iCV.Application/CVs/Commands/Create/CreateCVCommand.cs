@@ -14,6 +14,7 @@ namespace iCV.Application.CVs.Commands.Create
     {
         public string? UserId { get; set; }
         public string FileName { get; set; }
+        public string? Status { get; set; }
         public DateTime CreateWhen { get; set; }
         public Template? Template { get; set; }
         public Avatar? Avatar { get; set; }

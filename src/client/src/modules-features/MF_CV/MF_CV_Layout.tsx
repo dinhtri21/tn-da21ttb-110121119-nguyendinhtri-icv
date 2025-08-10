@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import MF_Document from "./MF_Document";
+import MF_Document from "./MF_CV";
 import cvService from "@/api/services/cvService";
 import { ICV } from "@/interface/cv";
 import { useDisclosure } from "@mantine/hooks";
@@ -9,9 +9,9 @@ import { Center } from "@mantine/core";
 interface IProp {
   id: string;
 }
-export default function MF_Document_Layout({ id }: IProp) {
+export default function MF_CV_Layout({ id }: IProp) {
   const query = useQuery<ICV>({
-    queryKey: ["MF_Document_Layout", id],
+    queryKey: ["MF_CV_Layout", id],
     queryFn: async () => {
       const response = await cvService.getCVById(id);
       return response.data.data || {};

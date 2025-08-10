@@ -32,6 +32,7 @@ namespace iCV.Application.CVs.Commands.Update
                 Id = request.Id,
                 UserId = request.UserId,
                 FileName = request.FileName,
+                Status = request.Status,
                 CreateWhen = request.CreateWhen,
                 PersonalInfo = request.PersonalInfo,
                 Template = request.Template,

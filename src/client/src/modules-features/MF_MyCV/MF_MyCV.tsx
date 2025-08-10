@@ -2,6 +2,7 @@
 import cvService from "@/api/services/cvService";
 import { ICV } from "@/interface/cv";
 import {
+  ActionIcon,
   Box,
   Button,
   Center,
@@ -30,7 +31,7 @@ import { SkeletonCard } from "./SkeletonCard";
 import { utils_date_DateToDDMMYYYYHHMMString } from "@/utils/date";
 import { useRef } from "react";
 
-export default function MF_Dashboard() {
+export default function MF_MyCV() {
   const { colorScheme } = useMantineColorScheme();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,7 +97,7 @@ export default function MF_Dashboard() {
         color: "green",
       });
       if (data?.data?.data?.id) {
-        router.push(`/document/${data.data.data.id}`);
+        router.push(`/cv/${data.data.data.id}`);
       }
     },
     onError: (error: any) => {
@@ -109,7 +110,7 @@ export default function MF_Dashboard() {
   });
 
   const handleCardClick = (id: any) => {
-    router.push(`/document/${id}`);
+    router.push(`/cv/${id}`);
   };
 
   const handleCreateNew = async () => {
@@ -162,18 +163,19 @@ export default function MF_Dashboard() {
           <Text fw={500} size="xl">
             Quản lý CV
           </Text>
-          <Text fw={400} size="md">
+          <Text fw={400} size="sm">
             Tạo sơ yếu lý lịch tùy chỉnh của riêng bạn với AI
           </Text>
         </Flex>
-        <Button 
-          variant="light" 
-          color="blue" 
+        <Button
+          variant="light"
+          color="blue"
           leftSection={<IconUpload size={18} stroke={2} />}
           onClick={handleImportPdf}
           loading={importPdfMutation.isPending}
+          size="sm"
         >
-          Import từ PDF
+          Import PDF
         </Button>
         <input
           type="file"
@@ -198,8 +200,10 @@ export default function MF_Dashboard() {
                 onClick={handleCreateNew}
               >
                 <Stack align="center" gap={4}>
-                  <IconPlus size={32} stroke={1} />
-                  <Text size="sm">Tạo mới</Text>
+                  <IconPlus size={32} stroke={1} style={{ color: "#228BE6" }} />
+                  <Text c="blue" size="sm">
+                    Tạo mới
+                  </Text>
                 </Stack>
               </Center>
             </Grid.Col>
@@ -207,7 +211,6 @@ export default function MF_Dashboard() {
               query.data.map((cv, i) => {
                 return (
                   <Grid.Col key={i} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
-                    {/* <Link href={`/document/${cv.document.id}`}> */}
                     <div
                       className={styles.cvCard}
                       style={{
@@ -217,10 +220,10 @@ export default function MF_Dashboard() {
                         height: 220,
                       }}
                       onClick={() => handleCardClick(cv.id)}
-                      
                     >
-                      <Center h={170}  bg={colorScheme === "dark" ? "gray.8" : "#F3F4F6"}>
-                        <IconFileCv size={60} stroke={0.3} />
+                      <Center h={170} bg={colorScheme === "dark" ? "gray.8" : "#F3F4F6"}>
+                        <IconFileCv size={60} stroke={0.3} color="gray" />
+                        {/* <Text c="gray" fw={200} fz={20}>CV</Text> */}
                       </Center>
                       <Box px={12} py={4} className="border-t border-gray-200">
                         <Text
@@ -247,21 +250,24 @@ export default function MF_Dashboard() {
                             >
                               <Menu shadow="md" width={90}>
                                 <Menu.Target>
-                                  <IconDotsVertical size={16} stroke={2} />
+                                  <IconDotsVertical
+                                    size={16}
+                                    stroke={2}
+                                    style={{ color: "#228BE6" }}
+                                  />
                                 </Menu.Target>
                                 <Menu.Dropdown>
                                   <Menu.Item
-                                    onClick={() => handleCardClick(cv.id)}
-                                    leftSection={<IconPencil size={14} color="blue" />}
-                                  >
-                                    Sửa
-                                  </Menu.Item>
-                                  <Menu.Item leftSection={<IconEye size={14} color="orange" />}>
-                                    Xem
-                                  </Menu.Item>
-                                  <Menu.Item 
-                                    leftSection={<IconTrash size={14} color="red" />}
-                                    onClick={() => cv.id && handleDelete(cv.id)}
+                                    leftSection={
+                                      <ActionIcon
+                                        size="sm"
+                                        variant="light"
+                                        color="red"
+                                        onClick={() => cv.id && handleDelete(cv.id)}
+                                      >
+                                        <IconTrash stroke={1.5} />
+                                      </ActionIcon>
+                                    }
                                   >
                                     Xoá
                                   </Menu.Item>

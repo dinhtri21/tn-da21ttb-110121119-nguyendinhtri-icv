@@ -1,5 +1,5 @@
 "use client";
-import MF_Document_Layout from "@/modules-features/document/MF_Document_Layout";
+import MF_CV_Layout from "@/modules-features/MF_CV/MF_CV_Layout";
 import React from "react";
 
 interface IProp {
@@ -10,7 +10,7 @@ export default function Page({ params }: IProp) {
   const { id } = React.use(params);
   return (
     <>
-      <MF_Document_Layout id={id} />
+      <MF_CV_Layout id={id} />
     </>
   );
 }

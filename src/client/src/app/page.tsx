@@ -1,18 +1,36 @@
 "use client";
 
 import { clearToken, setToken } from "@/redux/slices/authSlice";
+import { clearUser, setUser } from "@/redux/slices/userSlide";
 import { RootState } from "@/redux/store";
-import { AppShell, Button, Container, Flex, Group, Image, Text } from "@mantine/core";
+import {
+  AppShell,
+  Avatar,
+  Button,
+  Container,
+  Flex,
+  Group,
+  Image,
+  Menu,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
 import { useHeadroom } from "@mantine/hooks";
+import { IconChevronDown, IconSwitchHorizontal, IconLogout, IconSquares } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function HomePage() {
   let tokenLocalStorage: string | null = null;
+  let userDataLocalStorage: any = null;
   if (typeof window !== "undefined") {
     tokenLocalStorage = localStorage.getItem("authToken");
+    const userDataString = localStorage.getItem("userData");
+    userDataLocalStorage = userDataString ? JSON.parse(userDataString) : null;
   }
   const token = useSelector((state: RootState) => state.auth.token);
+  const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
   const Router = useRouter();
 
@@ -21,23 +39,34 @@ export default function HomePage() {
     dispatch(setToken(fakeToken)); // Lưu token vào Redux
   };
 
-  const handleLogout = () => {
-    dispatch(clearToken()); // Xóa token khỏi Redux
-  };
+  // const handleLogout = () => {
+  //   dispatch(clearToken()); // Xóa token khỏi Redux
+  // };
 
   const pinned = useHeadroom({ fixedAt: 120 });
 
-  // useEffect(() => {
-  //   if (token == null || token == "") {
-  //     if (tokenLocalStorage == null || token == "") {
-  //       Router.push("auth/login");
-  //       return;
-  //     } else {
-  //       dispatch(setToken(tokenLocalStorage));
-  //     }
-  //   }
-  //   console.log(token);
-  // }, [token]);
+  // user
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const userState = useSelector((state: RootState) => state.user);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("userData");
+      dispatch(clearUser());
+      dispatch(clearToken());
+      // window.location.replace("/auth/login");
+    }
+  };
+
+  // Khôi phục thông tin đăng nhập từ localStorage vào Redux khi trang được tải
+  useEffect(() => {
+    // Nếu không có token trong Redux nhưng có trong localStorage
+    if (!token && tokenLocalStorage && userDataLocalStorage) {
+      dispatch(setToken(tokenLocalStorage));
+      dispatch(setUser(userDataLocalStorage));
+    }
+  }, [token, tokenLocalStorage, userDataLocalStorage, dispatch]);
 
   return (
     <AppShell header={{ height: 60, collapsed: !pinned, offset: false }}>
@@ -48,10 +77,101 @@ export default function HomePage() {
               <Text fz={30}>iCV</Text>
             </Flex>
             <Group>
-              <Button variant="light" onClick={() => Router.push("/auth/login")}>
-                Đăng ký
-              </Button>
-              <Button onClick={() => Router.push("/auth/login")}>Đăng nhập</Button>
+              {user ? (
+                <Menu
+                  width={260}
+                  // position="bottom-end"
+                  transitionProps={{ transition: "pop-top-right" }}
+                  onClose={() => setUserMenuOpened(false)}
+                  onOpen={() => setUserMenuOpened(true)}
+                  withinPortal
+                >
+                  <Menu.Target>
+                    <UnstyledButton
+                    // className={cx(classes.user, {
+                    //   [classes.userActive]: userMenuOpened,
+                    // })}
+                    >
+                      <Group gap={7}>
+                        {userState && userState.user?.pictureUrl ? (
+                          <Avatar
+                            src={userState.user?.pictureUrl}
+                            alt={userState.user?.name}
+                            radius="xl"
+                            size={35}
+                            key={userState.user?.name}
+                            name={userState.user?.name}
+                            color="initials"
+                            allowedInitialsColors={["blue", "red"]}
+                          />
+                        ) : (
+                          <Avatar
+                            alt={userState.user?.name}
+                            radius="xl"
+                            size={35}
+                            key={userState.user?.name}
+                            name={userState.user?.name}
+                            color="initials"
+                            allowedInitialsColors={["blue", "red"]}
+                          />
+                        )}
+
+                        <Text fw={500} size="sm" lh={1} mr={3}>
+                          {userState.user?.name}
+                        </Text>
+                        <IconChevronDown size={12} stroke={1.5} />
+                      </Group>
+                    </UnstyledButton>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Cài đặt</Menu.Label>
+                    <Menu.Item
+                      onClick={() => window.location.replace("/my-cv")}
+                      leftSection={<IconSquares size={16} stroke={1.5} />}
+                    >
+                      Quản lý CV
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={handleLogout}
+                      leftSection={<IconLogout size={16} stroke={1.5} />}
+                    >
+                      Đăng xuất
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              ) : (
+                //   <Group>
+                //     <Text>Xin chào, {user.name}</Text>
+                //     <Button onClick={() => Router.push("/dashboard")}>Dashboard</Button>
+                //     <Button
+                //       variant="outline"
+                //       color="red"
+                //       onClick={() => {
+                //         if (typeof window !== "undefined") {
+                //           localStorage.removeItem("authToken");
+                //           localStorage.removeItem("userData");
+                //           dispatch(clearUser());
+                //           dispatch(clearToken());
+                //         }
+                //       }}
+                //     >
+                //       Đăng xuất
+                //     </Button>
+                //   </Group>
+                // ) : (
+                //   <>
+                //     <Button variant="light" onClick={() => Router.push("/auth/register")}>
+                //       Đăng ký
+                //     </Button>
+                //     <Button onClick={() => Router.push("/auth/login")}>Đăng nhập</Button>
+                //   </>
+                <>
+                  <Button variant="light" onClick={() => Router.push("/auth/register")}>
+                    Đăng ký
+                  </Button>
+                  <Button onClick={() => Router.push("/auth/login")}>Đăng nhập</Button>
+                </>
+              )}
             </Group>
           </Group>
         </Container>

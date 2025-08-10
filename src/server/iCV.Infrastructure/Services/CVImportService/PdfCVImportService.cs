@@ -53,6 +53,8 @@ namespace iCV.Infrastructure.Services.CVImportService
                 UserId = userId,
                 FileName = fileName,
                 CreateWhen = DateTime.UtcNow,
+                Status = "Private",
+
                 Template = new Template 
                 {
                     Color = "#a5c9e8",
