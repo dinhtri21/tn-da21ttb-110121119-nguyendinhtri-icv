@@ -4,6 +4,7 @@ using iCV.Application.CVs.Commands.Translate;
 using iCV.Application.CVs.Commands.Update;
 using iCV.Application.CVs.Queries.GetCVById;
 using iCV.Application.CVs.Queries.GetCVs;
+using iCV.Application.CVs.Queries.GetPublicCVById;
 using iCV.Application.ExternalServices.PdfCVImport.Commands.Import;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -54,6 +55,23 @@ namespace iCV.API.Controllers
                     data = result
                 }
             );
+        }
+
+        [HttpGet("public/{id}")]
+        public async Task<IActionResult> GetPublicCVById([FromRoute] string id)
+        {
+            var query = new GetPublicCVByIdQuery { Id = id };
+            var result = await _mediator.Send(query);
+            
+            if (result == null) 
+                return NotFound(new { isSuccess = false, message = "CV not found or not public."  });
+            
+            return Ok(new
+            {
+                isSuccess = true,
+                message = "Public CV retrieved successfully.",
+                data = result
+            });
         }
 
         [Authorize]

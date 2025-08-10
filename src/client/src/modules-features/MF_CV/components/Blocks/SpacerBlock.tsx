@@ -47,7 +47,7 @@ export function SpacerBlock({
     <div
       style={{
         width: "100%",
-        height: height,
+        height: `${height}px`,
         backgroundColor: "transparent",
         position: "relative",
         borderRadius: "4px",

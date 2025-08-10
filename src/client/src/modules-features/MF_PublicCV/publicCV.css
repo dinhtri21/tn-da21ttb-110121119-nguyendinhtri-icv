@@ -1,0 +1,56 @@
+/* ReadOnly Mode for CV Blocks */
+.read-only-mode input, 
+.read-only-mode textarea, 
+.read-only-mode [contenteditable="true"] {
+  pointer-events: none;
+  /* border: none !important; */
+  background-color: transparent !important;
+  resize: none !important;
+  cursor: default !important;
+  outline: none !important;
+  box-shadow: none !important;
+  /* color: inherit !important; */
+}
+
+.read-only-mode .hover\:border,
+.read-only-mode .hover\:border-gray-300,
+.read-only-mode .focus\:border,
+.read-only-mode .focus\:border-gray-300 {
+  border-color: transparent !important;
+}
+
+.read-only-mode button,
+.read-only-mode .mantine-ActionIcon-root,
+.read-only-mode .action-buttons {
+  display: none !important;
+}
+
+.read-only-mode .cv-input {
+  /* padding: 0 !important; */
+  /* height: auto !important; */
+}
+
+/* Hide drag handles, delete buttons, and edit icons */
+.read-only-block .drag-handle,
+.read-only-block .delete-button,
+.read-only-block .edit-icon {
+  display: none !important;
+}
+
+/* Remove padding from block wrapper */
+.read-only-block {
+  /* padding: 0 !important; */
+}
+
+/* Print optimizations */
+@media print {
+  .cv-container {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Hide the download button when printing */
+  .fixed {
+    display: none !important;
+  }
+}

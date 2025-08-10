@@ -41,6 +41,10 @@ const cvService = {
   // Translate CV content to a target language
   translateCV: async (id: string, targetLanguage: string) => {
     return await baseAxios.post<IMyResponse<ICV>>(`${Controller}/${id}/translate?targetLanguage=${targetLanguage}`);
+  },
+  // Get public CV by ID (without authentication)
+  getPublicCVById: async (id: string) => {
+    return await baseAxios.get<IMyResponse<ICV>>(`${Controller}/public/${id}`);
   }
 };
 

@@ -27,6 +27,7 @@ import {
   IconLock,
   IconMessage2Star,
   IconMoon,
+  IconShare2,
   IconSun,
   IconWorld,
 } from "@tabler/icons-react";
@@ -36,6 +37,7 @@ import EmptyDropZone from "./components/EmptyDropZone";
 import EvaluationTab from "./components/EvaluationTab";
 import ResizablePreview from "./components/ResizablePreview";
 import RightSidebarSetting from "./components/RightSidebarSetting";
+import ShareTab from "./components/ShareTab";
 import Sidebar from "./components/Sidebar";
 import SortableBlock from "./components/SortableBlock";
 import { getBlockLabel } from "./constants/blocksMultiLang";
@@ -571,11 +573,14 @@ export default function MF_CV({ data }: IProps) {
 
           <Tabs defaultValue="bocuc" mt={12}>
             <Tabs.List>
-              <Tabs.Tab value="bocuc" leftSection={<IconComponents size={12} />}>
+              <Tabs.Tab value="bocuc" flex={1} leftSection={<IconComponents size={16} /> }>
                 Tuỳ chỉnh
               </Tabs.Tab>
-              <Tabs.Tab value="danhgia" leftSection={<IconMessage2Star size={12} />}>
+              <Tabs.Tab value="danhgia" flex={1} leftSection={<IconMessage2Star size={16} />}>
                 Đánh giá
+              </Tabs.Tab>
+              <Tabs.Tab value="chiase" flex={1} leftSection={<IconShare2 size={16} />}>
+                Chia sẻ
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="bocuc" mt={16}>
@@ -590,6 +595,12 @@ export default function MF_CV({ data }: IProps) {
             </Tabs.Panel>
             <Tabs.Panel value="danhgia" mt={16}>
               <EvaluationTab id={cvData?.id!} />
+            </Tabs.Panel>
+            <Tabs.Panel value="chiase" mt={16}>
+              <ShareTab 
+                cv={cvData!} 
+                onCvUpdated={(updatedCv) => setCvData(updatedCv)}
+              />
             </Tabs.Panel>
             <Tabs.Panel value="settings" mt={16}>
               Settings tab content
