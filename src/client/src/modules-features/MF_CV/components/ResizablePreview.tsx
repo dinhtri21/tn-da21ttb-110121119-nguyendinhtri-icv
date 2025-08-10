@@ -124,7 +124,7 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500}>
           Tuỳ chỉnh tỉ lệ
         </Text>
-        <Text size="xs" c="gray.6" mb={8}>
+        <Text size="xs" c="gray.6" mb={10}>
           Kéo thanh ở giữa để điều chỉnh
         </Text>
         <Center>
@@ -137,7 +137,7 @@ export default function ResizablePreview({
               {/* Left column */}
               <Box
                 bg={colorScheme == "dark" ? "rgba(54, 75, 93, 0.5)" : "#E4F1FC"}
-                className="bg-gray-100 p-2 relative "
+                className="bg-gray-100 px-2 py-1 relative "
                 style={{ width: `${leftWidth}%` }}
               >
                 <div className="space-y-1">
@@ -178,7 +178,7 @@ export default function ResizablePreview({
               {/* Right column */}
               <Box
                 bg={colorScheme == "dark" ? "rgba(54, 75, 93, 0.5)" : "#E4F1FC"}
-                className=" p-2 relative"
+                className=" px-2 py-1 relative"
                 style={{ width: `${100 - leftWidth}%` }}
               >
                 <div className="space-y-1">
@@ -207,7 +207,7 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500}>
           Màu chủ đạo
         </Text>
-         <Text size="xs" c="gray.6" mb={8}>
+         <Text size="xs" c="gray.6" mb={10}>
           Chọn màu để làm chủ đạo cho toàn cv
         </Text>
         <Center>
@@ -248,7 +248,7 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
           Ngôn ngữ
         </Text>
-          <Text size="xs" c="gray.6" mb={8}>
+          <Text size="xs" c="gray.6" mb={10}>
             Chọn ngôn ngữ hiển thị cho các thành phần
           </Text>
         <div className="flex gap-2">
@@ -291,7 +291,7 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
           Dịch nội dung
         </Text>
-          <Text size="xs" c="gray.6" mb={8}>
+          <Text size="xs" c="gray.6" mb={10}>
           Dịch nội dung CV sang ngôn ngữ khác
         </Text>
         <div className="flex gap-2 items-end">

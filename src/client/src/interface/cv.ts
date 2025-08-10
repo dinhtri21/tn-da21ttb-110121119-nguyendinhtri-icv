@@ -2,6 +2,7 @@ export interface ICV {
   id?: string;
   userId?: string;
   fileName?: string;
+  status?: string;
   createWhen?: Date;
   template?: Template;
   avatar?: IAvatar;

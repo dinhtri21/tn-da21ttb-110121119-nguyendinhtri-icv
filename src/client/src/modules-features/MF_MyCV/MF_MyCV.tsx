@@ -18,11 +18,14 @@ import { notifications } from "@mantine/notifications";
 import {
   IconDotsVertical,
   IconEye,
+  IconFile,
   IconFileCv,
+  IconLock,
   IconPencil,
   IconPlus,
   IconTrash,
   IconUpload,
+  IconWorld,
 } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -114,7 +117,14 @@ export default function MF_MyCV() {
   };
 
   const handleCreateNew = async () => {
-    await createMutation.mutate({ fileName: "Chưa đặt tên", createWhen: new Date() });
+    await createMutation.mutate({
+      fileName: "Chưa đặt tên",
+      createWhen: new Date(),
+      status: "private",
+      template: {
+        language: "vi",
+      },
+    });
   };
 
   const handleDelete = async (id: string) => {
@@ -150,7 +160,7 @@ export default function MF_MyCV() {
   if (query.isError) return "Không có dữ liệu...";
 
   if (createMutation.isSuccess) {
-    window.location.href = `/document/${createMutation.data?.data?.data?.id}`;
+    window.location.href = `/cv/${createMutation.data?.data?.data?.id}`;
   }
 
   return (
@@ -173,7 +183,7 @@ export default function MF_MyCV() {
           leftSection={<IconUpload size={18} stroke={2} />}
           onClick={handleImportPdf}
           loading={importPdfMutation.isPending}
-          size="sm"
+          size="xs"
         >
           Import PDF
         </Button>
@@ -192,27 +202,35 @@ export default function MF_MyCV() {
         <Box>
           <Grid mt={16}>
             <Grid.Col span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
-              <Center
-                style={{ cursor: "pointer" }}
-                h={220}
-                bg={colorScheme === "dark" ? "gray.8" : "#F3F4F6"}
-                className={styles.cvNewCard}
-                onClick={handleCreateNew}
+              <Box
+                style={{
+                  cursor: "pointer",
+                  borderRadius: 12,
+                  overflow: "hidden",
+                  // border: `1px solid  #E5E7EB`,
+                }}
+                className="border border-gray-400"
               >
-                <Stack align="center" gap={4}>
-                  <IconPlus size={32} stroke={1} style={{ color: "#228BE6" }} />
-                  <Text c="blue" size="sm">
-                    Tạo mới
-                  </Text>
-                </Stack>
-              </Center>
+                <Center
+                  h={220}
+                  className={styles.cvNewCard}
+                  onClick={handleCreateNew}
+                >
+                  <Stack align="center" gap={4}>
+                    <IconPlus size={32} stroke={1} style={{ color: "#868E96" }} />
+                    <Text c="gray" size="sm">
+                      Tạo mới
+                    </Text>
+                  </Stack>
+                </Center>
+              </Box>
             </Grid.Col>
             {query?.data &&
               query.data.map((cv, i) => {
                 return (
                   <Grid.Col key={i} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
                     <div
-                      className={styles.cvCard}
+                      className="border border-gray-200 dark:border-blue-400"
                       style={{
                         borderRadius: 12,
                         overflow: "hidden",
@@ -221,15 +239,18 @@ export default function MF_MyCV() {
                       }}
                       onClick={() => handleCardClick(cv.id)}
                     >
-                      <Center h={170} bg={colorScheme === "dark" ? "gray.8" : "#F3F4F6"}>
-                        <IconFileCv size={60} stroke={0.3} color="gray" />
-                        {/* <Text c="gray" fw={200} fz={20}>CV</Text> */}
+                      <Center h={170}>
+                        {cv?.status === "public" ? (
+                          <IconWorld size={32} stroke={0.7} style={{ color: "gray" }} />
+                        ) : (
+                          <IconLock size={32} stroke={0.7} style={{ color: "gray" }} />
+                        )}
                       </Center>
-                      <Box px={12} py={4} className="border-t border-gray-200">
+                      <Box px={12} py={4} className="border-t border-gray-300">
                         <Text
                           fw={500}
                           size="sm"
-                          c={colorScheme === "dark" ? "gray.4" : "gray.8"}
+                          c={colorScheme === "dark" ? "gray.4" : "gray.7"}
                           lineClamp={1}
                         >
                           {cv.fileName}
@@ -253,21 +274,13 @@ export default function MF_MyCV() {
                                   <IconDotsVertical
                                     size={16}
                                     stroke={2}
-                                    style={{ color: "#228BE6" }}
+                                    style={{ color: "gray" }}
                                   />
                                 </Menu.Target>
                                 <Menu.Dropdown>
                                   <Menu.Item
-                                    leftSection={
-                                      <ActionIcon
-                                        size="sm"
-                                        variant="light"
-                                        color="red"
-                                        onClick={() => cv.id && handleDelete(cv.id)}
-                                      >
-                                        <IconTrash stroke={1.5} />
-                                      </ActionIcon>
-                                    }
+                                    onClick={() => cv.id && handleDelete(cv.id)}
+                                    leftSection={<IconTrash stroke={1} size={18} color="red" />}
                                   >
                                     Xoá
                                   </Menu.Item>
@@ -286,7 +299,7 @@ export default function MF_MyCV() {
             {query?.data &&
               Array.from({ length: Math.max(0, 11 - query.data.length) }).map((_, i) => (
                 <Grid.Col key={`skeleton-${i}`} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
-                  <SkeletonCard isAnimation={false} />
+                  <SkeletonCard isLoading={false} />
                 </Grid.Col>
               ))}
           </Grid>

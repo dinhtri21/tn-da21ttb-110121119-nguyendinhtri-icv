@@ -13,6 +13,8 @@ import {
   Text,
   Tooltip,
   UnstyledButton,
+  useComputedColorScheme,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
@@ -20,6 +22,9 @@ import {
   IconDownload,
   IconInputAi,
   IconLogout,
+  IconMoon,
+  IconSquares,
+  IconSun,
   IconSwitchHorizontal,
 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
@@ -38,6 +43,10 @@ export default function RightSidebarSetting({
 }) {
   const [isExporting, setIsExporting] = useState(false);
   const editableRef = useRef<HTMLDivElement>(null);
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: true,
+  });
 
   const mutate = useMutation({
     mutationFn: async (cv: ICV) => {
@@ -121,7 +130,7 @@ export default function RightSidebarSetting({
                     src={userState.user?.pictureUrl}
                     alt={userState.user?.name}
                     radius="xl"
-                    size={35}
+                    size={30}
                     key={userState.user?.name}
                     name={userState.user?.name}
                     color="initials"
@@ -131,7 +140,7 @@ export default function RightSidebarSetting({
                   <Avatar
                     alt={userState.user?.name}
                     radius="xl"
-                    size={35}
+                    size={30}
                     key={userState.user?.name}
                     name={userState.user?.name}
                     color="initials"
@@ -148,8 +157,11 @@ export default function RightSidebarSetting({
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Label>Cài đặt</Menu.Label>
-            <Menu.Item leftSection={<IconSwitchHorizontal size={16} stroke={1.5} />}>
-              Change account
+            <Menu.Item
+              onClick={() => window.location.replace("/my-cv")}
+              leftSection={<IconSquares size={16} stroke={1.5} />}
+            >
+              Quản lý CV
             </Menu.Item>
             <Menu.Item onClick={handleLogout} leftSection={<IconLogout size={16} stroke={1.5} />}>
               Đăng xuất
@@ -157,6 +169,18 @@ export default function RightSidebarSetting({
           </Menu.Dropdown>
         </Menu>
         <Group gap={4}>
+          <ActionIcon
+            onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")}
+            variant="default"
+            size="30px"
+            aria-label="Toggle color scheme"
+          >
+            {computedColorScheme === "light" ? (
+              <IconSun stroke={1.5} size={18} />
+            ) : (
+              <IconMoon stroke={1.5} size={18} />
+            )}
+          </ActionIcon>
           <Tooltip
             label={
               <Text size="xs">
@@ -170,7 +194,7 @@ export default function RightSidebarSetting({
               }}
               size="xs"
               // leftSection={<IconDownload size={16} />}
-              color="blue"
+              color="green"
               variant="outline"
               loading={isExporting}
               disabled={isExporting}
@@ -178,7 +202,7 @@ export default function RightSidebarSetting({
               {isExporting ? "Đang tải..." : "Tải xuống"}
             </Button>
           </Tooltip>
-          <Button size="xs" color="blue" onClick={handleSaveCV}>
+          <Button size="xs" color="green" onClick={handleSaveCV}>
             Lưu
           </Button>
         </Group>

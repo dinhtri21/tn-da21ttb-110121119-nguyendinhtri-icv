@@ -194,8 +194,8 @@ export default function AuthenticationForm() {
             color: "green",
           });
 
-          // Chuyển hướng về dashboard
-          router.replace("/dashboard");
+          // Chuyển hướng về my-cv
+          router.replace("/my-cv");
         }
 
         hideOverlay();

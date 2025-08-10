@@ -23,9 +23,12 @@ import {
 } from "@mantine/core";
 import {
   IconComponents,
+  IconFileCv,
+  IconLock,
   IconMessage2Star,
   IconMoon,
-  IconSun
+  IconSun,
+  IconWorld,
 } from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";
@@ -53,9 +56,6 @@ export default function MF_CV({ data }: IProps) {
   const printRef = useRef<HTMLDivElement>(null);
   const editableRef = useRef<HTMLDivElement>(null);
   const { colorScheme, setColorScheme } = useMantineColorScheme();
-  const computedColorScheme = useComputedColorScheme("light", {
-    getInitialValueInEffect: true,
-  });
 
   // Track which blocks are used
   const usedBlocks = [...leftBlocks, ...rightBlocks]
@@ -360,13 +360,13 @@ export default function MF_CV({ data }: IProps) {
       <div className="border-b border-gray-300 "></div>
       <Box className="flex min-h-screen bg-gray-50">
         {/* Left Sidebar */}
-
         <Stack
           bg={colorScheme === "dark" ? "dark.5" : "white"}
           gap={4}
-          className="border-r border-gray-300  p-4"
+          className="border-r border-gray-300 px-6 py-2"
         >
-          <div className="flex items-center justify-between mb-2 gap-1">
+          <div className="flex items-center justify-between mb-1 gap-1">
+            <IconFileCv stroke={1} size={22} color="#1C7ED6" />
             <Input
               value={cvData?.fileName || ""}
               onChange={(e) =>
@@ -375,21 +375,23 @@ export default function MF_CV({ data }: IProps) {
                   fileName: e.target.value,
                 }))
               }
-              size="sm"
+              size="md"
               placeholder="Chưa đặt tên"
+              px={4}
+              style={{
+                border: "none !important",
+                outline: "none",
+                // padding: "0 !important",
+                // height: "22px",
+              }}
+              variant="unstyled"
             />
-            <ActionIcon
-              onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")}
-              variant="default"
-              size="lg"
-              aria-label="Toggle color scheme"
-            >
-              {computedColorScheme === "light" ? (
-                <IconSun stroke={1.5} />
-              ) : (
-                <IconMoon stroke={1.5} />
-              )}
-            </ActionIcon>
+
+            {cvData?.status === "public" ? (
+              <IconWorld stroke={1} size={22}/>
+            ) : (
+              <IconLock stroke={1} size={22} />
+            )}
           </div>
           <Sidebar
             onAddBlock={(type) => addBlock(type, "left")}
@@ -400,7 +402,7 @@ export default function MF_CV({ data }: IProps) {
         {/* Main content */}
         <Box
           bg={colorScheme === "dark" ? "dark.6" : "gray.1"}
-          className="flex-1 p-4  min-h-screen flex flex-col items-center"
+          className="flex-1 py-4  min-h-screen flex flex-col items-center"
         >
           <div
             className="cv-container shadow-2xl"
@@ -408,7 +410,7 @@ export default function MF_CV({ data }: IProps) {
               width: "815px",
               minHeight: "1056px",
               margin: "0 auto",
-              transform: "scale(0.9)",
+              transform: "scale(0.8)",
               transformOrigin: "top",
             }}
           >
@@ -539,7 +541,7 @@ export default function MF_CV({ data }: IProps) {
         {/* Right sidebar */}
         <Box
           bg={colorScheme === "dark" ? "dark.5" : "white"}
-          className={`w-100 border-l border-gray-300 p-4`}
+          className={`w-[420px] border-l border-gray-300 py-5 pl-6 pr-4`}
         >
           <RightSidebarSetting
             printRef={printRef as React.RefObject<HTMLDivElement>}
@@ -567,22 +569,16 @@ export default function MF_CV({ data }: IProps) {
             }}
           />
 
-          <Tabs defaultValue="bocuc" mt={8}>
+          <Tabs defaultValue="bocuc" mt={12}>
             <Tabs.List>
-              <Tabs.Tab
-                value="bocuc"
-                leftSection={<IconComponents size={12} />}
-              >
+              <Tabs.Tab value="bocuc" leftSection={<IconComponents size={12} />}>
                 Tuỳ chỉnh
               </Tabs.Tab>
-              <Tabs.Tab
-                value="danhgia"
-                leftSection={<IconMessage2Star size={12} />}
-              >
+              <Tabs.Tab value="danhgia" leftSection={<IconMessage2Star size={12} />}>
                 Đánh giá
               </Tabs.Tab>
             </Tabs.List>
-            <Tabs.Panel value="bocuc" mt={10}>
+            <Tabs.Panel value="bocuc" mt={16}>
               <ResizablePreview
                 leftWidth={leftWidth}
                 onWidthChange={setLeftWidth}
@@ -592,10 +588,10 @@ export default function MF_CV({ data }: IProps) {
                 setCvData={setCvData as React.Dispatch<React.SetStateAction<ICV>>}
               />
             </Tabs.Panel>
-            <Tabs.Panel value="danhgia" mt={10}>
+            <Tabs.Panel value="danhgia" mt={16}>
               <EvaluationTab id={cvData?.id!} />
             </Tabs.Panel>
-            <Tabs.Panel value="settings" mt={10}>
+            <Tabs.Panel value="settings" mt={16}>
               Settings tab content
             </Tabs.Panel>
           </Tabs>

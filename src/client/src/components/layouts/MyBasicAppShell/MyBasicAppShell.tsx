@@ -107,9 +107,6 @@ export function MyBasicAppShell({ children }: { children: React.ReactNode }) {
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Cài đặt</Menu.Label>
-                  <Menu.Item leftSection={<IconSwitchHorizontal size={16} stroke={1.5} />}>
-                    Change account
-                  </Menu.Item>
                   <Menu.Item
                     onClick={handleLogout}
                     leftSection={<IconLogout size={16} stroke={1.5} />}
