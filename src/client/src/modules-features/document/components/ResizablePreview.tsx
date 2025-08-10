@@ -1,7 +1,17 @@
 import IBlock, { ICV } from "@/interface/cv";
 import { useEffect, useRef, useState } from "react";
 import { BLOCKS } from "../constants/blocks";
-import { ActionIcon, Box, Button, Center, ColorPicker, Group, Select, Stack, useMantineColorScheme } from "@mantine/core";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Center,
+  ColorPicker,
+  Group,
+  Select,
+  Stack,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { Text } from "@mantine/core";
 import { IconLanguage, IconTransfer, IconWorld } from "@tabler/icons-react";
 import cvService from "@/api/services/cvService";
@@ -27,7 +37,7 @@ export default function ResizablePreview({
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { colorScheme, setColorScheme } = useMantineColorScheme();
-  const [targetLanguage, setTargetLanguage] = useState<string>(value?.template?.language || 'vi');
+  const [targetLanguage, setTargetLanguage] = useState<string>(value?.template?.language || "vi");
   const [isTranslating, setIsTranslating] = useState(false);
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -49,16 +59,17 @@ export default function ResizablePreview({
     try {
       setIsTranslating(true);
       const response = await cvService.translateCV(value.id, targetLanguage);
-      
+
       if (response.data.isSuccess) {
-        if (response.data.data) {
-          setCvData(response.data.data);
-        }
+        // if (response.data.data) {
+        //   setCvData(response.data.data);
+        // }
         notifications.show({
           title: "Thành công",
           message: "CV đã được dịch thành công!",
           color: "green",
         });
+        window.location.reload(); // Reload the page to reflect changes
       } else {
         notifications.show({
           title: "Lỗi",
@@ -113,7 +124,7 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500}>
           Tuỳ chỉnh tỉ lệ
         </Text>
-        <p className="text-gray-400 text-xs mb-2">💡 Kéo thanh ở giữa để điều chỉnh</p>
+        <p className="text-gray-400 text-xs mb-2">Kéo thanh ở giữa để điều chỉnh</p>
         <Center>
           <div
             ref={containerRef}
@@ -194,7 +205,7 @@ export default function ResizablePreview({
         <Text mb={1} fz={"sm"} fw={500}>
           Màu chủ đạo
         </Text>
-        <p className="text-gray-400 text-xs mb-2">💡 Chọn màu để làm chủ đạo cho toàn cv</p>
+        <p className="text-gray-400 text-xs mb-2">Chọn màu để làm chủ đạo cho toàn cv</p>
         <Center>
           <ColorPicker
             size="sm"
@@ -223,21 +234,20 @@ export default function ResizablePreview({
                   ...prev.template,
                   color: color,
                 },
-                
               }));
             }}
           />
         </Center>
       </Box>
-      
+
       <Box mt={4}>
         <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
           Ngôn ngữ
         </Text>
-        <p className="text-gray-400 text-xs mb-2">💡 Chọn ngôn ngữ hiển thị cho các thành phần</p>
+        <p className="text-gray-400 text-xs mb-2">Chọn ngôn ngữ hiển thị cho các thành phần</p>
         <div className="flex gap-2">
           <ActionIcon
-            variant={value?.template?.language === 'vi' ? 'filled' : 'light'}
+            variant={value?.template?.language === "vi" ? "filled" : "light"}
             color="blue"
             size="md"
             onClick={() => {
@@ -245,7 +255,7 @@ export default function ResizablePreview({
                 ...prev,
                 template: {
                   ...prev?.template,
-                  language: 'vi',
+                  language: "vi",
                 },
               }));
             }}
@@ -253,7 +263,7 @@ export default function ResizablePreview({
             VI
           </ActionIcon>
           <ActionIcon
-            variant={value?.template?.language === 'en' ? 'filled' : 'light'}
+            variant={value?.template?.language === "en" ? "filled" : "light"}
             color="blue"
             size="md"
             onClick={() => {
@@ -261,7 +271,7 @@ export default function ResizablePreview({
                 ...prev,
                 template: {
                   ...prev?.template,
-                  language: 'en',
+                  language: "en",
                 },
               }));
             }}
@@ -270,30 +280,33 @@ export default function ResizablePreview({
           </ActionIcon>
         </div>
       </Box>
-      
+
       <Box mt={4}>
         <Text mb={1} fz={"sm"} fw={500} className="flex items-center gap-1">
           Dịch nội dung
         </Text>
-        <p className="text-gray-400 text-xs mb-2">💡 Dịch tất cả nội dung CV sang ngôn ngữ khác</p>
+        <p className="text-gray-400 text-xs mb-2">Dịch nội dung CV sang ngôn ngữ khác</p>
         <div className="flex gap-2 items-end">
           <Select
-            label="Ngôn ngữ đích"
+            // label="Ngôn ngữ đích"
             placeholder="Chọn ngôn ngữ"
             data={[
-              { value: 'vi', label: 'Tiếng Việt' },
-              { value: 'en', label: 'Tiếng Anh' },
+              { value: "vi", label: "Tiếng Việt" },
+              { value: "en", label: "Tiếng Anh" },
             ]}
             value={targetLanguage}
-            onChange={(value) => setTargetLanguage(value || 'vi')}
+            defaultValue={value?.template?.language}
+            onChange={(value) => setTargetLanguage(value || "vi")}
             className="flex-1"
-          />
+            size="xs"
+          />  
           <Button
-            variant="light"
+            variant="filled"
             color="blue"
+            size="xs"
             onClick={handleTranslate}
             loading={isTranslating}
-            leftSection={<IconTransfer size={16} />}
+            // leftSection={<IconTransfer size={16} />}
           >
             Dịch
           </Button>

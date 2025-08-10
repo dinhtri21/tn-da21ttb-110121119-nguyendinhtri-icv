@@ -3,6 +3,7 @@ using iCV.Application.Common.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -26,29 +27,46 @@ namespace iCV.Infrastructure.Services.TranslationService
         {
             try
             {
-                // Kiểm tra ngôn ngữ hiện tại của CV
-                string currentLanguage = cv.Template?.Language ?? "en";
-                
-                // Nếu ngôn ngữ hiện tại giống ngôn ngữ đích, không cần dịch
-                if (currentLanguage == targetLanguage)
-                {
-                    return cv;
-                }
-
                 // Tạo bản sao của CV để không ảnh hưởng đến CV gốc
                 var translatedCV = CloneCV(cv);
                 
-                // Cập nhật ngôn ngữ đích
-                translatedCV.Template.Language = targetLanguage;
-
                 // Chuẩn bị dữ liệu CV để dịch
                 var cvDataJson = SerializeCVForTranslation(cv);
                 
+                // Xác định ngôn ngữ nguồn dựa trên phân tích nội dung
+                string sourceLanguage = targetLanguage == "vi" ? "en" : "vi";
+                
                 // Gọi API Gemini để dịch
-                var translatedJson = await TranslateJsonWithGemini(cvDataJson, currentLanguage, targetLanguage);
+                var translatedJson = await TranslateJsonWithGemini(cvDataJson, sourceLanguage, targetLanguage);
+                
+                // Kiểm tra xem Gemini có báo CV đã ở ngôn ngữ đích không
+                bool alreadyInTargetLanguage = false;
+                try
+                {
+                    using var doc = JsonDocument.Parse(translatedJson);
+                    if (doc.RootElement.TryGetProperty("AlreadyInTargetLanguage", out var flag) && flag.ValueKind == JsonValueKind.True)
+                    {
+                        alreadyInTargetLanguage = true;
+                    }
+                }
+                catch
+                {
+                    // Bỏ qua lỗi phân tích JSON, coi như cần dịch
+                }
+                
+                if (alreadyInTargetLanguage)
+                {
+                    return translatedCV;
+                }
                 
                 // Cập nhật CV với dữ liệu đã dịch
                 UpdateCVFromTranslatedJson(translatedCV, translatedJson);
+                
+                // Cập nhật ngôn ngữ đích
+                if (translatedCV.Template != null)
+                {
+                    translatedCV.Template.Language = targetLanguage;
+                }
                 
                 return translatedCV;
             }
@@ -65,7 +83,7 @@ namespace iCV.Infrastructure.Services.TranslationService
             // Tạo một bản sao của CV để không ảnh hưởng đến dữ liệu gốc
             // Sử dụng deep clone để tránh các vấn đề tham chiếu
             var json = JsonSerializer.Serialize(source);
-            return JsonSerializer.Deserialize<CVDto>(json);
+            return JsonSerializer.Deserialize<CVDto>(json) ?? new CVDto();
         }
 
         private string SerializeCVForTranslation(CVDto cv)
@@ -126,6 +144,9 @@ namespace iCV.Infrastructure.Services.TranslationService
             
             var prompt = new StringBuilder();
             prompt.AppendLine($"Bạn là một chuyên gia dịch thuật CV từ tiếng {languageDirection}. Tôi cần bạn dịch tất cả nội dung văn bản trong JSON này sang tiếng {targetLanguageName}.");
+            prompt.AppendLine("Trước tiên, hãy phân tích nhanh nội dung JSON để xác định ngôn ngữ hiện tại thực tế của nó.");
+            prompt.AppendLine("Nếu nội dung đã ở đúng ngôn ngữ đích, hãy trả về JSON nguyên bản và thêm trường \"AlreadyInTargetLanguage\": true.");
+            prompt.AppendLine("Nếu cần dịch, hãy dịch tất cả nội dung và trả về JSON không có trường AlreadyInTargetLanguage.");
             prompt.AppendLine("Hãy giữ nguyên cấu trúc JSON, chỉ dịch giá trị của các trường nội dung.");
             prompt.AppendLine("Không dịch các URL, email, số điện thoại, tên riêng của các công ty hoặc sản phẩm công nghệ.");
             prompt.AppendLine("Đối với các kỹ năng chuyên môn hoặc thuật ngữ kỹ thuật, hãy giữ nguyên thuật ngữ tiếng Anh nếu cần thiết.");
@@ -163,11 +184,11 @@ namespace iCV.Infrastructure.Services.TranslationService
 
             using var doc = JsonDocument.Parse(responseJson);
             var text = doc.RootElement
-                          .GetProperty("candidates")[0]
-                          .GetProperty("content")
-                          .GetProperty("parts")[0]
-                          .GetProperty("text")
-                          .GetString();
+                   .GetProperty("candidates")[0]
+                   .GetProperty("content")
+                   .GetProperty("parts")[0]
+                   .GetProperty("text")
+                   .GetString();
 
             if (string.IsNullOrWhiteSpace(text))
                 return "{}";
@@ -225,7 +246,7 @@ namespace iCV.Infrastructure.Services.TranslationService
                 }
 
                 // Cập nhật Experiences
-                if (root.TryGetProperty("Experiences", out var experiencesElement) && experiencesElement.ValueKind == JsonValueKind.Array)
+                if (root.TryGetProperty("Experiences", out var experiencesElement) && experiencesElement.ValueKind == JsonValueKind.Array && cv.Experiences != null)
                 {
                     int expIndex = 0;
                     foreach (var expElement in experiencesElement.EnumerateArray())
@@ -244,7 +265,7 @@ namespace iCV.Infrastructure.Services.TranslationService
                 }
 
                 // Cập nhật Education
-                if (root.TryGetProperty("Education", out var educationElement) && educationElement.ValueKind == JsonValueKind.Array)
+                if (root.TryGetProperty("Education", out var educationElement) && educationElement.ValueKind == JsonValueKind.Array && cv.Education != null)
                 {
                     int eduIndex = 0;
                     foreach (var eduElement in educationElement.EnumerateArray())
@@ -263,7 +284,7 @@ namespace iCV.Infrastructure.Services.TranslationService
                 }
 
                 // Cập nhật Projects
-                if (root.TryGetProperty("Projects", out var projectsElement) && projectsElement.ValueKind == JsonValueKind.Array)
+                if (root.TryGetProperty("Projects", out var projectsElement) && projectsElement.ValueKind == JsonValueKind.Array && cv.Projects != null)
                 {
                     int projIndex = 0;
                     foreach (var projElement in projectsElement.EnumerateArray())
@@ -288,7 +309,7 @@ namespace iCV.Infrastructure.Services.TranslationService
                 }
 
                 // Cập nhật Certificates
-                if (root.TryGetProperty("Certificates", out var certsElement) && certsElement.ValueKind == JsonValueKind.Array)
+                if (root.TryGetProperty("Certificates", out var certsElement) && certsElement.ValueKind == JsonValueKind.Array && cv.Certificates != null)
                 {
                     int certIndex = 0;
                     foreach (var certElement in certsElement.EnumerateArray())
@@ -307,7 +328,7 @@ namespace iCV.Infrastructure.Services.TranslationService
                 }
 
                 // Cập nhật Awards
-                if (root.TryGetProperty("Awards", out var awardsElement) && awardsElement.ValueKind == JsonValueKind.Array)
+                if (root.TryGetProperty("Awards", out var awardsElement) && awardsElement.ValueKind == JsonValueKind.Array && cv.Awards != null)
                 {
                     int awardIndex = 0;
                     foreach (var awardElement in awardsElement.EnumerateArray())

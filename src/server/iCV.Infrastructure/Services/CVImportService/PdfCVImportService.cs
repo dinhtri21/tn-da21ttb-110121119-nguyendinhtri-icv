@@ -56,8 +56,8 @@ namespace iCV.Infrastructure.Services.CVImportService
                 Template = new Template 
                 {
                     Color = "#a5c9e8",
-                    LeftSizeColum = 34,
-                    RightSizeColum = 66,
+                    LeftSizeColum = 35,
+                    RightSizeColum = 65,
                     LeftColumn = new List<Block>
                     {
                         new Block { Id = 0, Type = "avatar", Height = null },

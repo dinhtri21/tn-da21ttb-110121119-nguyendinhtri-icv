@@ -84,9 +84,9 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
         Đánh giá CV bởi AI
       </Text>
       {!query.data ? (
-        <p className="text-gray-400 text-xs">💡 Nhấn nút tải đánh giá để thực hiện</p>
+        <p className="text-gray-400 text-xs">Nhấn nút tải đánh giá để thực hiện</p>
       ) : (
-        <p className="text-gray-400 text-xs">💡 Nhấn nút tải lại để làm mới đánh giá</p>
+        <p className="text-gray-400 text-xs">Nhấn nút tải lại để làm mới đánh giá</p>
       )}
       {!query.data && (
         <Button onClick={handleEnableQuery} size="xs" mt="8px">
