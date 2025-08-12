@@ -30,11 +30,12 @@ export default function ShareTab({ cv, onCvUpdated }: ShareTabProps) {
 
   const updateStatusMutation = useMutation({
     mutationFn: async () => {
+      if (!cv || !cv.id) throw new Error("Thiếu thông tin CV hoặc ID");
       const updatedCv: ICV = {
         ...cv,
         status: isPublic ? "private" : "public",
       };
-      const response = await cvService.updateCV(cv?.id!, updatedCv);
+      const response = await cvService.updateCV(cv.id, updatedCv);
       return response.data;
     },
     onSuccess: (data) => {

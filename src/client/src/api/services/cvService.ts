@@ -1,10 +1,9 @@
 import baseAxios from "@/api/config/baseAxios";
 import { ICV } from "@/interface/cv";
+import { IEvaluate } from "@/interface/evaluate";
 import IMyResponse from "@/interface/response";
 
 const Controller = "CV";
-
-
 
 const cvService = {
   // Create a new CV
@@ -44,8 +43,12 @@ const cvService = {
   },
   // Get public CV by ID (without authentication)
   getPublicCVById: async (id: string) => {
-    return await baseAxios.get<IMyResponse<ICV>>(`${Controller}/public/${id}`);
-  }
+    return await baseAxios.get<IMyResponse<ICV>>(`${Controller}/${id}/public`);
+  },
+  // Get evaluations by CV ID
+  getEvaluations: async (id: string) => {
+    return await baseAxios.get<IMyResponse<IEvaluate[]>>(`${Controller}/${id}/evaluation`);
+  },
 };
 
 export default cvService;

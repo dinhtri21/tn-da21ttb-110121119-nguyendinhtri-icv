@@ -594,7 +594,7 @@ export default function MF_CV({ data }: IProps) {
               />
             </Tabs.Panel>
             <Tabs.Panel value="danhgia" mt={16}>
-              <EvaluationTab id={cvData?.id!} />
+              {cvData?.id && <EvaluationTab id={cvData.id} />}
             </Tabs.Panel>
             <Tabs.Panel value="chiase" mt={16}>
               <ShareTab 

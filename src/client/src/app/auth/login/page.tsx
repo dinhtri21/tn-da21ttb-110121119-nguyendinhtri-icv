@@ -220,19 +220,19 @@ export default function AuthenticationForm() {
 
       window.addEventListener("message", handleMessage);
 
-      // Timeout sau 5 phút
-      setTimeout(() => {
-        if (popup && !popup.closed) {
-          popup.close();
-        }
-        hideOverlay();
-        cleanup();
-        notifications.show({
-          title: "Timeout",
-          message: "Quá trình đăng nhập đã hết thời gian",
-          color: "orange",
-        });
-      }, 300000); // 5 phút
+      // // Timeout sau 5 phút
+      // setTimeout(() => {
+      //   if (popup && !popup.closed) {
+      //     popup.close();
+      //   }
+      //   hideOverlay();
+      //   cleanup();
+      //   notifications.show({
+      //     title: "Timeout",
+      //     message: "Quá trình đăng nhập đã hết thời gian",
+      //     color: "orange",
+      //   });
+      // }, 300000); // 5 phút
     } catch (error) {
       console.error("Login failed:", error);
       notifications.show({
@@ -262,7 +262,7 @@ export default function AuthenticationForm() {
 
   return (
     <Center h="100vh" w="100vw">
-      <Paper radius="md" p="xl" withBorder miw={360} pos="relative">
+      <Paper radius="md" p="xl" withBorder miw={360} pos="relative" shadow="md">
         <LoadingOverlay
           visible={visible}
           zIndex={1000}

@@ -34,23 +34,23 @@ namespace iCV.API.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("signUp")]
+        [HttpPost("sign-up")]
         public async Task<IActionResult> AddUser(CreateUserCommand command)
         {
             var userId = await _mediator.Send(command);
             if (userId == null)
             {
-                return BadRequest(new { message = "Đăng ký tài khoản không thành công!" });
+                return BadRequest(new { message = "Account registration failed!" });
             }
             return Ok(new
             {
                 isSuccess = true,
-                message = "Đăng ký tài khoản thành công!",
+                message = "Account registered successfully!",
                 data = new { id = userId }
             });
         }
 
-        [HttpPost("signIn")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> Login([FromBody] LoginLocalQuery query)
         {
             var loginData = await _mediator.Send(query);
@@ -67,7 +67,7 @@ namespace iCV.API.Controllers
             return Ok(new
             {
                 isSuccess = true,
-                message = "Đăng nhập thành công!",
+                message = "Login successful!",
                 data = loginData
             });
         }

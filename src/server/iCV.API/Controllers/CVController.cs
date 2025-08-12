@@ -5,6 +5,7 @@ using iCV.Application.CVs.Commands.Update;
 using iCV.Application.CVs.Queries.GetCVById;
 using iCV.Application.CVs.Queries.GetCVs;
 using iCV.Application.CVs.Queries.GetPublicCVById;
+using iCV.Application.Evaluate.Queries.EvaluateWithGemini;
 using iCV.Application.ExternalServices.PdfCVImport.Commands.Import;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -57,7 +58,7 @@ namespace iCV.API.Controllers
             );
         }
 
-        [HttpGet("public/{id}")]
+        [HttpGet("{id}/public")]
         public async Task<IActionResult> GetPublicCVById([FromRoute] string id)
         {
             var query = new GetPublicCVByIdQuery { Id = id };
@@ -165,6 +166,21 @@ namespace iCV.API.Controllers
             }
         }
 
+        [HttpGet("{id}/evaluation")]
+        public async Task<IActionResult> EvaluateWithGemini([FromRoute] string id)
+        {
+            var query = new EvaluateWithGeminiQuery { id = id };
+            var result = await _mediator.Send(query);
+            return Ok(
+                new
+                {
+                    isSuccess = true,
+                    message = "Evaluation completed successfully.",
+                    data = result.Areas
+                }
+            );
+        }
+
         [Authorize]
         [HttpPost("{id}/translate")]
         public async Task<IActionResult> TranslateCV([FromRoute] string id, [FromQuery] string targetLanguage)
@@ -186,7 +202,7 @@ namespace iCV.API.Controllers
                 return Ok(new
                 {
                     isSuccess = true,
-                    message = $"CV đã được dịch sang tiếng {(targetLanguage == "vi" ? "Việt" : "Anh")}",
+                    message = $"CV has been translated to {(targetLanguage == "vi" ? "Vietnamese" : "English")}",
                     data = translatedCV
                 });
             }

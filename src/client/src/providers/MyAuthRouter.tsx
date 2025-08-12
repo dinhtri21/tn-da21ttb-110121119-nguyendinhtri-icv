@@ -53,7 +53,7 @@ export default function MyAuthRouter({ children }: { children: React.ReactNode }
     if (isAuthPage) {
       Router.replace("/dashboard");
     }
-  }, [token]);
+  }, [token, Router, dispatch, isAuthPage, tokenLocalStorage, userDataLocalStorage]);
 
   if (isAuthPage) {
     return <>{children}</>;

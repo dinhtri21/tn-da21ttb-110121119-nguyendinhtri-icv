@@ -230,7 +230,7 @@ export default function MF_MyCV() {
                 return (
                   <Grid.Col key={i} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
                     <div
-                      className="border border-gray-200 dark:border-blue-400"
+                      className={`border-1  ${cv.status === "public" ? "border-blue-400" : "border-gray-400"}`}
                       style={{
                         borderRadius: 12,
                         overflow: "hidden",
@@ -241,7 +241,7 @@ export default function MF_MyCV() {
                     >
                       <Center h={170}>
                         {cv?.status === "public" ? (
-                          <IconWorld size={32} stroke={0.7} style={{ color: "gray" }} />
+                          <IconWorld size={32} stroke={0.7} style={{ color: "blue" }} />
                         ) : (
                           <IconLock size={32} stroke={0.7} style={{ color: "gray" }} />
                         )}

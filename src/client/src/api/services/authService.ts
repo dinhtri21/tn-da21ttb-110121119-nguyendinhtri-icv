@@ -19,10 +19,10 @@ export const authService = {
   },
   // Local login
   login: async (data: IBodyAuth) => {
-    return baseAxios.post<IMyResponse<IUserLoginData>>(`${Controller}/signIn`, data);
+    return baseAxios.post<IMyResponse<IUserLoginData>>(`${Controller}/sign-in`, data);
   },
   // Sign up
   signUp: async (data: IBodyAuth) => {
-    return baseAxios.post<IMyResponse<{id: string}>>(`${Controller}/signUp`, data);
+    return baseAxios.post<IMyResponse<{id: string}>>(`${Controller}/sign-up`, data);
   }
 };

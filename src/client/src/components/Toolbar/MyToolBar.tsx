@@ -94,7 +94,7 @@ export default function MyToolBar({
         <Tooltip
           label={
             <Text size="sm">
-              Vui lòng chọn 'Lưu dưới dạng PDF' hoặc 'Save as PDF' trong hộp thoại In.
+              Vui lòng chọn &apos;Lưu dưới dạng PDF&apos; hoặc &apos;Save as PDF&apos; trong hộp thoại In.
             </Text>
           }
         >

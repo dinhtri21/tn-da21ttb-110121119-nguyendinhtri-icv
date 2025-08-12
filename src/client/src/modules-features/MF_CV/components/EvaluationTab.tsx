@@ -1,4 +1,3 @@
-import evaluateService from "@/api/services/evaluateService";
 import { IEvaluate } from "@/interface/evaluate";
 import {
   ActionIcon,
@@ -8,10 +7,9 @@ import {
   Center,
   Group,
   Loader,
-  Skeleton,
   Table,
   Text,
-  useMantineColorScheme,
+  useMantineColorScheme
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
@@ -67,7 +65,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
   const query = useQuery<IEvaluate[]>({
     queryKey: ["EvaluationTab", id],
     queryFn: async () => {
-      // const response = await evaluateService.getEvaluations({ id });
+      // const response = await cvService.getEvaluations(id);
       // return response.data.data || [];
       return mockData;
     },
