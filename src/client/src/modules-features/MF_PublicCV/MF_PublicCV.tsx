@@ -1,15 +1,16 @@
 "use client";
 import IBlock, { ICV } from "@/interface/cv";
 import {
-  ActionIcon,
   Box,
   Button,
   Center,
   Text,
   Tooltip,
-  useMantineColorScheme,
+  useMantineColorScheme
 } from "@mantine/core";
+import { IconDownload } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
+import { useReactToPrint } from "react-to-print";
 import { AvatarBlock } from "../MF_CV/components/Blocks/AvatarBlock";
 import { AwardBlock } from "../MF_CV/components/Blocks/AwardBlock";
 import { BusinessCardBlock } from "../MF_CV/components/Blocks/BusinessCardBlock";
@@ -21,8 +22,6 @@ import { OverviewBlock } from "../MF_CV/components/Blocks/OverviewBlock";
 import { PersonalInfoBlock } from "../MF_CV/components/Blocks/PersonalInfoBlock";
 import { ProjectBlock } from "../MF_CV/components/Blocks/ProjectBlock";
 import { SkillBlock } from "../MF_CV/components/Blocks/SkillBlock";
-import { IconDownload } from "@tabler/icons-react";
-import { useReactToPrint } from "react-to-print";
 import "./publicCV.css"; // Import the CSS
 
 // Component to render blocks with proper component from MF_CV

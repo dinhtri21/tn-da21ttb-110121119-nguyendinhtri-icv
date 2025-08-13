@@ -29,7 +29,7 @@ namespace iCV.Application.Users.Queries.LoginLocal
             // Check if user exists
             var user = await _userRepository.GetUserByEmailAsync(request.Email);
 
-            if(user != null && user.provider == "google")
+            if(user != null && user.Provider == "google")
             {
                 throw new ValidationException("Email này đã được đăng ký bằng hình thức Google!");
             }   
@@ -39,7 +39,7 @@ namespace iCV.Application.Users.Queries.LoginLocal
                 throw new ValidationException("Email hoặc mật khẩu không đúng");
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(request.PassWord, user.password))
+            if (!BCrypt.Net.BCrypt.Verify(request.PassWord, user.Password))
             {
                 throw new ValidationException("Email hoặc mật khẩu không đúng");
             }
@@ -47,9 +47,9 @@ namespace iCV.Application.Users.Queries.LoginLocal
             // Create claims
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.id),
-                new Claim(ClaimTypes.Email, user.email),
-                new Claim(ClaimTypes.Name, user.name),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Name),
             };
 
             // Create token
@@ -67,15 +67,15 @@ namespace iCV.Application.Users.Queries.LoginLocal
             // Return token and user info
             var userInfo = new UserLoginDto
             {
-                token = tokenString,
-                user = new UserDto
+                Token = tokenString,
+                User = new UserDto
                 {
-                    id = user.id,
-                    name = user.name,
-                    email = user.email,
-                    provider = user.provider,
-                    createdAt = user.createdAt,
-                    updatedAt = user.updatedAt,
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    Provider = user.Provider,
+                    CreatedAt = user.CreatedAt,
+                    UpdatedAt = user.UpdatedAt,
                 }
             };
 

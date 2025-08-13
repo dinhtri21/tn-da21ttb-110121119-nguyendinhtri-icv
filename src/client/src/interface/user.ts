@@ -1,12 +1,12 @@
 export interface IUser {
-    id?: string;
-    name?: string;
-    email?: string;
-    password?: string;
-    provider?: string;
-    pictureUrl?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    Id?: string;
+    Name?: string;
+    Email?: string;
+    Password?: string;
+    Provider?: string;
+    PictureUrl?: string;
+    CreatedAt?: Date;
+    UpdatedAt?: Date;
 }
 
 export interface IUserLoginData {

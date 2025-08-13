@@ -13,23 +13,19 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import {
-  ActionIcon,
   Box,
   Input,
   Stack,
   Tabs,
-  useComputedColorScheme,
-  useMantineColorScheme,
+  useMantineColorScheme
 } from "@mantine/core";
 import {
   IconComponents,
   IconFileCv,
   IconLock,
   IconMessage2Star,
-  IconMoon,
   IconShare2,
-  IconSun,
-  IconWorld,
+  IconWorld
 } from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
 import BlockEditor from "./components/BlockEditor";

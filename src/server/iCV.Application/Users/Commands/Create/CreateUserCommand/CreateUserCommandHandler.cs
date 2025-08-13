@@ -20,7 +20,7 @@ namespace iCV.Application.Users.Commands.Create.CreateUserCommand
         {
             var isUserExist = await _userRepository.GetUserByEmailAsync(request.Email);
 
-            if (isUserExist != null && isUserExist.provider == "google")
+            if (isUserExist != null && isUserExist.Provider == "google")
             {
                 throw new Exception("Email này đăng nhập bằng hình thức google!");
             } else if (isUserExist != null)
@@ -32,14 +32,14 @@ namespace iCV.Application.Users.Commands.Create.CreateUserCommand
 
             var user = new User
             {
-                name = request.Name,
-                email = request.Email,
-                password = hashedPassword,
-                provider = "local",
+                Name = request.Name,
+                Email = request.Email,
+                Password = hashedPassword,
+                Provider = "local",
             };
 
             await _userRepository.CreateUserAsync(user);
-            return user.id;
+            return user.Id;
         }
     }
 }

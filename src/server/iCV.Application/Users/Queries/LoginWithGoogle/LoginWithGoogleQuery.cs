@@ -10,8 +10,8 @@ namespace iCV.Application.Users.Queries.LoginWithGoogle
 {
     public class LoginWithGoogleQuery : IRequest<UserLoginDto>
     {
-        public string email { get; set; }
-        public string name { get; set; }
-        public string? pictureUrl { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string? PictureUrl { get; set; }
     }
 }

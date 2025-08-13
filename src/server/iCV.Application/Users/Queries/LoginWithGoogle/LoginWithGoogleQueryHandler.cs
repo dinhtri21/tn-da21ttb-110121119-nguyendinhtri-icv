@@ -26,14 +26,14 @@ namespace iCV.Application.Users.Queries.LoginWithGoogle
         public async Task<UserLoginDto> Handle(LoginWithGoogleQuery request, CancellationToken cancellationToken)
         {
             // Check if user exists
-            var user = await _userRepository.GetUserByEmailAsync(request.email);
+            var user = await _userRepository.GetUserByEmailAsync(request.Email);
             if (user == null)
             {
                 var newUser = new User
                 {
-                    name = request.name,
-                    email = request.email,
-                    provider = "google",
+                    Name = request.Name,
+                    Email = request.Email,
+                    Provider = "google",
                 };
                 await _userRepository.CreateUserAsync(newUser);
                 user = newUser;
@@ -42,9 +42,9 @@ namespace iCV.Application.Users.Queries.LoginWithGoogle
             // Create claims
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.id), 
-                new Claim(ClaimTypes.Email, user.email),
-                new Claim(ClaimTypes.Name, user.name),
+                new Claim(ClaimTypes.NameIdentifier, user.Id), 
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Name),
             };
 
             // Create token
@@ -62,16 +62,16 @@ namespace iCV.Application.Users.Queries.LoginWithGoogle
             // Return token and user info
             var userInfo = new UserLoginDto
             {
-                token = tokenString,
-                user = new UserDto
+                Token = tokenString,
+                User = new UserDto
                 {
-                    id = user.id,
-                    name = user.name,
-                    email = user.email,
-                    pictureUrl = request.pictureUrl,
-                    provider = user.provider,
-                    createdAt = user.createdAt,
-                    updatedAt = user.updatedAt,
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    PictureUrl = request.PictureUrl,
+                    Provider = user.Provider,
+                    CreatedAt = user.CreatedAt,
+                    UpdatedAt = user.UpdatedAt,
                 }
             };
 

@@ -56,9 +56,9 @@ export default function AuthenticationForm() {
     try {
       showOverlay();
       const res = await authService.signUp({
-        name: values.name,
-        email: values.email,
-        passWord: values.password,
+        Name: values.name,
+        Email: values.email,
+        PassWord: values.password,
       });
 
       if (res.status === 200 && res.data.isSuccess) {
@@ -110,7 +110,7 @@ export default function AuthenticationForm() {
 
         notifications.show({
           title: "Đăng nhập thành công",
-          message: `Chào mừng ${res.data?.data?.user?.name}!`,
+          message: `Chào mừng ${res.data?.data?.user?.Name}!`,
           color: "green",
         });
 

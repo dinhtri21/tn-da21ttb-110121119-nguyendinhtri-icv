@@ -20,7 +20,7 @@ namespace iCV.Infrastructure.Context
             _database = client.GetDatabase(options.Value.DatabaseName);
         }
 
-        public IMongoCollection<User> Users => _database.GetCollection<User>("users");
+        public IMongoCollection<User> Users => _database.GetCollection<User>("user");
         public IMongoCollection<CV> CV => _database.GetCollection<CV>("cv");
 
         public IMongoCollection<T> GetCollection<T>(string collectionName)

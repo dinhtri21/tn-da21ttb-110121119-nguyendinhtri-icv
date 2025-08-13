@@ -62,7 +62,7 @@ namespace iCV.API.Controllers
                 SameSite = SameSiteMode.None,
                 MaxAge = TimeSpan.FromHours(12),
             };
-            Response.Cookies.Append("accessToken", loginData.token, cookieOptions);
+            Response.Cookies.Append("accessToken", loginData.Token, cookieOptions);
 
             return Ok(new
             {
@@ -176,16 +176,16 @@ namespace iCV.API.Controllers
                 // Xử lý login/register user
                 var loginData = await _mediator.Send(new LoginWithGoogleQuery
                 {
-                    email = userInfo.email,
-                    name = userInfo.name,
-                    pictureUrl = userInfo.picture
+                    Email = userInfo.email,
+                    Name = userInfo.name,
+                    PictureUrl = userInfo.picture
                 });
 
                 ClearSessionData();
 
                 // Redirect về callback page với thông tin thành công
-                var userJson = Uri.EscapeDataString(JsonSerializer.Serialize(loginData.user));
-                var redirectUrl = $"{callbackUrl}?success=true&token={Uri.EscapeDataString(loginData.token)}&user={userJson}";
+                var userJson = Uri.EscapeDataString(JsonSerializer.Serialize(loginData.User));
+                var redirectUrl = $"{callbackUrl}?success=true&token={Uri.EscapeDataString(loginData.Token)}&user={userJson}";
 
                 return Redirect(redirectUrl);
             }

@@ -5,9 +5,9 @@ import { ICV } from "@/interface/cv";
 import IMyResponse from "@/interface/response";
 
 interface IBodyAuth {
-  name?: string
-  email: string;
-  passWord: string;
+  Name?: string
+  Email: string;
+  PassWord: string;
 }
 
 const Controller = "auth";

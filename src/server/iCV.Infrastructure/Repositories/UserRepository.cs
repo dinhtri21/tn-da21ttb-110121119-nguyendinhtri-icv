@@ -28,13 +28,13 @@ namespace iCV.Infrastructure.Repositories
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            var filter = Builders<User>.Filter.Eq(u => u.email, email);
+            var filter = Builders<User>.Filter.Eq(u => u.Email, email);
             return await _users.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task<User?> GetUserByIdAsync(string id)
         {
-            return await _users.Find(u => u.id == id).FirstOrDefaultAsync();
+            return await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
@@ -44,12 +44,12 @@ namespace iCV.Infrastructure.Repositories
 
         public async Task UpdateUserAsync(User user)
         {
-            await _users.ReplaceOneAsync(u => u.id == user.id, user);
+            await _users.ReplaceOneAsync(u => u.Id == user.Id, user);
         }
 
         public async Task DeleteUserAsync(string id)
         {
-            await _users.DeleteOneAsync(u => u.id == id);
+            await _users.DeleteOneAsync(u => u.Id == id);
         }
     }
 }
