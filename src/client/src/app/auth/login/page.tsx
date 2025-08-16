@@ -56,9 +56,9 @@ export default function AuthenticationForm() {
     try {
       showOverlay();
       const res = await authService.signUp({
-        Name: values.name,
-        Email: values.email,
-        PassWord: values.password,
+        name: values.name,
+        email: values.email,
+        password: values.password,
       });
 
       if (res.status === 200 && res.data.isSuccess) {
@@ -94,7 +94,7 @@ export default function AuthenticationForm() {
       showOverlay();
       const res = await authService.login({
         email: values.email,
-        passWord: values.password,
+        password: values.password,
       });
 
       if (res.status === 200 && res.data.isSuccess) {

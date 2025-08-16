@@ -11,6 +11,6 @@ namespace iCV.Application.Users.Commands.Create.CreateUserCommand
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public string? PassWord { get; set; }
+        public string? Password { get; set; }
     }
 }

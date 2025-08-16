@@ -27,7 +27,7 @@ namespace iCV.Application.Users.Commands.Create.CreateUserCommand
                 .EmailAddress()
                 .WithMessage("Email không hợp lệ.");
 
-            RuleFor(v => v.PassWord)
+            RuleFor(v => v.Password)
                 .NotEmpty()
                 .WithMessage("Password là bắt buộc.")
                 .MaximumLength(255)

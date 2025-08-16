@@ -11,6 +11,6 @@ namespace iCV.Application.Users.Queries.LoginLocal
     public class LoginLocalQuery : IRequest<UserLoginDto>
     {
         public string Email { get; set; }
-        public string PassWord { get; set; }
+        public string Password { get; set; }
     }
 }

@@ -1,0 +1,52 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: icv-server
+    ports:
+      - "${SERVER_PORT:-5138}:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
+      - Cors__AllowedOrigins__0=${CLIENT_URL:-http://localhost:3000}
+      - Frontend__DefaultOrigin=${CLIENT_URL:-http://localhost:3000}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-YourIssuer}
+      - Jwt__Audience=${JWT_AUDIENCE:-YourAudience}
+      - Authentication__Google__ClientId=${GOOGLE_CLIENT_ID}
+      - Authentication__Google__ClientSecret=${GOOGLE_CLIENT_SECRET}
+      - Gemini__ApiKey=${GEMINI_API_KEY}
+      - Tavily__ApiKey=${TAVILY_API_KEY}
+      - MongoDbSettings__ConnectionString=${MONGODB_CONNECTION_STRING}
+      - MongoDbSettings__DatabaseName=${MONGODB_DATABASE_NAME:-iCV}
+    networks:
+      - icv-network
+    volumes:
+      - server_uploads:/app/Uploads
+    restart: ${RESTART_POLICY:-unless-stopped}
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API: ${NEXT_PUBLIC_API} 
+    container_name: icv-client
+    ports:
+      - "${CLIENT_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - NEXT_PUBLIC_API=${NEXT_PUBLIC_API:-http://localhost:5138}
+    depends_on:
+      - server
+    networks:
+      - icv-network
+    restart: ${RESTART_POLICY:-unless-stopped}
+
+networks:
+  icv-network:
+    driver: bridge
+
+volumes:
+  server_uploads:
+    name: ${UPLOADS_VOLUME_NAME:-icv_uploads}

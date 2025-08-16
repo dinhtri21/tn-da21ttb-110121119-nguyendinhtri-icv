@@ -19,7 +19,7 @@ namespace iCV.Application.Users.Queries.LoginLocal
                 .WithMessage("Email không được vượt quá 200 ký tự.")
                 .EmailAddress()
                 .WithMessage("Email không hợp lệ.");
-            RuleFor(v => v.PassWord)
+            RuleFor(v => v.Password)
                 .NotEmpty()
                 .WithMessage("Password là bắt buộc.")
                 .MaximumLength(255)

@@ -1,13 +1,11 @@
-import { IUserLoginData } from "@/interface/user";
-import { AxiosResponse } from "axios";
-import baseAxios from "../config/baseAxios";
-import { ICV } from "@/interface/cv";
 import IMyResponse from "@/interface/response";
+import { IUserLoginData } from "@/interface/user";
+import baseAxios from "../config/baseAxios";
 
 interface IBodyAuth {
-  Name?: string
-  Email: string;
-  PassWord: string;
+  name?: string
+  email?: string;
+  password?: string;
 }
 
 const Controller = "auth";

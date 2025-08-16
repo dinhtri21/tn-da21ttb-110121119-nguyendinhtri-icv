@@ -39,7 +39,7 @@ namespace iCV.Application.Users.Queries.LoginLocal
                 throw new ValidationException("Email hoặc mật khẩu không đúng");
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(request.PassWord, user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 throw new ValidationException("Email hoặc mật khẩu không đúng");
             }

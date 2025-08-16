@@ -28,7 +28,7 @@ namespace iCV.Application.Users.Commands.Create.CreateUserCommand
                 throw new Exception("Email này đã được đăng ký!");
             }
 
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.PassWord);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
             var user = new User
             {

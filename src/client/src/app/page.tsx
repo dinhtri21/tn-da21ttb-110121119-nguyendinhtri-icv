@@ -93,31 +93,31 @@ export default function HomePage() {
                     // })}
                     >
                       <Group gap={7}>
-                        {userState && userState.user?.pictureUrl ? (
+                        {userState && userState.user?.PictureUrl ? (
                           <Avatar
-                            src={userState.user?.pictureUrl}
-                            alt={userState.user?.name}
+                            src={userState.user?.PictureUrl}
+                            alt={userState.user?.Name}
                             radius="xl"
                             size={35}
-                            key={userState.user?.name}
-                            name={userState.user?.name}
+                            key={userState.user?.Name}
+                            name={userState.user?.Name}
                             color="initials"
                             allowedInitialsColors={["blue", "red"]}
                           />
                         ) : (
                           <Avatar
-                            alt={userState.user?.name}
+                            alt={userState.user?.Name}
                             radius="xl"
                             size={35}
-                            key={userState.user?.name}
-                            name={userState.user?.name}
+                            key={userState.user?.Name}
+                            name={userState.user?.Name}
                             color="initials"
                             allowedInitialsColors={["blue", "red"]}
                           />
                         )}
 
                         <Text fw={500} size="sm" lh={1} mr={3}>
-                          {userState.user?.name}
+                          {userState.user?.Name}
                         </Text>
                         <IconChevronDown size={12} stroke={1.5} />
                       </Group>
