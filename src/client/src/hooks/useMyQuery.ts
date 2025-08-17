@@ -5,6 +5,7 @@ import { useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query
  * @param queryKey - Query key
  * @param options - Các tùy chọn khác cho useQuery
  */
+
 export default function useMyQuery<TData = unknown>({
   queryFn,
   queryKey,
