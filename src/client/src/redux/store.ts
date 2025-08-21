@@ -4,7 +4,7 @@ import userReducer from "./slices/userSlide"
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer, // Reducer for authentication
+    auth: authReducer, 
     user: userReducer
   },
 });
