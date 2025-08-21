@@ -1,7 +1,5 @@
-## 📄iCV - Hệ thống tạo và đánh giá hồ sơ xin việc tích hợp AI
-
+# 📄iCV - Hệ thống tạo và đánh giá hồ sơ xin việc tích hợp AI
 [![GitHub Repo Stars](https://img.shields.io/github/stars/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv)](https://github.com/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv/stargazers) [![GitHub Forks](https://img.shields.io/github/forks/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv)](https://github.com/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv/network/members) [![GitHub Issues](https://img.shields.io/github/issues/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv)](https://github.com/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv/issues) [![GitHub Last Commit](https://img.shields.io/github/last-commit/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv)](https://github.com/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv/commits/main) [![GitHub Contributors](https://img.shields.io/github/contributors/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv?style=flat&color=blue)](https://github.com/dinhtri21/tn-da21ttb-110121119-nguyendinhtri-icv/graphs/contributors)
-
 ### ℹ️ Thông tin chung
 - **Sinh viên thực hiện:** Nguyễn Đình Trí  
 - **Giáo viên hướng dẫn:** Nguyễn Bảo Ân  
@@ -24,14 +22,14 @@ Xây dựng một hệ thống hỗ trợ người dùng tạo, quản lý và t
 - **Dịch thuật CV (AI):** giữa Tiếng Việt và Tiếng Anh  
 ### 🏗️ Kiến trúc hệ thống
 ![architecture](docs/images/architecture.png)
-Trong đó:
-(1): Các trình duyệt của người dùng.  
-(2): Giao diện người dùng, nơi người dùng tương tác với hệ thống.  
-(3): Các API từ server.  
-(4): Máy chủ ứng dụng ASP.NET Core Web API xử lý các yêu cầu từ client.  
-(5): Đây là lớp chịu trách nhiệm cho các controller, middleware,… định tuyến và xử lý yêu cầu.  
-(6): Lớp chứa logic nghiệp vụ, các use case và luồng công việc đặc thù của ứng dụng.  
-(7): Lớp chứa các thực thể, logic nghiệp vụ và mô hình cốt lõi.  
-(8): Lớp này chứa các truy cập dữ liệu, dịch vụ và tích hợp với các hệ thống bên ngoài, chẳng hạn như giao tiếp với API của bên thứ ba và các thao tác cơ sở dữ liệu.  
-(9): Cơ sở dữ liệu nơi dữ liệu của ứng dụng được lưu trữ.  
-(10): Các dịch vụ bên ngoài như Gemini (thông qua api) mà ứng dụng tương tác, thông qua lớp Infrastructure.  
+Trong đó:  
+- (1): Các trình duyệt của người dùng.  
+- (2): Giao diện người dùng, nơi người dùng tương tác với hệ thống.  
+- (3): Các API từ server.  
+- (4): Máy chủ ứng dụng ASP.NET Core Web API xử lý các yêu cầu từ client.  
+- (5): Đây là lớp chịu trách nhiệm cho các controller, middleware,… định tuyến và xử lý yêu cầu.  
+- (6): Lớp chứa logic nghiệp vụ, các use case và luồng công việc đặc thù của ứng dụng.  
+- (7): Lớp chứa các thực thể, logic nghiệp vụ và mô hình cốt lõi.  
+- (8): Lớp này chứa các truy cập dữ liệu, dịch vụ và tích hợp với các hệ thống bên ngoài, chẳng hạn như giao tiếp với API của bên thứ ba và các thao tác cơ sở dữ liệu.  
+- (9): Cơ sở dữ liệu nơi dữ liệu của ứng dụng được lưu trữ.  
+- (10): Các dịch vụ bên ngoài như Gemini (thông qua api) mà ứng dụng tương tác, thông qua lớp Infrastructure.  
