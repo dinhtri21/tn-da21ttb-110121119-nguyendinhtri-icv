@@ -93,7 +93,7 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
                 />
               </div>
               {/* Thời gian */}
-              <div className="relative flex-shrink-0 w-[90px] flex items-center gap-1 whitespace-nowrap bg-[#ECECEC] px-[6px] rounded-md text-gray-500">
+              <div className="relative flex-shrink-0 w-[130px] flex items-center gap-1 whitespace-nowrap bg-[#ECECEC] px-[6px] rounded-md text-gray-500">
                 <input
                   value={edu.startDate || ""}
                   onChange={(e) => {
@@ -104,14 +104,14 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
                     };
                     setEducation(newEducation);
                   }}
-                  placeholder="2020"
+                  placeholder="01/2020"
                   type="text"
                   maxLength={4}
                   style={{
                     color: "#a5a5a5",
                     height: "20px",
                   }}
-                  className="cv-input max-w-[32px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
+                  className="cv-input max-w-[52px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
                 />
                 <div className="h-[20px] flex items-center">
                   <span className="text-[#a5a5a5]">-</span>
@@ -126,14 +126,14 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
                     };
                     setEducation(newEducation);
                   }}
-                  placeholder="2024"
+                  placeholder="01/2024"
                   maxLength={4}
                   type="text"
                   style={{
                     color: "#a5a5a5",
                     height: "20px",
                   }}
-                  className="cv-input max-w-[32px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
+                  className="cv-input max-w-[52px] border border-transparent hover:border hover:border-gray-300 focus:border focus:border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-300 print:border-transparent print:ring-0"
                 />
                 <div className="absolute right-[-24px] top-0">
                   <ActionIcon
@@ -154,7 +154,7 @@ export function EducationBlock({ value, setCvData }: EducationBlockProps) {
             {/* Ngành học */}
             <div className="mt-1">
               <TiptapEditor
-                placeholder="Mô tả công việc"
+                placeholder="Mô tả chuyển ngành, GPA,..."
                 content={
                   edu.description
                   // ||

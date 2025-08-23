@@ -182,8 +182,8 @@ export function ProjectBlock({ value, setCvData }: ProjectBlockProps) {
               <TiptapEditor
                 placeholder="Mô tả về dự án"
                 content={
-                  project.description ||
-                  `<p>Phát triển một ứng dụng web thương mại điện tử để bán giày.</p><p><strong>Vị trí:</strong> Developer.</p><p><strong>Trách nhiệm</strong>: Full-stack developer.</p><p><strong>Công nghệ sử dụng:</strong></p><p>- Frontend: ReactJS.</p><p>- Backend: NodeJS, MySQL.</p><p>- Kiến trúc: N-layer</p><p><strong>Github: </strong>https://.......</p>`
+                  project.description
+                  //  || `<p>Phát triển một ứng dụng web thương mại điện tử để bán giày.</p><p><strong>Vị trí:</strong> Developer.</p><p><strong>Trách nhiệm</strong>: Full-stack developer.</p><p><strong>Công nghệ sử dụng:</strong></p><p>- Frontend: ReactJS.</p><p>- Backend: NodeJS, MySQL.</p><p>- Kiến trúc: N-layer</p><p><strong>Github: </strong>https://.......</p>`
                 }
                 onChange={(content) => {
                   const newProjects = [...projects];

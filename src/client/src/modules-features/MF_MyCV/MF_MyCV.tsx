@@ -9,6 +9,7 @@ import {
   Container,
   Flex,
   Grid,
+  LoadingOverlay,
   Menu,
   Stack,
   Text,
@@ -33,8 +34,10 @@ import styles from "./css.module.css";
 import { SkeletonCard } from "./SkeletonCard";
 import { utils_date_DateToDDMMYYYYHHMMString } from "@/utils/date";
 import { useRef } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function MF_MyCV() {
+  const [visible, { open: showOverlay, close: hideOverlay }] = useDisclosure(false);
   const { colorScheme } = useMantineColorScheme();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -156,9 +159,6 @@ export default function MF_MyCV() {
     }
   };
 
-  if (query.isLoading) return "Loading...";
-  if (query.isError) return "Không có dữ liệu...";
-
   if (createMutation.isSuccess) {
     window.location.href = `/cv/${createMutation.data?.data?.data?.id}`;
   }
@@ -166,6 +166,12 @@ export default function MF_MyCV() {
   return (
     <Container px={16} size="80rem" pb={16} mt={16}>
       <Flex justify={"space-between"} align="center" gap={8} wrap="wrap">
+        <LoadingOverlay
+          visible={visible}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+          loaderProps={{ color: "blue", type: "bars" }}
+        />
         <Flex
           direction="column"
           //   gap={8}
@@ -211,11 +217,7 @@ export default function MF_MyCV() {
                 }}
                 className="border border-gray-400"
               >
-                <Center
-                  h={220}
-                  className={styles.cvNewCard}
-                  onClick={handleCreateNew}
-                >
+                <Center h={220} className={styles.cvNewCard} onClick={handleCreateNew}>
                   <Stack align="center" gap={4}>
                     <IconPlus size={32} stroke={1} style={{ color: "#868E96" }} />
                     <Text c="gray" size="sm">
@@ -225,12 +227,14 @@ export default function MF_MyCV() {
                 </Center>
               </Box>
             </Grid.Col>
-            {query?.data &&
+            {query?.data && 
               query.data.map((cv, i) => {
                 return (
                   <Grid.Col key={i} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
                     <div
-                      className={`border-1  ${cv.status === "public" ? "border-blue-400" : "border-gray-400"}`}
+                      className={`border-1  ${
+                        cv.status === "public" ? "border-blue-400" : "border-gray-400"
+                      }`}
                       style={{
                         borderRadius: 12,
                         overflow: "hidden",

@@ -24,13 +24,6 @@ export function ExperienceBlock({ value, setCvData }: ExperienceBlockProps) {
             description: "",
             currentlyWorking: false,
           },
-          {
-            title: "",
-            startDate: "",
-            endDate: "",
-            description: "",
-            currentlyWorking: false,
-          },
         ]
   );
 
@@ -130,7 +123,9 @@ export function ExperienceBlock({ value, setCvData }: ExperienceBlockProps) {
                         height: "20px",
                       }}
                     >
-                      Hiện tại
+                      {value.template?.language === "vi"
+                        ? "Hiện tại"
+                        : "Now"}
                     </span>
                   ) : (
                     <input
@@ -194,8 +189,8 @@ export function ExperienceBlock({ value, setCvData }: ExperienceBlockProps) {
               <TiptapEditor
                 placeholder="Mô tả công việc"
                 content={
-                  exp.description ||
-                  '<ul class="tiptap-bullet-list"><li class="tiptap-list-item"><p>Phát triển các module web cho các dự án được giao.</p></li><li class="tiptap-list-item"><p>Sử dụng Next.js, TypeScript và thư viện Mantine UI.</p></li><li class="tiptap-list-item"><p>Tham gia tổ chức và cấu trúc lại mã nguồn. Phối hợp với đội ngũ back-end để tích hợp API.</p></li></ul>'
+                  exp.description
+                  //  || '<ul class="tiptap-bullet-list"><li class="tiptap-list-item"><p>Phát triển các module web cho các dự án được giao.</p></li><li class="tiptap-list-item"><p>Sử dụng Next.js, TypeScript và thư viện Mantine UI.</p></li><li class="tiptap-list-item"><p>Tham gia tổ chức và cấu trúc lại mã nguồn. </p></li><li class="tiptap-list-item"><p>Phối hợp với đội ngũ back-end để tích hợp API.</p></li></ul>'
                 }
                 onChange={(content) => {
                   const newExperience = [...experience];
