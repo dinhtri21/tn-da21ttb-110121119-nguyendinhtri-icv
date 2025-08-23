@@ -1,3 +1,4 @@
+import cvService from "@/api/services/cvService";
 import { IEvaluate } from "@/interface/evaluate";
 import {
   ActionIcon,
@@ -9,52 +10,69 @@ import {
   Loader,
   Table,
   Text,
-  useMantineColorScheme
+  useMantineColorScheme,
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
-// const EvaluationSkeleton = () => {
-//   return (
-//     <Table verticalSpacing="sm">
-//       <Table.Thead>
-//         <Table.Tr>
-//           <Table.Th w="22%" p={8}>
-//             <Text fz="13px" fw={500}>
-//               Khu vực
-//             </Text>
-//           </Table.Th>
-//           <Table.Th w="18%" ta="center" p={8}>
-//             <Text fz="13px" fw={500}>
-//               Điểm
-//             </Text>
-//           </Table.Th>
-//           <Table.Th p={8}>
-//             <Text fz="13px" fw={500}>
-//               Mô tả
-//             </Text>
-//           </Table.Th>
-//         </Table.Tr>
-//       </Table.Thead>
-//       <Table.Tbody>
-//         {[1, 2, 3, 4, 5].map((item) => (
-//           <Table.Tr key={item}>
-//             <Table.Td p={4}>
-//               <Skeleton height={20} width="80%" radius="sm" />
-//             </Table.Td>
-//             <Table.Td ta="center" p={4}>
-//               <Skeleton height={20} width={30} radius="xl" mx="auto" />
-//             </Table.Td>
-//             <Table.Td p={4}>
-//               <Skeleton height={20} radius="sm" mb={6} />
-//               <Skeleton height={16} width="70%" radius="sm" />
-//             </Table.Td>
-//           </Table.Tr>
-//         ))}
-//       </Table.Tbody>
-//     </Table>
-//   );
-// };
+// Component để hiển thị rich text
+const RichTextContent = ({
+  content,
+  className = "",
+}: {
+  content: string | null;
+  className?: string;
+}) => {
+  if (!content) return null;
+
+  return (
+    <div className={className}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          // Tùy chỉnh styling cho các thành phần Markdown
+          p: ({ children }) => (
+            <Text fz="13px" style={{ margin: "4px 0" }}>
+              {children}
+            </Text>
+          ),
+          strong: ({ children }) => <strong style={{ fontWeight: 600 }}>{children}</strong>,
+          ul: ({ children }) => <ul style={{  }}>{children}</ul>,
+          ol: ({ children }) => <ol style={{  }}>{children}</ol>,
+          li: ({ children }) => <li style={{ margin: "2px 0" }}>- {children}</li>,
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#228be6", textDecoration: "none" }}
+            >
+              {children}
+            </a>
+          ),
+          code: ({ children }) => (
+            <code
+              style={{
+                backgroundColor: "rgba(0,0,0,0.05)",
+                padding: "2px 4px",
+                borderRadius: "3px",
+                fontSize: "12px",
+              }}
+            >
+              {children}
+            </code>
+          ),
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
+  );
+};
 
 interface EvaluationTabProps {
   id: string;
@@ -65,9 +83,9 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
   const query = useQuery<IEvaluate[]>({
     queryKey: ["EvaluationTab", id],
     queryFn: async () => {
-      // const response = await cvService.getEvaluations(id);
-      // return response.data.data || [];
-      return mockData;
+      const response = await cvService.getEvaluations(id);
+      return response.data.data || [];
+      // return mockData;
     },
     enabled: false,
   });
@@ -99,12 +117,12 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
         <Table.ScrollContainer
           minWidth={50}
           maxHeight={"Calc(100vh - 190px)"}
-          // bg={colorScheme === "dark" ? "dark.5" : "rgba(241, 243, 245, 0.6)"}
           style={{
-              padding: "4px 8px", borderRadius: "8px", marginTop: "8px", 
-              border: colorScheme === "dark" ? "none" : "1px solid #ddd"
-            }}
-          
+            padding: "4px 8px",
+            borderRadius: "8px",
+            marginTop: "8px",
+            border: colorScheme === "dark" ? "none" : "1px solid #ddd",
+          }}
         >
           <Table verticalSpacing="sm">
             <Table.Thead>
@@ -154,20 +172,28 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                     </Badge>
                   </Table.Td>
                   <Table.Td p={6}>
+                    {/* Mô tả vẫn giữ là text thông thường */}
                     <Text fz="13px" c={colorScheme === "dark" ? "gray.4" : "gray.7"}>
                       {evaluation.description}
                     </Text>
+
+                    {/* Suggestion với rich text */}
                     {evaluation.suggestion && (
                       <Box
                         bg={colorScheme === "dark" ? "rgba(203, 237, 255, 0.1)" : "#E8F3FC"}
-                        className=" p-2 rounded-md mt-2"
+                        className="p-2 rounded-md mt-2"
                       >
-                        <Text fz="13px" c="blue.5">
-                          <strong>Gợi ý: </strong>
-                          {evaluation.suggestion}
+                        <Text fz="13px" c="blue.5" fw={600} mb={4}>
+                          Gợi ý:
                         </Text>
+                        <RichTextContent
+                          content={evaluation.suggestion}
+                          className="suggestion-content"
+                        />
                       </Box>
                     )}
+
+                    {/* Example với rich text */}
                     {evaluation.example && (
                       <Box
                         bg={
@@ -175,14 +201,16 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                             ? "rgba(255, 247, 237, 0.1)"
                             : "rgba(255, 247, 237, 1)"
                         }
-                        className="bg-orange-50 p-2 rounded-md mt-2"
+                        className="p-2 rounded-md mt-2"
                       >
-                        <Text fz="13px" c="orange.5">
-                          <strong>Ví dụ: </strong>
-                          {evaluation.example}
+                        <Text fz="13px" c="orange.5" fw={600} mb={4}>
+                          Ví dụ:
                         </Text>
+                        <RichTextContent content={evaluation.example} className="example-content" />
                       </Box>
                     )}
+
+                    {/* Correction với rich text */}
                     {evaluation.correction && (
                       <Box
                         bg={
@@ -190,12 +218,15 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                             ? "rgba(254, 242, 242, 0.1)"
                             : "rgba(254, 242, 242, 1)"
                         }
-                        className="bg-red-50 p-2 rounded-md mt-2"
+                        className="p-2 rounded-md mt-2"
                       >
-                        <Text fz="13px" c="red.5">
-                          <strong>Điều chỉnh: </strong>
-                          {evaluation.correction}1
+                        <Text fz="13px" c="red.5" fw={600} mb={4}>
+                          Điều chỉnh:
                         </Text>
+                        <RichTextContent
+                          content={evaluation.correction}
+                          className="correction-content"
+                        />
                       </Box>
                     )}
                   </Table.Td>
