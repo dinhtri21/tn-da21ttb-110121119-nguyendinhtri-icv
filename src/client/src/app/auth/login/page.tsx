@@ -110,7 +110,7 @@ export default function AuthenticationForm() {
 
         notifications.show({
           title: "Đăng nhập thành công",
-          message: `Chào mừng ${res.data?.data?.user?.Name}!`,
+          message: `Chào mừng bạn đến với iCV!`,
           color: "green",
         });
 
@@ -138,28 +138,27 @@ export default function AuthenticationForm() {
   };
 
   const handleGoogleLogin = async () => {
-    showOverlay();
     try {
+      showOverlay();
+      
+      // Đảm bảo rằng overlay được hiển thị trước khi tiếp tục
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Lấy URL đăng nhập Google
       const res = await authService.getGoogleLoginUrl();
       const googleUrl = res.data.redirectUrl;
 
-      // Tạo popup window
+      // Thiết lập popup window
       const width = 500;
       const height = 600;
       const left = window.screenX + (window.outerWidth - width) / 2;
       const top = window.screenY + (window.outerHeight - height) / 2;
 
-      const popup = window.open(
-        googleUrl,
-        "GoogleLogin",
-        `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`
-      );
-
-      if (!popup) {
-        throw new Error("Popup bị chặn bởi trình duyệt");
-      }
-
-      // Lắng nghe message từ popup
+      // Biến global để kiểm soát popup
+      let googleLoginPopup: Window | null = null;
+      let popupCloseCheckInterval: NodeJS.Timeout | null = null;
+      
+      // Thiết lập xử lý sự kiện trước
       const handleMessage = (event: MessageEvent) => {
         // Kiểm tra origin để bảo mật
         if (event.origin !== window.location.origin) {
@@ -175,7 +174,7 @@ export default function AuthenticationForm() {
             message: getErrorMessage(error),
             color: "red",
           });
-          hideOverlay();
+          cleanup();
           return;
         }
 
@@ -190,49 +189,107 @@ export default function AuthenticationForm() {
 
           notifications.show({
             title: "Đăng nhập thành công",
-            message: `Chào mừng ${user.name}!`,
+            message: `Chào mừng đến với iCV!`,
             color: "green",
           });
 
           // Chuyển hướng về my-cv
           router.replace("/my-cv");
-        }
-
-        hideOverlay();
-        cleanup();
-      };
-
-      // Kiểm tra khi popup đóng
-      const checkClosed = setInterval(() => {
-        if (popup.closed) {
-          hideOverlay();
+          
+          // Dọn dẹp
           cleanup();
         }
-      }, 1000);
-
-      const cleanup = () => {
-        window.removeEventListener("message", handleMessage);
-        clearInterval(checkClosed);
-        if (popup && !popup.closed) {
-          popup.close();
-        }
       };
 
+      // Đăng ký event listener trước khi mở popup
       window.addEventListener("message", handleMessage);
 
-      // // Timeout sau 5 phút
-      // setTimeout(() => {
-      //   if (popup && !popup.closed) {
-      //     popup.close();
-      //   }
-      //   hideOverlay();
-      //   cleanup();
-      //   notifications.show({
-      //     title: "Timeout",
-      //     message: "Quá trình đăng nhập đã hết thời gian",
-      //     color: "orange",
-      //   });
-      // }, 300000); // 5 phút
+      // Phương thức cleanup để đảm bảo dọn dẹp tất cả resources
+      let cleanup = () => {
+        // Hủy event listener
+        window.removeEventListener("message", handleMessage);
+        
+        // Hủy interval kiểm tra popup
+        if (popupCloseCheckInterval) {
+          clearInterval(popupCloseCheckInterval);
+          popupCloseCheckInterval = null;
+        }
+        
+        // Đóng popup nếu còn mở
+        if (googleLoginPopup && !googleLoginPopup.closed) {
+          try {
+            googleLoginPopup.close();
+          } catch (e) {
+            console.log("Không thể đóng popup");
+          }
+        }
+        
+        // Ẩn overlay
+        hideOverlay();
+      };
+
+      // Sử dụng requestAnimationFrame để đảm bảo UI đã được cập nhật
+      requestAnimationFrame(() => {
+        // Mở popup trong user interaction event loop
+        googleLoginPopup = window.open(
+          googleUrl,
+          "GoogleLogin",
+          `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes,status=yes`
+        );
+
+        if (!googleLoginPopup) {
+          notifications.show({
+            title: "Lỗi",
+            message: "Popup bị chặn bởi trình duyệt. Vui lòng cho phép popup và thử lại.",
+            color: "red",
+          });
+          cleanup();
+          return;
+        }
+
+        // Đặt focus vào popup
+        try {
+          googleLoginPopup.focus();
+        } catch (e) {
+          console.log("Không thể focus vào popup");
+        }
+
+        // Đặt lịch kiểm tra popup có bị đóng không
+        popupCloseCheckInterval = setInterval(() => {
+          if (!googleLoginPopup || googleLoginPopup.closed) {
+            console.log("Popup đã bị đóng bởi người dùng");
+            cleanup();
+          }
+        }, 500);
+        
+        // Thiết lập timeout để tự động đóng popup nếu không có phản hồi sau một thời gian
+        setTimeout(() => {
+          if (googleLoginPopup && !googleLoginPopup.closed) {
+            console.log("Popup timeout - không có phản hồi sau thời gian chờ");
+            notifications.show({
+              title: "Đăng nhập thất bại",
+              message: "Không nhận được phản hồi từ Google. Vui lòng thử lại.",
+              color: "orange",
+            });
+            cleanup();
+          }
+        }, 120000); // 2 phút timeout
+      });
+      
+      // Thêm event handler để xử lý nếu người dùng rời khỏi trang
+      const handleBeforeUnload = () => {
+        cleanup();
+      };
+      
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      
+      // Thêm vào cleanup để hủy event handler khi rời trang
+      const originalCleanup = cleanup;
+      cleanup = () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        originalCleanup();
+      };
+      
     } catch (error) {
       console.error("Login failed:", error);
       notifications.show({

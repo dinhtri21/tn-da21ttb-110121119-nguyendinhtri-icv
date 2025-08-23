@@ -45,7 +45,7 @@ export default function GoogleCallback() {
             const user = JSON.parse(decodeURIComponent(userParam));
             
             setStatus("success");
-            setMessage(`Đăng nhập thành công! Chào mừng ${user.name}`);
+            setMessage(`Đăng nhập thành công!`);
             
             // Gửi dữ liệu về parent window
             if (window.opener) {
