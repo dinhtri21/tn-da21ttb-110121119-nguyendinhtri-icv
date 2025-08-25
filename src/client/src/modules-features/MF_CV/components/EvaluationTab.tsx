@@ -10,10 +10,12 @@ import {
   Loader,
   Table,
   Text,
+  Textarea,
   useMantineColorScheme,
 } from "@mantine/core";
 import { IconRefresh } from "@tabler/icons-react";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -41,8 +43,8 @@ const RichTextContent = ({
             </Text>
           ),
           strong: ({ children }) => <strong style={{ fontWeight: 600 }}>{children}</strong>,
-          ul: ({ children }) => <ul style={{  }}>{children}</ul>,
-          ol: ({ children }) => <ol style={{  }}>{children}</ol>,
+          ul: ({ children }) => <ul style={{}}>{children}</ul>,
+          ol: ({ children }) => <ol style={{}}>{children}</ol>,
           li: ({ children }) => <li style={{ margin: "2px 0" }}>- {children}</li>,
           a: ({ href, children }) => (
             <a
@@ -80,11 +82,18 @@ interface EvaluationTabProps {
 
 export default function EvaluationTab({ id }: EvaluationTabProps) {
   const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const [jobDescription, setJobDescription] = useState("");
+
   const query = useQuery<IEvaluate[]>({
-    queryKey: ["EvaluationTab", id],
+    queryKey: ["EvaluationTab", id, jobDescription],
     queryFn: async () => {
-      const response = await cvService.getEvaluations(id);
-      return response.data.data || [];
+      if (jobDescription.trim()) {
+        const response = await cvService.evaluateWithJobDescription(id, jobDescription.trim());
+        return response.data.data || [];
+      } else {
+        const response = await cvService.getEvaluations(id);
+        return response.data.data || [];
+      }
       // return mockData;
     },
     enabled: false,
@@ -100,17 +109,26 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
         Đánh giá CV bởi AI
       </Text>
       {!query.data ? (
-        <p className="text-gray-400 text-xs">Nhấn nút tải đánh giá để thực hiện</p>
+         <Text size="xs" c="gray.6" mb={10}>Nhấn nút tải đánh giá để thực hiện</Text>
       ) : (
-        <p className="text-gray-400 text-xs">Nhấn nút tải lại để làm mới đánh giá</p>
+        <Text className="text-gray-400 text-xs">Nhấn nút tải lại để làm mới đánh giá</Text>
       )}
+      <Textarea
+        placeholder="Nhập mô tả công việc (Job Description) để đánh giá CV phù hợp với vị trí cụ thể... Để trống nếu muốn đánh giá tổng quát CV."
+        minRows={3}
+        maxRows={6}
+        autosize
+        value={jobDescription}
+        onChange={(event) => setJobDescription(event.currentTarget.value)}
+        mb="sm"
+        size="xs"
+      />
+
       {!query.data && (
-        <Button onClick={handleEnableQuery} size="xs" mt="8px">
+        <Button onClick={handleEnableQuery} size="xs" >
           {query.isLoading ? <Loader color="white" size={16} /> : "Tải đánh giá"}
         </Button>
       )}
-      {/* {query.isRefetching && EvaluationSkeleton()}
-      {query.isLoading && EvaluationSkeleton()} */}
       {query.isError && <Center w="100%">Không có dữ liệu...</Center>}
 
       {query.isSuccess && (
@@ -147,6 +165,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                       variant="light"
                       title="Tải lại"
                       aria-label="Settings"
+                      loading={query.isRefetching}
                     >
                       <IconRefresh style={{ width: "70%", height: "70%" }} stroke={1.5} />
                     </ActionIcon>
@@ -172,12 +191,12 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                     </Badge>
                   </Table.Td>
                   <Table.Td p={6}>
-                    {/* Mô tả vẫn giữ là text thông thường */}
+                    
                     <Text fz="13px" c={colorScheme === "dark" ? "gray.4" : "gray.7"}>
                       {evaluation.description}
                     </Text>
 
-                    {/* Suggestion với rich text */}
+                    {/* Suggestion */}
                     {evaluation.suggestion && (
                       <Box
                         bg={colorScheme === "dark" ? "rgba(203, 237, 255, 0.1)" : "#E8F3FC"}
@@ -193,7 +212,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                       </Box>
                     )}
 
-                    {/* Example với rich text */}
+                    {/* Example */}
                     {evaluation.example && (
                       <Box
                         bg={
@@ -210,7 +229,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                       </Box>
                     )}
 
-                    {/* Correction với rich text */}
+                    {/* Correction */}
                     {evaluation.correction && (
                       <Box
                         bg={

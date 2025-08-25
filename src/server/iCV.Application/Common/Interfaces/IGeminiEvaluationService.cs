@@ -13,5 +13,6 @@ namespace iCV.Application.Common.Interfaces
         Task<string> NormalizeCVAsync(CVDto cv);
         Task<List<string>> SuggestJobsAsync(CVDto cv);
         Task<CVDto> ExtractCVDataFromPdfTextAsync(CVDto emptyCV, string pdfText);
+        Task<CVEvaluationResultDto> EvaluateCVWithJobDescriptionAsync(CVDto cv, string jobDescription);
     }
 }

@@ -175,7 +175,7 @@ namespace iCV.Infrastructure.Services.GeminiService
             var sb = new StringBuilder();
 
             // PHẦN 1: NHIỆM VỤ VÀ MỤC TIÊU CHÍNH
-            sb.AppendLine("!!! NHIỆM VỤ DUY NHẤT CỦA BẠN: KIỂM TRA LỖI CHÍNH TẢ, NGỮ PHÁP VÀ DIỄN ĐẠT TRONG CV !!!");
+            sb.AppendLine("NHIỆM VỤ DUY NHẤT CỦA BẠN: KIỂM TRA LỖI CHÍNH TẢ, NGỮ PHÁP VÀ DIỄN ĐẠT TRONG CV");
             sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia ngôn ngữ, chuyên kiểm tra lỗi chính tả và ngữ pháp. KHÔNG làm bất kỳ việc đánh giá nội dung nào khác.");
             sb.AppendLine("Bạn có kiến thức sâu rộng về cả tiếng Việt và tiếng Anh, đặc biệt là các thuật ngữ kỹ thuật trong lĩnh vực công nghệ thông tin.");
             sb.AppendLine("");
@@ -262,7 +262,7 @@ namespace iCV.Infrastructure.Services.GeminiService
             var sb = new StringBuilder();
 
             // PHẦN 1: NHIỆM VỤ VÀ MỤC TIÊU CHÍNH
-            sb.AppendLine("!!! NHIỆM VỤ DUY NHẤT CỦA BẠN: ĐÁNH GIÁ CHẤT LƯỢNG CV !!!");
+            sb.AppendLine("NHIỆM VỤ DUY NHẤT CỦA BẠN: ĐÁNH GIÁ CHẤT LƯỢNG CV");
             sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia nhân sự đánh giá CV. KHÔNG kiểm tra lỗi chính tả hay ngữ pháp.");
             sb.AppendLine("Tập trung vào việc đánh giá nội dung, cấu trúc và sự phù hợp của CV với vị trí ứng tuyển.");
             sb.AppendLine("");
@@ -351,103 +351,6 @@ namespace iCV.Infrastructure.Services.GeminiService
 
             return sb.ToString();
         }
-
-//        // Phương thức tạo prompt chỉ tập trung vào đánh giá CV
-//        private string GenerateEvaluationPromptFromNormalized(string normalizedJson)
-//        {
-//            var sb = new StringBuilder();
-
-//            // PHẦN 1: NHIỆM VỤ VÀ MỤC TIÊU CHÍNH
-//            sb.AppendLine("!!! NHIỆM VỤ DUY NHẤT CỦA BẠN: ĐÁNH GIÁ CHẤT LƯỢNG CV !!!");
-//            sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia nhân sự đánh giá CV. KHÔNG kiểm tra lỗi chính tả hay ngữ pháp.");
-//            sb.AppendLine("Tập trung vào việc đánh giá nội dung, cấu trúc và sự phù hợp của CV với vị trí ứng tuyển.");
-//            sb.AppendLine("");
-//            sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), bạn PHẢI:");
-//            sb.AppendLine("1. Đánh giá mức độ đầy đủ và phù hợp của thông tin");
-//            sb.AppendLine("2. Đề xuất các cải thiện cụ thể để nâng cao chất lượng CV");
-//            sb.AppendLine("3. Cung cấp ví dụ minh họa cho các cải thiện được đề xuất");
-//            sb.AppendLine("4. Cho điểm từng khu vực (0-10) dựa trên mức độ hoàn thiện");
-
-//            // PHẦN 2: TIÊU CHÍ ĐÁNH GIÁ
-//            sb.AppendLine("\nTIÊU CHÍ ĐÁNH GIÁ:");
-//            sb.AppendLine("1. Đầy đủ: Thông tin có đầy đủ và chi tiết không");
-//            sb.AppendLine("2. Phù hợp: Thông tin có phù hợp với vị trí ứng tuyển không");
-//            sb.AppendLine("3. Cụ thể: Thông tin có được trình bày cụ thể, rõ ràng không");
-//            sb.AppendLine("4. Định dạng: Thông tin có được trình bày với định dạng phù hợp không");
-//            sb.AppendLine("5. Tổ chức: Thông tin có được tổ chức logic, dễ theo dõi không");
-
-//            // PHẦN 3: HƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC
-//            sb.AppendLine("\nHƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC:");
-            
-//            sb.AppendLine("\n1. KHU VỰC THÔNG TIN:");
-//            sb.AppendLine("- Kiểm tra đầy đủ thông tin cơ bản: họ tên, email, số điện thoại, địa chỉ, vị trí ứng tuyển.");
-//            sb.AppendLine("- KHÔNG cần gợi ý bổ sung các liên kết như LinkedIn, GitHub cá nhân, trừ khi chúng đã có sẵn trong dữ liệu CV.");
-
-//            sb.AppendLine("\n2. KHU VỰC KINH NGHIỆM:");
-//            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của kinh nghiệm với vị trí ứng tuyển.");
-//            sb.AppendLine("- Định dạng ngày tháng: Kiểm tra StartDate và EndDate có định dạng MM/YYYY.");
-//            sb.AppendLine("- EndDate trống nhưng có CurrentlyWorking=true, hoặc EndDate là \"Hiện tại\" hay \"Present\" đều là định dạng hợp lệ.");
-//            sb.AppendLine("- Chỉ gợi ý bổ sung thông tin thời gian khi hoàn toàn không có thông tin StartDate và EndDate và CurrentlyWorking=false.");
-
-//            sb.AppendLine("\n3. KHU VỰC HỌC VẤN:");
-//            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của học vấn với vị trí ứng tuyển.");
-//            sb.AppendLine("- Định dạng ngày tháng: Kiểm tra StartDate và EndDate có định dạng MM/YYYY.");
-//            sb.AppendLine("- Chỉ gợi ý bổ sung thông tin thời gian khi không có bất kỳ thông tin StartDate và EndDate nào.");
-//            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường");
-//            sb.AppendLine("- Gợi ý nếu không có thông tin về ngành học, GPA,...");
-
-//            sb.AppendLine("\n4. KHU VỰC DỰ ÁN:");
-//            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của dự án với vị trí ứng tuyển.");
-//            sb.AppendLine("- Định dạng ngày tháng: Kiểm tra StartDate và EndDate có định dạng MM/YYYY");
-//            sb.AppendLine("- Chỉ gợi ý bổ sung ngày tháng khi không có thông tin thời gian nào.");
-//            sb.AppendLine("- Gợi ý mô tả dự án có nêu công nghệ sử dụng, vai trò, trách nhiệm,... không");
-
-//            sb.AppendLine("\n5. KHU VỰC KỸ NĂNG:");
-//            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của kỹ năng với vị trí công việc.");
-//            sb.AppendLine("- Kiểm tra kỹ năng có được liệt kê rõ ràng, phân loại và định dạng tốt không.");
-//            sb.AppendLine("- Gợi ý cách tổ chức và trình bày kỹ năng hiệu quả hơn.");
-
-//            sb.AppendLine("\n6. KHU VỰC CHỨNG CHỈ:");
-//            sb.AppendLine("- Đánh giá mức độ phù hợp của chứng chỉ với vị trí ứng tuyển.");
-//            sb.AppendLine("- Định dạng ngày: Chấp nhận MM/YYYY.");
-//            sb.AppendLine("- Chỉ gợi ý bổ sung ngày cấp khi không có thông tin Date.");
-//            sb.AppendLine("- Kiểm tra tên chứng chỉ có rõ ràng, từ tổ chức nào cấp không.");
-
-//            sb.AppendLine("\n7. KHU VỰC GIẢI THƯỞNG:");
-//            sb.AppendLine("- Đánh giá mức độ phù hợp của giải thưởng với vị trí ứng tuyển.");
-//            sb.AppendLine("- Định dạng ngày: Định dạng ngày: Chấp nhận MM/YYYY.");
-//            sb.AppendLine("- Kiểm tra mô tả có nêu rõ giải thưởng là gì, trong lĩnh vực nào, từ tổ chức nào không.");
-
-//            // PHẦN 4: ĐỊNH DẠNG JSON VÀ CÁC TRƯỜNG
-//            sb.AppendLine("\nTrả về kết quả dưới dạng JSON không có giải thích hay markdown bọc ngoài, chỉ JSON thuần túy với cấu trúc:");
-//            sb.AppendLine(@"
-//{
-// ""areas"": [
-//   {
-//     ""area"": ""Tên khu vực"",
-//     ""score"": 10,
-//     ""description"": ""Mô tả chi tiết bằng text thuần, KHÔNG có HTML"",
-//     ""suggestion"": ""<ul><li>Gợi ý 1</li><li>Gợi ý 2</li></ul>"",
-//     ""example"": ""<p>Ví dụ minh họa với <strong>định dạng</strong> HTML</p>"",
-//     ""correction"": null
-//   }
-// ]
-//}
-//");
-
-//            sb.AppendLine("Trong phần phản hồi:");
-//            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào.");
-//            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện.");
-//            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa.");
-//            sb.AppendLine("- Trường `correction` LUÔN là null vì bạn không kiểm tra lỗi chính tả.");
-
-//            // PHẦN 5: DỮ LIỆU CV
-//            sb.AppendLine("\nDữ liệu CV chuẩn hóa:");
-//            sb.AppendLine(normalizedJson);
-
-//            return sb.ToString();
-//        }
-
         ////////// Suggestion
         public async Task<List<string>> SuggestJobsAsync(CVDto cv)
         {
@@ -1129,6 +1032,152 @@ namespace iCV.Infrastructure.Services.GeminiService
             }
 
             return text;
+        }
+
+        public async Task<CVEvaluationResultDto> EvaluateCVWithJobDescriptionAsync(CVDto cv, string jobDescription)
+        {
+            try
+            {
+                // Bước 1: Chuẩn hóa dữ liệu bằng Gemini (trả về JSON string)
+                var normalizedJson = await NormalizeCVAsync(cv);
+
+                // Kiểm tra nếu không có dữ liệu chuẩn hóa
+                if (string.IsNullOrWhiteSpace(normalizedJson))
+                    return new CVEvaluationResultDto();
+
+                // Bước 2: Tạo prompt kiểm tra lỗi chính tả từ dữ liệu đã chuẩn hóa
+                string spellCheckPrompt = GenerateSpellCheckPromptFromNormalized(normalizedJson);
+                
+                // Bước 3: Gọi API để kiểm tra lỗi chính tả
+                var spellCheckResult = await CallGeminiAPI(spellCheckPrompt);
+
+                // Bước 4: Tạo prompt đánh giá CV từ dữ liệu đã chuẩn hóa và job description
+                string evaluationPrompt = GenerateEvaluationWithJobDescriptionPrompt(normalizedJson, jobDescription);
+                
+                // Bước 5: Gọi API để đánh giá CV
+                var evaluationResult = await CallGeminiAPI(evaluationPrompt);
+
+                // Bước 6: Kết hợp kết quả từ hai lần gọi API
+                var combinedResult = CombineResults(spellCheckResult, evaluationResult);
+
+                return combinedResult;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"EvaluateCVWithJobDescriptionAsync error: {ex.Message}");
+                return new CVEvaluationResultDto();
+            }
+        }
+
+        // Phương thức tạo prompt đánh giá CV dựa trên job description
+        private string GenerateEvaluationWithJobDescriptionPrompt(string normalizedJson, string jobDescription)
+        {
+            var sb = new StringBuilder();
+
+            // PHẦN 1: NHIỆM VỤ VÀ MỤC TIÊU CHÍNH
+            sb.AppendLine("NHIỆM VỤ DUY NHẤT CỦA BẠN: ĐÁNH GIÁ SỰ PHÙ HỢP CỦA CV VỚI JOB DESCRIPTION");
+            sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia nhân sự đánh giá mức độ phù hợp của CV với yêu cầu công việc. KHÔNG kiểm tra lỗi chính tả hay ngữ pháp.");
+            sb.AppendLine("Tập trung vào việc đánh giá mức độ đáp ứng và phù hợp của CV với các yêu cầu cụ thể trong JD.");
+            sb.AppendLine("");
+            sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), bạn PHẢI:");
+            sb.AppendLine("1. Đánh giá mức độ phù hợp của thông tin với yêu cầu trong JD");
+            sb.AppendLine("2. Chỉ ra những điểm mạnh và điểm yếu so với JD");
+            sb.AppendLine("3. Đề xuất các cải thiện cụ thể để tăng sự phù hợp với JD");
+            sb.AppendLine("4. Cho điểm từng khu vực (0-10) dựa trên mức độ phù hợp với JD");
+
+            // PHẦN 2: TIÊU CHÍ ĐÁNH GIÁ
+            sb.AppendLine("\nTIÊU CHÍ ĐÁNH GIÁ:");
+            sb.AppendLine("1. Mức độ phù hợp: Thông tin có phù hợp với các yêu cầu trong JD không");
+            sb.AppendLine("2. Mức độ đáp ứng: CV đáp ứng được bao nhiêu phần trăm yêu cầu của JD");
+            sb.AppendLine("3. Kinh nghiệm liên quan: Kinh nghiệm làm việc có liên quan đến vị trí trong JD không");
+            sb.AppendLine("4. Kỹ năng phù hợp: Kỹ năng của ứng viên có phù hợp với các kỹ năng yêu cầu trong JD không");
+            sb.AppendLine("5. Điểm nổi bật: Ứng viên có điểm nổi bật nào đặc biệt phù hợp với vị trí này không");
+
+            // PHẦN 3: HƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC
+            sb.AppendLine("\nHƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC:");
+
+            sb.AppendLine("\n1. KHU VỰC THÔNG TIN:");
+            sb.AppendLine("- Đánh giá việc định hướng nghề nghiệp có phù hợp với vị trí trong JD không");
+            sb.AppendLine("- Phân tích mức độ phù hợp của vị trí ứng tuyển với JD");
+            sb.AppendLine("- Đánh giá các thông tin liên hệ có đầy đủ không");
+
+            sb.AppendLine("\n2. KHU VỰC KINH NGHIỆM:");
+            sb.AppendLine("- So sánh kinh nghiệm làm việc với các yêu cầu kinh nghiệm trong JD");
+            sb.AppendLine("- Đánh giá mức độ liên quan của kinh nghiệm với vị trí đang ứng tuyển");
+            sb.AppendLine("- Xác định khoảng cách giữa kinh nghiệm hiện tại và yêu cầu trong JD");
+
+            sb.AppendLine("\n3. KHU VỰC HỌC VẤN:");
+            sb.AppendLine("- Đánh giá mức độ phù hợp của học vấn với yêu cầu trong JD");
+            sb.AppendLine("- Xem xét liệu chuyên ngành có liên quan đến vị trí công việc không");
+            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường, ngành học, và thời gian học tập không");
+
+            sb.AppendLine("\n4. KHU VỰC DỰ ÁN:");
+            sb.AppendLine("- Đánh giá mức độ liên quan của các dự án với vị trí trong JD");
+            sb.AppendLine("- Phân tích các kỹ năng và công nghệ sử dụng trong dự án có phù hợp với JD không");
+            sb.AppendLine("- Đánh giá mức độ chi tiết của mô tả dự án và vai trò của ứng viên");
+
+            sb.AppendLine("\n5. KHU VỰC KỸ NĂNG:");
+            sb.AppendLine("- So sánh chi tiết kỹ năng trong CV với các kỹ năng yêu cầu trong JD");
+            sb.AppendLine("- Phân tích kỹ năng đã đáp ứng và kỹ năng còn thiếu");
+            sb.AppendLine("- Đề xuất cách bổ sung hoặc làm nổi bật kỹ năng phù hợp với JD");
+
+            sb.AppendLine("\n6. KHU VỰC CHỨNG CHỈ:");
+            sb.AppendLine("- Đánh giá mức độ phù hợp của chứng chỉ với các yêu cầu trong JD");
+            sb.AppendLine("- Xác định xem chứng chỉ có phải là lợi thế cho vị trí này không");
+            sb.AppendLine("- Kiểm tra tên chứng chỉ có rõ ràng, từ tổ chức nào cấp không");
+
+            sb.AppendLine("\n7. KHU VỰC GIẢI THƯỞNG:");
+            sb.AppendLine("- Đánh giá mức độ liên quan của giải thưởng với lĩnh vực trong JD");
+            sb.AppendLine("- Xác định liệu giải thưởng có tạo điểm khác biệt cho ứng viên không");
+            sb.AppendLine("- Kiểm tra mô tả có nêu rõ giải thưởng là gì, trong lĩnh vực nào, từ tổ chức nào không");
+
+            // Thêm khu vực Đánh giá tổng thể JD
+            sb.AppendLine("\n8. KHU VỰC ĐÁNH GIÁ TỔNG THỂ JD:");
+            sb.AppendLine("- Đánh giá tổng thể mức độ phù hợp của CV với JD");
+            sb.AppendLine("- Chỉ ra những điểm mạnh và điểm yếu chính");
+            sb.AppendLine("- Cung cấp điểm số tổng thể từ 0-10 về mức độ phù hợp");
+            sb.AppendLine("- Đưa ra các gợi ý cụ thể để tăng tính phù hợp với JD");
+
+            // PHẦN 4: ĐỊNH DẠNG JSON VÀ CÁC TRƯỜNG
+            sb.AppendLine("\nTrả về kết quả dưới dạng JSON không có giải thích hay markdown bọc ngoài, chỉ JSON thuần túy với cấu trúc:");
+            sb.AppendLine(@"
+{
+ ""areas"": [
+   {
+     ""area"": ""Tên khu vực"",
+     ""score"": 10,
+     ""description"": ""Mô tả chi tiết bằng text thuần, KHÔNG có HTML"",
+     ""suggestion"": ""<ul><li>Gợi ý 1</li><li>Gợi ý 2</li></ul>"",
+     ""example"": ""<p>Ví dụ minh họa với <strong>định dạng</strong> HTML</p>"",
+     ""correction"": null
+   },
+   {
+     ""area"": ""Đánh giá tổng thể JD"",
+     ""score"": 8,
+     ""description"": ""Mô tả tổng quan về mức độ phù hợp với JD"",
+     ""suggestion"": ""<ul><li>Gợi ý cải thiện để tăng khả năng phù hợp</li></ul>"",
+     ""example"": null,
+     ""correction"": null
+   }
+ ]
+}
+");
+
+            sb.AppendLine("Trong phần phản hồi:");
+            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào.");
+            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện.");
+            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa.");
+            sb.AppendLine("- Trường `correction` LUÔN là null vì bạn không kiểm tra lỗi chính tả.");
+            sb.AppendLine("- PHẢI thêm một khu vực \"Đánh giá tổng thể JD\" vào cuối danh sách, với điểm tổng thể và phân tích mức độ phù hợp");
+
+            // PHẦN 5: DỮ LIỆU CV VÀ JD
+            sb.AppendLine("\nDữ liệu CV chuẩn hóa:");
+            sb.AppendLine(normalizedJson);
+
+            sb.AppendLine("\nJOB DESCRIPTION:");
+            sb.AppendLine(jobDescription);
+
+            return sb.ToString();
         }
     }
 

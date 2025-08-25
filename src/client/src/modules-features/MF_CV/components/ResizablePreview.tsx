@@ -1,21 +1,18 @@
+import cvService from "@/api/services/cvService";
 import IBlock, { ICV } from "@/interface/cv";
-import { useEffect, useRef, useState } from "react";
-import { BLOCKS } from "../constants/blocks";
 import {
   ActionIcon,
   Box,
   Button,
   Center,
   ColorPicker,
-  Group,
   Select,
   Stack,
-  useMantineColorScheme,
+  Text,
+  useMantineColorScheme
 } from "@mantine/core";
-import { Text } from "@mantine/core";
-import { IconLanguage, IconTransfer, IconWorld } from "@tabler/icons-react";
-import cvService from "@/api/services/cvService";
 import { notifications } from "@mantine/notifications";
+import { useEffect, useRef, useState } from "react";
 
 export interface ResizablePreviewProps {
   leftWidth: number;

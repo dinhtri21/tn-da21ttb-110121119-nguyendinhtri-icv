@@ -6,6 +6,7 @@ using iCV.Application.CVs.Queries.GetCVById;
 using iCV.Application.CVs.Queries.GetCVs;
 using iCV.Application.CVs.Queries.GetPublicCVById;
 using iCV.Application.Evaluate.Queries.EvaluateWithGemini;
+using iCV.Application.Evaluate.Queries.EvaluateWithJobDescription;
 using iCV.Application.ExternalServices.PdfCVImport.Commands.Import;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -214,6 +215,20 @@ namespace iCV.API.Controllers
                     message = ex.Message
                 });
             }
+        }
+
+        [HttpPost("{id}/evaluation-with-jd")]
+        public async Task<IActionResult> EvaluateWithJobDescription([FromRoute] string id, [FromQuery] string JobDescription)
+        {
+            var query = new EvaluateWithJobDescriptionQuery { Id = id, JobDescription = JobDescription };
+            var result = await _mediator.Send(query);
+            
+            return Ok(new
+            {
+                isSuccess = true,
+                message = "Evaluation with job description completed successfully.",
+                data = result.Areas
+            });
         }
     }
 }

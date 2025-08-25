@@ -49,6 +49,10 @@ const cvService = {
   getEvaluations: async (id: string) => {
     return await baseAxios.get<IMyResponse<IEvaluate[]>>(`${Controller}/${id}/evaluation`);
   },
+  // Evaluate CV with job description
+  evaluateWithJobDescription: async (id: string, jobDescription: string) => {
+    return await baseAxios.post<IMyResponse<IEvaluate[]>>(`${Controller}/${id}/evaluation-with-jd?jobDescription=${jobDescription}`);
+  },
 };
 
 export default cvService;
