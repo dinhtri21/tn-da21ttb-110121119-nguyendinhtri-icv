@@ -111,7 +111,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
       {!query.data ? (
          <Text size="xs" c="gray.6" mb={10}>Nhấn nút tải đánh giá để thực hiện</Text>
       ) : (
-        <Text className="text-gray-400 text-xs">Nhấn nút tải lại để làm mới đánh giá</Text>
+        <Text size="xs" c="gray.6" mb={10}>Nhấn nút tải lại để làm mới đánh giá</Text>
       )}
       <Textarea
         placeholder="Nhập mô tả công việc (Job Description) để đánh giá CV phù hợp với vị trí cụ thể... Để trống nếu muốn đánh giá tổng quát CV."
