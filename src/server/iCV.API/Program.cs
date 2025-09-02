@@ -76,7 +76,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-    options.CallbackPath = "/signin-google";
+    options.CallbackPath = builder.Configuration["Authentication:Google:CallbackPath"];
     options.Scope.Add("profile");
     options.ClaimActions.MapJsonKey("picture", "picture");
     options.SaveTokens = true; 
@@ -115,9 +115,10 @@ app.Use(async (context, next) =>
     await next();
 });
 
+app.UseRouting();
 app.UseCors("AllowSpecificOrigin");
 app.UseSession();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

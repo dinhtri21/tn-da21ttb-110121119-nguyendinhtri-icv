@@ -1,33 +1,23 @@
-# Build stage
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package.json và cài đặt dependencies
-COPY package.json ./
-RUN npm install --legacy-peer-deps --force
+# Nhận build args từ docker-compose.yml
+ARG NEXT_PUBLIC_API
+ENV NEXT_PUBLIC_API=$NEXT_PUBLIC_API
 
-# Copy code và build
+# Copy file cấu hình package và cài đặt dependencies
+COPY package.json package-lock.json* ./
+RUN npm install --legacy-peer-deps
+
+# Copy toàn bộ source code
 COPY . .
-ENV NODE_ENV=production
-RUN npm run build --force
 
-# Production stage
-FROM node:18-alpine AS runner
-WORKDIR /app
+# Build Next.js
+RUN npm run build
 
-ENV NODE_ENV=production
-
-# Chỉ copy những file cần thiết cho production
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.ts ./
-
-# Chỉ cài đặt dependencies cho production
-RUN npm install --only=production --legacy-peer-deps
-
+# Mở port 3000
 EXPOSE 3000
 
-# Chạy ứng dụng
+# Chạy app
 CMD ["npm", "start"]

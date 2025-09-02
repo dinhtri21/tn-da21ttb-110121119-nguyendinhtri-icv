@@ -77,8 +77,12 @@ namespace iCV.API.Controllers
         {
             try
             {
-                var redirectUrl = Url.Action("GoogleCallback", "Auth", null, Request.Scheme, Request.Host.Value);
+                //var redirectUrl = Url.Action("GoogleCallback", "Auth", null, Request.Scheme, Request.Host.Value);
+                var redirectUrl = _configuration["Authentication:Google:RedirectUri"];
                 var state = GenerateSecureState();
+
+                // Xác định callback URL ưu tiên returnUrl, fallback về RedirectUri
+                //var callbackUrl = !string.IsNullOrEmpty(returnUrl) ? returnUrl : redirectUrl;
 
                 // Xác định frontend origin
                 var frontendOrigin = GetFrontendOrigin(origin);
@@ -235,14 +239,15 @@ namespace iCV.API.Controllers
             {
                 var clientId = _configuration["Authentication:Google:ClientId"];
                 var clientSecret = _configuration["Authentication:Google:ClientSecret"];
-                var redirectUri = Url.Action("GoogleCallback", "Auth", null, Request.Scheme, Request.Host.Value);
+                var redirectUrl = _configuration["Authentication:Google:RedirectUri"];
+                //var redirectUri = Url.Action("GoogleCallback", "Auth", null, Request.Scheme, Request.Host.Value);
 
                 var tokenRequest = new Dictionary<string, string>
                 {
                     ["code"] = code,
                     ["client_id"] = clientId,
                     ["client_secret"] = clientSecret,
-                    ["redirect_uri"] = redirectUri,
+                    ["redirect_uri"] = redirectUrl,
                     ["grant_type"] = "authorization_code"
                 };
 

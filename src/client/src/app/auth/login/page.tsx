@@ -69,7 +69,7 @@ export default function AuthenticationForm() {
         });
 
         // Chuyển hướng về dashboard
-        router.replace("/dashboard");
+        router.replace("/my-cv");
       } else {
         notifications.show({
           title: "Lỗi đăng ký",
@@ -115,7 +115,7 @@ export default function AuthenticationForm() {
         });
 
         // Chuyển hướng về dashboard
-        router.replace("/dashboard");
+        router.replace("/my-cv");
       } else {
         notifications.show({
           title: "Lỗi đăng nhập",
