@@ -189,17 +189,17 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("1. Đọc kỹ từng câu trong CV và kiểm tra từng từ một.");
             sb.AppendLine("2. Kiểm tra đặc biệt các thuật ngữ kỹ thuật, tên công nghệ, tên công ty.");
             sb.AppendLine("3. Kiểm tra dấu câu và khoảng cách giữa các từ.");
-            sb.AppendLine("4. Kiểm tra nhất quán trong cách viết (vd: JavaScript vs Javascript).");
-            sb.AppendLine("5. Kiểm tra các từ bị dính liền không đúng (vd: côngnghệ, lậptrình, triểnkhai).");
+            sb.AppendLine("4. Kiểm tra nhất quán trong cách viết (ví dụ: JavaScript vs Javascript).");
+            sb.AppendLine("5. Kiểm tra các từ bị dính liền không đúng (ví dụ: côngnghệ, lậptrình, triểnkhai).");
 
             // PHẦN 3: DANH SÁCH CÁC LỖI THƯỜNG GẶP
             sb.AppendLine("\nCÁC LỖI THƯỜNG GẶP CẦN KIỂM TRA:");
-            sb.AppendLine("- Lỗi chính tả tiếng Việt: thiếu dấu, sai dấu, sai chính tả (vd: nghên cứu, phát triễn, trien khai)");
-            sb.AppendLine("- Lỗi chính tả tiếng Anh: sai chính tả (vd: Deverloper, Font-end, Javascipt, experence)");
-            sb.AppendLine("- Lỗi thuật ngữ công nghệ: viết sai tên công nghệ (vd: React Js, Node JS, Vue js thay vì ReactJS, Node.js, Vue.js)");
-            sb.AppendLine("- Lỗi viết hoa: không viết hoa tên riêng, tên công nghệ (vd: javascript thay vì JavaScript)");
-            sb.AppendLine("- Lỗi khoảng trắng: thiếu hoặc thừa khoảng trắng (vd: ReactNative thay vì React Native)");
-            sb.AppendLine("- Lỗi từ dính liền: các từ bị dính liền không đúng (vd: côngnghệ, kỹnăng, lậptrình, ngônngữ, full-stackdeveloper)");
+            sb.AppendLine("- Lỗi chính tả tiếng Việt: thiếu dấu, sai dấu, sai chính tả (ví dụ: nghên cứu, phát triễn, trien khai)");
+            sb.AppendLine("- Lỗi chính tả tiếng Anh: sai chính tả (ví dụ: Deverloper, Font-end, Javascipt, experence)");
+            sb.AppendLine("- Lỗi thuật ngữ công nghệ: viết sai tên công nghệ (ví dụ: React Js, Node JS, Vue js thay vì ReactJS, Node.js, Vue.js)");
+            sb.AppendLine("- Lỗi viết hoa: không viết hoa tên riêng, tên công nghệ (ví dụ: javascript thay vì JavaScript)");
+            sb.AppendLine("- Lỗi khoảng trắng: thiếu hoặc thừa khoảng trắng (ví dụ: ReactNative thay vì React Native)");
+            sb.AppendLine("- Lỗi từ dính liền: các từ bị dính liền không đúng (vví dụd: côngnghệ, kỹnăng, lậptrình, ngônngữ, full-stackdeveloper)");
             sb.AppendLine("- Lỗi nhất quán: dùng nhiều cách viết khác nhau cho cùng một thuật ngữ");
             sb.AppendLine("- Các từ viết sai thường gặp: font-end/front-end, back-end/back end, full-stack/fullstack, javascrip/javascript");
             sb.AppendLine("- Hay bất cứ lỗi nào khác bạn bắt gặp được");
@@ -248,6 +248,8 @@ namespace iCV.Infrastructure.Services.GeminiService
 ");
             sb.AppendLine("Lưu ý: Chỉ điền trường 'correction', các trường khác để trống hoặc giá trị mặc định. Score luôn để là 0.");
             sb.AppendLine("Trường 'correction' PHẢI sử dụng thẻ <p> và <span> với thuộc tính style cho màu sắc để hiển thị lỗi và cách sửa.");
+            sb.AppendLine("Chú ý Quan trọng tránh trình trạng không lỗi mà thông báo lối (Ví dụ ReactJS => ReactJS, học hỏi => học hỏi");
+            sb.AppendLine("Chú ý Quan trọng khu vực nào không có dữ liệu thì không kiểm tra lỗi chính tả ");
 
             // PHẦN 8: DỮ LIỆU CV
             sb.AppendLine("\nDữ liệu CV chuẩn hóa:");
@@ -1220,7 +1222,6 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa. Thể hiện nội dung gắn gọn, trọng tâm, chỉ cần ý chính.");
             sb.AppendLine("- Trường `correction` LUÔN là null vì bạn không kiểm tra lỗi chính tả.");
             sb.AppendLine("- PHẢI thêm một khu vực \"Đánh giá tổng thể JD\" vào cuối danh sách, với điểm tổng thể và phân tích mức độ phù hợp");
-          
             sb.AppendLine("- Trong trường `example`, hãy bỏ từ 'Ví dụ:' phía trước mỗi ví dụ");
 
             // PHẦN 5: DỮ LIỆU CV VÀ JD

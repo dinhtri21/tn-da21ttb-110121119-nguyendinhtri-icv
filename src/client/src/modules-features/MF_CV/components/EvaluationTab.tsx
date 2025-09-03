@@ -139,7 +139,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
       {query.isSuccess && (
         <Table.ScrollContainer
           minWidth={50}
-          maxHeight={"Calc(100vh - 260px)"}
+          maxHeight={"Calc(100vh - 280px)"}
           style={{
             padding: "4px 8px",
             borderRadius: "8px",

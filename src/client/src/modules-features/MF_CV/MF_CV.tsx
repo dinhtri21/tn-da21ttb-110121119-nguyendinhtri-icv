@@ -589,7 +589,7 @@ export default function MF_CV({ data }: IProps) {
             }}
           />
 
-          <Tabs defaultValue="bocuc" mt={6} className="flex flex-col h-full">
+          <Tabs defaultValue="bocuc" className="flex flex-col h-full">
             <Tabs.List className="flex-shrink-0">
               <Tabs.Tab value="bocuc" flex={1} leftSection={<IconComponents size={16} /> }>
                 Tuỳ chỉnh
