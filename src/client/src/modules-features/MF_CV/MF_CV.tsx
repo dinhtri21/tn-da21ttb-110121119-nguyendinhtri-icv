@@ -28,6 +28,7 @@ import {
   IconWorld
 } from "@tabler/icons-react";
 import React, { useEffect, useRef, useState } from "react";
+import "./styles/FixedSidebarLayout.css";
 import BlockEditor from "./components/BlockEditor";
 import EmptyDropZone from "./components/EmptyDropZone";
 import EvaluationTab from "./components/EvaluationTab";
@@ -356,12 +357,13 @@ export default function MF_CV({ data }: IProps) {
       onDragEnd={handleDragEnd}
     >
       <div className="border-b border-gray-300 "></div>
-      <Box className="flex min-h-screen bg-gray-50">
-        {/* Left Sidebar */}
+      <Box className="flex h-screen bg-gray-50 overflow-hidden" style={{ height: '100vh', overflow: 'hidden', overflowX: 'hidden' }}>
+        {/* Left Sidebar - Fixed */}
         <Stack
           bg={colorScheme === "dark" ? "dark.5" : "white"}
           gap={4}
-          className="border-r border-gray-300 px-6 py-2"
+          className="w-80 border-r border-gray-300 px-6 py-2 flex-shrink-0"
+          style={{ height: '100vh', overflowX: 'hidden', overflowY: 'hidden' }}
         >
           <div className="flex items-center justify-between mb-1 gap-1">
             <IconFileCv stroke={1} size={22} color="#1C7ED6" />
@@ -379,8 +381,7 @@ export default function MF_CV({ data }: IProps) {
               style={{
                 border: "none !important",
                 outline: "none",
-                // padding: "0 !important",
-                // height: "22px",
+                width: "100%",
               }}
               variant="unstyled"
             />
@@ -397,21 +398,40 @@ export default function MF_CV({ data }: IProps) {
             language={cvData?.template?.language || "vi"}
           />
         </Stack>
-        {/* Main content */}
+        {/* Main content - Scrollable */}
         <Box
           bg={colorScheme === "dark" ? "dark.6" : "gray.1"}
-          className="flex-1 py-4  min-h-screen flex flex-col items-center"
+          className="flex-1 py-4 overflow-y-auto"
+          style={{ 
+            height: '100vh', 
+            overflowX: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            width: '100%'
+          }}
         >
           <div
-            className="cv-container shadow-2xl"
+            className="cv-wrapper"
             style={{
-              width: "815px",
-              minHeight: "1056px",
-              margin: "0 auto",
-              transform: "scale(0.8)",
-              transformOrigin: "top",
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              width: '100%',
+              minHeight: 'fit-content',
             }}
           >
+            <div
+              className="cv-container shadow-2xl"
+              style={{
+                width: "815px",
+                minHeight: "1056px",
+                transform: "scale(0.8)",
+                transformOrigin: "top center",
+                flexShrink: 0,
+              }}
+            >
             {/* Print */}
             <div
               ref={printRef}
@@ -534,12 +554,14 @@ export default function MF_CV({ data }: IProps) {
               </div>
             </div>
           </div>
+          </div>
         </Box>
 
-        {/* Right sidebar */}
+        {/* Right sidebar - Fixed */}
         <Box
           bg={colorScheme === "dark" ? "dark.5" : "white"}
-          className={`w-[420px] border-l border-gray-300 py-5 pl-6 pr-4`}
+          className="w-[450px] border-l border-gray-300 py-2 pl-6 pr-4 flex-shrink-0"
+          style={{ height: '100vh' }}
         >
           <RightSidebarSetting
             printRef={printRef as React.RefObject<HTMLDivElement>}
@@ -567,8 +589,8 @@ export default function MF_CV({ data }: IProps) {
             }}
           />
 
-          <Tabs defaultValue="bocuc" mt={12}>
-            <Tabs.List>
+          <Tabs defaultValue="bocuc" mt={6} className="flex flex-col h-full">
+            <Tabs.List className="flex-shrink-0">
               <Tabs.Tab value="bocuc" flex={1} leftSection={<IconComponents size={16} /> }>
                 Tuỳ chỉnh
               </Tabs.Tab>
@@ -579,28 +601,30 @@ export default function MF_CV({ data }: IProps) {
                 Chia sẻ
               </Tabs.Tab>
             </Tabs.List>
-            <Tabs.Panel value="bocuc" mt={16}>
-              <ResizablePreview
-                leftWidth={leftWidth}
-                onWidthChange={setLeftWidth}
-                leftBlocks={leftBlocks}
-                rightBlocks={rightBlocks}
-                value={cvData!}
-                setCvData={setCvData as React.Dispatch<React.SetStateAction<ICV>>}
-              />
-            </Tabs.Panel>
-            <Tabs.Panel value="danhgia" mt={16}>
-              {cvData?.id && <EvaluationTab id={cvData.id} />}
-            </Tabs.Panel>
-            <Tabs.Panel value="chiase" mt={16}>
-              <ShareTab 
-                cv={cvData!} 
-                onCvUpdated={(updatedCv) => setCvData(updatedCv)}
-              />
-            </Tabs.Panel>
-            <Tabs.Panel value="settings" mt={16}>
-              Settings tab content
-            </Tabs.Panel>
+            <div className="flex-1 overflow-hidden">
+              <Tabs.Panel value="bocuc" mt={16} className="h-full">
+                <ResizablePreview
+                  leftWidth={leftWidth}
+                  onWidthChange={setLeftWidth}
+                  leftBlocks={leftBlocks}
+                  rightBlocks={rightBlocks}
+                  value={cvData!}
+                  setCvData={setCvData as React.Dispatch<React.SetStateAction<ICV>>}
+                />
+              </Tabs.Panel>
+              <Tabs.Panel value="danhgia" mt={16} className="h-full">
+                {cvData?.id && <EvaluationTab id={cvData.id} />}
+              </Tabs.Panel>
+              <Tabs.Panel value="chiase" mt={16} className="h-full">
+                <ShareTab 
+                  cv={cvData!} 
+                  onCvUpdated={(updatedCv) => setCvData(updatedCv)}
+                />
+              </Tabs.Panel>
+              <Tabs.Panel value="settings" mt={16} className="h-full">
+                Settings tab content
+              </Tabs.Panel>
+            </div>
           </Tabs>
         </Box>
       </Box>

@@ -241,7 +241,7 @@ namespace iCV.Infrastructure.Services.GeminiService
      ""description"": """",
      ""suggestion"": """",
      ""example"": """",
-     ""correction"": ""<p>Lỗi: <span style=\""color: red;\"">phát triễn</span> => <span style=\""color: green;\"">phát triển</span></p>""
+     ""correction"": ""<p><span style=\""color: red;\"">phát triễn</span> => <span style=\""color: green;\"">phát triển</span></p>""
    }
  ]
 }
@@ -268,9 +268,10 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("");
             sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), bạn PHẢI:");
             sb.AppendLine("1. Đánh giá mức độ đầy đủ và phù hợp của thông tin");
-            sb.AppendLine("2. Đề xuất các cải thiện cụ thể để nâng cao chất lượng CV");
-            sb.AppendLine("3. Cung cấp ví dụ minh họa cho các cải thiện được đề xuất");
-            sb.AppendLine("4. Cho điểm từng khu vực (0-10) dựa trên mức độ hoàn thiện, nếu khu vực nào không có thông tin thì 0 điểm");
+            sb.AppendLine("2. Đánh giá mức độ phù hợp của thông tin với vị trí ứng tuyển");
+            sb.AppendLine("3. Đề xuất các cải thiện cụ thể để nâng cao chất lượng CV");
+            sb.AppendLine("4. Cung cấp ví dụ minh họa cho các cải thiện được đề xuất");
+            sb.AppendLine("5. Cho điểm từng khu vực (0-10) dựa trên mức độ hoàn thiện, nếu khu vực nào không có thông tin thì 0 điểm");
 
             // PHẦN 2: TIÊU CHÍ ĐÁNH GIÁ
             sb.AppendLine("\nTIÊU CHÍ ĐÁNH GIÁ:");
@@ -287,39 +288,55 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("- Kiểm tra đầy đủ thông tin cơ bản: họ tên, email, số điện thoại, địa chỉ, vị trí ứng tuyển.");
             sb.AppendLine("- KHÔNG cần gợi ý bổ sung các liên kết như LinkedIn, GitHub cá nhân, trừ khi chúng đã có sẵn trong dữ liệu CV.");
 
-            sb.AppendLine("\n2. KHU VỰC KINH NGHIỆM:");
+            sb.AppendLine("\n2. KHU VỰC GIỚI THIỆU:");
+            sb.AppendLine("- Kiểm tra có cung cấp thông tin giới thiệu không");
+            sb.AppendLine("- Ví dụ gợi ý: ");
+            sb.AppendLine("+ Nêu rõ hơn mục tiêu ngắn hạn và dài hạn liên quan đến vị trí ứng tuyển.");
+
+            sb.AppendLine("\n3. KHU VỰC KINH NGHIỆM:");
+            sb.AppendLine("- So sánh kinh nghiệm làm việc với các yêu cầu kinh nghiệm trong JD");
+            sb.AppendLine("- Đánh giá mức độ liên quan của kinh nghiệm với vị trí đang ứng tuyển");
+            sb.AppendLine("- Xác định khoảng cách giữa kinh nghiệm hiện tại và yêu cầu trong JD");
             sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của kinh nghiệm với vị trí ứng tuyển.");
-            sb.AppendLine("- Định dạng ngày tháng: Kiểm tra StartDate và EndDate có định dạng MM/YYYY.");
-            sb.AppendLine("- EndDate trống nhưng có CurrentlyWorking=true, hoặc EndDate là \"Hiện tại\" hay \"Present\" đều là định dạng hợp lệ.");
-            sb.AppendLine("- Chỉ gợi ý bổ sung thông tin thời gian khi hoàn toàn không có thông tin StartDate và EndDate và CurrentlyWorking=false.");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
+            sb.AppendLine("- Ví dụ gợi ý: ");
+            sb.AppendLine("+ Lượng hóa các thành tựu đạt được trong quá trình làm việc (nếu có)");
 
-            sb.AppendLine("\n3. KHU VỰC HỌC VẤN:");
-            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của học vấn với vị trí ứng tuyển.");
-            sb.AppendLine("- Định dạng ngày tháng: Kiểm tra StartDate và EndDate có định dạng MM/YYYY.");
-            sb.AppendLine("- Chỉ gợi ý bổ sung thông tin thời gian khi không có bất kỳ thông tin StartDate và EndDate nào.");
+            sb.AppendLine("\n4. KHU VỰC HỌC VẤN:");
+            sb.AppendLine("- Đánh giá mức độ phù hợp của học vấn với yêu cầu trong JD.");
+            sb.AppendLine("- Xem xét liệu chuyên ngành có liên quan đến vị trí công việc không.");
+            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường, ngành học, và thời gian học tập không.");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc.");
             sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường");
-            sb.AppendLine("- Gợi ý nếu không có thông tin về ngành học, GPA,...");
+            sb.AppendLine("- Gợi ý nếu không có thông tin về ngành học, GPA, thành viên CLB...");
+            sb.AppendLine("- Ví dụ: Bổ sung thông tin về GPA (nếu có)");
 
-            sb.AppendLine("\n4. KHU VỰC DỰ ÁN:");
-            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của dự án với vị trí ứng tuyển.");
-            sb.AppendLine("- Định dạng ngày tháng: Kiểm tra StartDate và EndDate có định dạng MM/YYYY");
-            sb.AppendLine("- Chỉ gợi ý bổ sung ngày tháng khi không có thông tin thời gian nào.");
+            sb.AppendLine("\n5. KHU VỰC DỰ ÁN:");
+            sb.AppendLine("- Đánh giá mức độ liên quan của các dự án với vị trí trong JD.");
+            sb.AppendLine("- Phân tích các kỹ năng và công nghệ sử dụng trong dự án có phù hợp với JD không");
+            sb.AppendLine("- Đánh giá mức độ chi tiết của mô tả dự án và vai trò của ứng viên.");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
             sb.AppendLine("- Gợi ý mô tả dự án có nêu công nghệ sử dụng, vai trò, trách nhiệm,... không");
+            sb.AppendLine("- Ví dụ gợi ý: ");
+            sb.AppendLine("+  Bổ sung thông tin về kết quả đạt được của dự án.");
 
-            sb.AppendLine("\n5. KHU VỰC KỸ NĂNG:");
-            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của kỹ năng với vị trí công việc.");
+            sb.AppendLine("\n6. KHU VỰC KỸ NĂNG:");
+            sb.AppendLine("- So sánh chi tiết kỹ năng trong CV với các kỹ năng yêu cầu trong JD");
+            sb.AppendLine("- Phân tích kỹ năng đã đáp ứng và kỹ năng còn thiếu");
+            sb.AppendLine("- Đề xuất cách bổ sung hoặc làm nổi bật kỹ năng phù hợp với JD");
             sb.AppendLine("- Kiểm tra kỹ năng có được liệt kê rõ ràng, phân loại và định dạng tốt không.");
             sb.AppendLine("- Gợi ý cách tổ chức và trình bày kỹ năng hiệu quả hơn.");
+            sb.AppendLine("- Ví dụ gợi ý: ");
+            sb.AppendLine("+ Nhóm các ký năng theo Frontend, Backend, Công cụ");
 
-            sb.AppendLine("\n6. KHU VỰC CHỨNG CHỈ:");
-            sb.AppendLine("- Đánh giá mức độ phù hợp của chứng chỉ với vị trí ứng tuyển.");
-            sb.AppendLine("- Định dạng ngày: Chấp nhận MM/YYYY.");
-            sb.AppendLine("- Chỉ gợi ý bổ sung ngày cấp khi không có thông tin Date.");
+            sb.AppendLine("\n7. KHU VỰC CHỨNG CHỈ:");
+            sb.AppendLine("- Đánh giá mức độ phù hợp của chứng chỉ với các yêu cầu trong JD.");
+            sb.AppendLine("- Xác định xem chứng chỉ có phải là lợi thế cho vị trí này không");
             sb.AppendLine("- Kiểm tra tên chứng chỉ có rõ ràng, từ tổ chức nào cấp không.");
 
-            sb.AppendLine("\n7. KHU VỰC GIẢI THƯỞNG:");
+            sb.AppendLine("\n8. KHU VỰC GIẢI THƯỞNG:");
             sb.AppendLine("- Đánh giá mức độ phù hợp của giải thưởng với vị trí ứng tuyển.");
-            sb.AppendLine("- Định dạng ngày: Định dạng ngày: Chấp nhận MM/YYYY.");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
             sb.AppendLine("- Kiểm tra mô tả có nêu rõ giải thưởng là gì, trong lĩnh vực nào, từ tổ chức nào không.");
 
             // PHẦN 4: ĐỊNH DẠNG JSON VÀ CÁC TRƯỜNG
@@ -332,17 +349,17 @@ namespace iCV.Infrastructure.Services.GeminiService
      ""score"": 10,
      ""description"": ""Mô tả chi tiết bằng text thuần, KHÔNG có HTML"",
      ""suggestion"": ""<ul><li>Gợi ý 1</li><li>Gợi ý 2</li></ul>"",
-     ""example"": ""<p>Ví dụ minh họa với <strong>định dạng</strong> HTML</p>"",
+     ""example"": ""<ul><li>Nội dung ví dụ 1</li><li>Nội dung ví dụ 2</li></ul>"",
      ""correction"": null
    }
  ]
 }
 ");
 
-            sb.AppendLine("Trong phần phản hồi:");
-            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào.");
-            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện.");
-            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa.");
+            sb.AppendLine("Chú ý quan trọng, trong phần phản hồi:");
+            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào. Nội dung gắn gọn, chỉ cần ý chính");
+            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện. Nội dung gắn gọn, chỉ cần ý chính");
+            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa. Nội dung gắn gọn, chỉ cần ý chính, nêu dạng liệt kê. Hãy bỏ từ 'Ví dụ :' phía trước mỗi ví dụ.");
             sb.AppendLine("- Trường `correction` LUÔN là null vì bạn không kiểm tra lỗi chính tả.");
 
             // PHẦN 5: DỮ LIỆU CV
@@ -1079,11 +1096,12 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia nhân sự đánh giá mức độ phù hợp của CV với yêu cầu công việc. KHÔNG kiểm tra lỗi chính tả hay ngữ pháp.");
             sb.AppendLine("Tập trung vào việc đánh giá mức độ đáp ứng và phù hợp của CV với các yêu cầu cụ thể trong JD.");
             sb.AppendLine("");
-            sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), bạn PHẢI:");
+            sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng, Đánh giá tổng thể CV so với JD), bạn PHẢI:");
             sb.AppendLine("1. Đánh giá mức độ phù hợp của thông tin với yêu cầu trong JD");
             sb.AppendLine("2. Chỉ ra những điểm mạnh và điểm yếu so với JD");
             sb.AppendLine("3. Đề xuất các cải thiện cụ thể để tăng sự phù hợp với JD");
             sb.AppendLine("4. Cho điểm từng khu vực (0-10) dựa trên mức độ phù hợp với JD");
+            sb.AppendLine("5. Cung cấp ví dụ minh họa cho các cải thiện được đề xuất"); 
 
             // PHẦN 2: TIÊU CHÍ ĐÁNH GIÁ
             sb.AppendLine("\nTIÊU CHÍ ĐÁNH GIÁ:");
@@ -1092,51 +1110,84 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("3. Kinh nghiệm liên quan: Kinh nghiệm làm việc có liên quan đến vị trí trong JD không");
             sb.AppendLine("4. Kỹ năng phù hợp: Kỹ năng của ứng viên có phù hợp với các kỹ năng yêu cầu trong JD không");
             sb.AppendLine("5. Điểm nổi bật: Ứng viên có điểm nổi bật nào đặc biệt phù hợp với vị trí này không");
+            sb.AppendLine("6. Đầy đủ: Thông tin có đầy đủ và chi tiết không");
+            sb.AppendLine("7. Cụ thể: Thông tin có được trình bày cụ thể, rõ ràng không");
+            sb.AppendLine("8. Định dạng: Thông tin có được trình bày với định dạng phù hợp không");
+            sb.AppendLine("9. Tổ chức: Thông tin có được tổ chức logic, dễ theo dõi không");
 
             // PHẦN 3: HƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC
             sb.AppendLine("\nHƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC:");
 
             sb.AppendLine("\n1. KHU VỰC THÔNG TIN:");
-            sb.AppendLine("- Đánh giá việc định hướng nghề nghiệp có phù hợp với vị trí trong JD không");
             sb.AppendLine("- Phân tích mức độ phù hợp của vị trí ứng tuyển với JD");
             sb.AppendLine("- Đánh giá các thông tin liên hệ có đầy đủ không");
+            sb.AppendLine("- Nếu thông tin đầy đủ và cị trí ứng tuyển có liên quan đến JD thì cho 10 điểm luôn và không cần cải thi");
+            sb.AppendLine("- Kiểm tra đầy đủ thông tin cơ bản: họ tên, email, số điện thoại, địa chỉ, vị trí ứng tuyển");
+            sb.AppendLine("- KHÔNG cần gợi ý bổ sung các liên kết như LinkedIn, GitHub cá nhân, trừ khi chúng đã có sẵn trong dữ liệu CV");
+            sb.AppendLine("- Đánh giá các thông tin liên hệ có đầy đủ không");
 
-            sb.AppendLine("\n2. KHU VỰC KINH NGHIỆM:");
+
+            sb.AppendLine("\n2. KHU VỰC GIỚI THIỆU:");
+            sb.AppendLine("- Kiểm tra có cung cấp thông tin giới thiệu không");
+            sb.AppendLine("- Nêu rõ hơn mục tiêu ngắn hạn và dài hạn liên quan đến vị trí ứng tuyển");
+            sb.AppendLine("- Đánh giá mức độ phù hợp của thông tin giới thiệu với yêu cầu trong JD");
+            sb.AppendLine("- Ví dụ gợi ý: ");
+            sb.AppendLine("+ Định hướng nghề nghiệp tập trung vào lĩnh vực phát triển ứng dụng cho công ty trong JD");
+
+            sb.AppendLine("\n3. KHU VỰC KINH NGHIỆM:");
             sb.AppendLine("- So sánh kinh nghiệm làm việc với các yêu cầu kinh nghiệm trong JD");
             sb.AppendLine("- Đánh giá mức độ liên quan của kinh nghiệm với vị trí đang ứng tuyển");
             sb.AppendLine("- Xác định khoảng cách giữa kinh nghiệm hiện tại và yêu cầu trong JD");
+            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của kinh nghiệm với vị trí ứng tuyển");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
+            sb.AppendLine("- Ví dụ gợi ý: ");
+            sb.AppendLine("+ Lượng hóa các thành tựu đạt được trong quá trình làm việc (nếu có)");
+            sb.AppendLine("+ Có kinh nghiệm làm việc trong các dự án liên quan đến lĩnh vực theo JD.");
 
-            sb.AppendLine("\n3. KHU VỰC HỌC VẤN:");
+
+            sb.AppendLine("\n4. KHU VỰC HỌC VẤN:");
             sb.AppendLine("- Đánh giá mức độ phù hợp của học vấn với yêu cầu trong JD");
             sb.AppendLine("- Xem xét liệu chuyên ngành có liên quan đến vị trí công việc không");
-            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường, ngành học, và thời gian học tập không");
+            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường, ngành học không");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
+            sb.AppendLine("- Gợi ý nếu không có thông tin về ngành học, GPA, thành viên CLB...");
+            sb.AppendLine("- Ví dụ: Bổ sung thông tin về GPA (nếu có)");
 
-            sb.AppendLine("\n4. KHU VỰC DỰ ÁN:");
+            sb.AppendLine("\n5. KHU VỰC DỰ ÁN:");
             sb.AppendLine("- Đánh giá mức độ liên quan của các dự án với vị trí trong JD");
             sb.AppendLine("- Phân tích các kỹ năng và công nghệ sử dụng trong dự án có phù hợp với JD không");
             sb.AppendLine("- Đánh giá mức độ chi tiết của mô tả dự án và vai trò của ứng viên");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
+            sb.AppendLine("- Gợi ý mô tả dự án có nêu công nghệ sử dụng, vai trò, trách nhiệm,... không");
+            sb.AppendLine("- Ví dụ gợi ý: Bổ sung thông tin về kết quả đạt được của dự án");
 
-            sb.AppendLine("\n5. KHU VỰC KỸ NĂNG:");
+            sb.AppendLine("\n6. KHU VỰC KỸ NĂNG:");
             sb.AppendLine("- So sánh chi tiết kỹ năng trong CV với các kỹ năng yêu cầu trong JD");
             sb.AppendLine("- Phân tích kỹ năng đã đáp ứng và kỹ năng còn thiếu");
             sb.AppendLine("- Đề xuất cách bổ sung hoặc làm nổi bật kỹ năng phù hợp với JD");
+            sb.AppendLine("- Kiểm tra kỹ năng có được liệt kê rõ ràng, phân loại và định dạng tốt không");
+            sb.AppendLine("- Gợi ý cách tổ chức và trình bày kỹ năng hiệu quả hơn");
+            sb.AppendLine("- Ví dụ gợi ý: Nhóm các kỹ năng theo Frontend, Backend, Công cụ");
 
-            sb.AppendLine("\n6. KHU VỰC CHỨNG CHỈ:");
+            sb.AppendLine("\n7. KHU VỰC CHỨNG CHỈ:");
             sb.AppendLine("- Đánh giá mức độ phù hợp của chứng chỉ với các yêu cầu trong JD");
             sb.AppendLine("- Xác định xem chứng chỉ có phải là lợi thế cho vị trí này không");
             sb.AppendLine("- Kiểm tra tên chứng chỉ có rõ ràng, từ tổ chức nào cấp không");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
 
-            sb.AppendLine("\n7. KHU VỰC GIẢI THƯỞNG:");
+            sb.AppendLine("\n8. KHU VỰC GIẢI THƯỞNG:");
             sb.AppendLine("- Đánh giá mức độ liên quan của giải thưởng với lĩnh vực trong JD");
             sb.AppendLine("- Xác định liệu giải thưởng có tạo điểm khác biệt cho ứng viên không");
             sb.AppendLine("- Kiểm tra mô tả có nêu rõ giải thưởng là gì, trong lĩnh vực nào, từ tổ chức nào không");
+            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
 
-            // Thêm khu vực Đánh giá tổng thể JD
-            sb.AppendLine("\n8. KHU VỰC ĐÁNH GIÁ TỔNG THỂ JD:");
+            sb.AppendLine("\n9. KHU VỰC ĐÁNH GIÁ TỔNG THỂ CV SO VỚI JD:");
             sb.AppendLine("- Đánh giá tổng thể mức độ phù hợp của CV với JD");
             sb.AppendLine("- Chỉ ra những điểm mạnh và điểm yếu chính");
             sb.AppendLine("- Cung cấp điểm số tổng thể từ 0-10 về mức độ phù hợp");
             sb.AppendLine("- Đưa ra các gợi ý cụ thể để tăng tính phù hợp với JD");
+            sb.AppendLine("- Tóm tắt các kỹ năng và kinh nghiệm phù hợp nhất với JD");
+            sb.AppendLine("- Đánh giá xem ứng viên có thể đáp ứng bao nhiêu phần trăm yêu cầu công việc");
 
             // PHẦN 4: ĐỊNH DẠNG JSON VÀ CÁC TRƯỜNG
             sb.AppendLine("\nTrả về kết quả dưới dạng JSON không có giải thích hay markdown bọc ngoài, chỉ JSON thuần túy với cấu trúc:");
@@ -1148,7 +1199,7 @@ namespace iCV.Infrastructure.Services.GeminiService
      ""score"": 10,
      ""description"": ""Mô tả chi tiết bằng text thuần, KHÔNG có HTML"",
      ""suggestion"": ""<ul><li>Gợi ý 1</li><li>Gợi ý 2</li></ul>"",
-     ""example"": ""<p>Ví dụ minh họa với <strong>định dạng</strong> HTML</p>"",
+    ""example"": ""<ul><li>Nội dung ví dụ 1</li><li>Nội dung ví dụ 2</li></ul>"",
      ""correction"": null
    },
    {
@@ -1163,12 +1214,14 @@ namespace iCV.Infrastructure.Services.GeminiService
 }
 ");
 
-            sb.AppendLine("Trong phần phản hồi:");
-            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào.");
-            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện.");
-            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa.");
+            sb.AppendLine("Chú ý Quan trọng trong phần phản hồi:");
+            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào. Thể hiện nội dung gắn gọn, trọng tâm, chỉ cần ý chính.");
+            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện. Thể hiện nội dung gắn gọn, trọng tâm, chỉ cần ý chính.");
+            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa. Thể hiện nội dung gắn gọn, trọng tâm, chỉ cần ý chính.");
             sb.AppendLine("- Trường `correction` LUÔN là null vì bạn không kiểm tra lỗi chính tả.");
             sb.AppendLine("- PHẢI thêm một khu vực \"Đánh giá tổng thể JD\" vào cuối danh sách, với điểm tổng thể và phân tích mức độ phù hợp");
+          
+            sb.AppendLine("- Trong trường `example`, hãy bỏ từ 'Ví dụ:' phía trước mỗi ví dụ");
 
             // PHẦN 5: DỮ LIỆU CV VÀ JD
             sb.AppendLine("\nDữ liệu CV chuẩn hóa:");

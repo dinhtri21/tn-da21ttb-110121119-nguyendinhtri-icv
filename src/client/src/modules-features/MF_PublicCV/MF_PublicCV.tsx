@@ -50,7 +50,20 @@ const RenderBlock = ({
       case "overview":
         return <OverviewBlock value={readOnlyCvData} setCvData={noop} />;
       case "avatar":
-        return <AvatarBlock value={readOnlyCvData} setCvData={noop} />;
+        return (
+          <div 
+            style={{ 
+              pointerEvents: 'none', 
+              userSelect: 'none',
+              position: 'relative'
+            }}
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={(e) => e.preventDefault()}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            <AvatarBlock value={readOnlyCvData} setCvData={noop} />
+          </div>
+        );
       case "businessCard":
         return <BusinessCardBlock value={readOnlyCvData} setCvData={noop} />;
       case "personalInfo":
@@ -116,7 +129,8 @@ export default function MF_PublicCV({ data }: IProps) {
     style.innerHTML = `
       .read-only-mode input, 
       .read-only-mode textarea, 
-      .read-only-mode [contenteditable="true"] {
+      .read-only-mode [contenteditable="true"],
+      .read-only-mode input[type="file"] {
         pointer-events: none;
         border: none !important;
         background-color: transparent !important;
@@ -130,6 +144,23 @@ export default function MF_PublicCV({ data }: IProps) {
       .read-only-mode button,
       .read-only-mode .mantine-ActionIcon-root {
         display: none !important;
+      }
+      /* Completely disable avatar upload area */
+      .read-only-mode .avatar-container,
+      .read-only-mode .avatar-upload,
+      .read-only-mode .file-upload-area,
+      .read-only-mode [class*="avatar"],
+      .read-only-mode [class*="upload"],
+      .read-only-mode img {
+        pointer-events: none !important;
+        cursor: default !important;
+      }
+      /* Hide any clickable elements in avatar block */
+      .read-only-mode label,
+      .read-only-mode [role="button"],
+      .read-only-mode [onclick] {
+        pointer-events: none !important;
+        cursor: default !important;
       }
     `;
     document.head.appendChild(style);

@@ -5,11 +5,26 @@ import cvService from "@/api/services/cvService";
 import { ICV } from "@/interface/cv";
 import { useDisclosure } from "@mantine/hooks";
 import { Center } from "@mantine/core";
+import { useEffect } from "react";
 
 interface IProp {
   id: string;
 }
 export default function MF_CV_Layout({ id }: IProp) {
+  // Prevent page scroll only on CV editor page
+  useEffect(() => {
+    document.body.classList.add('cv-editor-page');
+    document.body.style.overflow = 'hidden';
+    
+    // Reset any scroll position
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTo(0, 0);
+    
+    return () => {
+      document.body.classList.remove('cv-editor-page');
+      document.body.style.overflow = '';
+    };
+  }, []);
   const query = useQuery<ICV>({
     queryKey: ["MF_CV_Layout", id],
     queryFn: async () => {

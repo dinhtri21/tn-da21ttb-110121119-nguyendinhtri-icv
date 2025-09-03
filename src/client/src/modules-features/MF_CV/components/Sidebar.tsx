@@ -14,7 +14,7 @@ export interface SidebarProps {
 export default function Sidebar({ onAddBlock, usedBlocks, language = 'vi' }: SidebarProps) {
 
   return (
-    <Box className="max-w-60 w-full">
+    <Box className=" w-full">
       <Group gap={4} align="center" justify="space-between">
         <Text mb={1} fz={"sm"} fw={500}>
           Thành phần

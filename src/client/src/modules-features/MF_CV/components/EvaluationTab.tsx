@@ -8,6 +8,7 @@ import {
   Center,
   Group,
   Loader,
+  Stack,
   Table,
   Text,
   Textarea,
@@ -109,14 +110,18 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
         Đánh giá CV bởi AI
       </Text>
       {!query.data ? (
-         <Text size="xs" c="gray.6" mb={10}>Nhấn nút tải đánh giá để thực hiện</Text>
+        <Text size="xs" c="gray.6" mb={10}>
+          Nhấn nút tải đánh giá để thực hiện
+        </Text>
       ) : (
-        <Text size="xs" c="gray.6" mb={10}>Nhấn nút tải lại để làm mới đánh giá</Text>
+        <Text size="xs" c="gray.6" mb={10}>
+          Nhấn nút tải lại để làm mới đánh giá
+        </Text>
       )}
       <Textarea
         placeholder="Nhập mô tả công việc (Job Description) để đánh giá CV phù hợp với vị trí cụ thể... Để trống nếu muốn đánh giá tổng quát CV."
         minRows={3}
-        maxRows={6}
+        maxRows={3}
         autosize
         value={jobDescription}
         onChange={(event) => setJobDescription(event.currentTarget.value)}
@@ -125,7 +130,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
       />
 
       {!query.data && (
-        <Button onClick={handleEnableQuery} size="xs" >
+        <Button onClick={handleEnableQuery} size="xs">
           {query.isLoading ? <Loader color="white" size={16} /> : "Tải đánh giá"}
         </Button>
       )}
@@ -134,7 +139,7 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
       {query.isSuccess && (
         <Table.ScrollContainer
           minWidth={50}
-          maxHeight={"Calc(100vh - 190px)"}
+          maxHeight={"Calc(100vh - 260px)"}
           style={{
             padding: "4px 8px",
             borderRadius: "8px",
@@ -150,11 +155,11 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                     Khu vực
                   </Text>
                 </Table.Th>
-                <Table.Th w="18%" ta="center" p={4}>
+                {/* <Table.Th w="18%" ta="center" p={4}>
                   <Text fz="13px" fw={500}>
                     Điểm
                   </Text>
-                </Table.Th>
+                </Table.Th> */}
                 <Table.Th p={4}>
                   <Group justify="space-between" align="center">
                     <Text fz="13px" fw={500}>
@@ -177,11 +182,20 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
               {query.data.map((evaluation, index) => (
                 <Table.Tr key={index}>
                   <Table.Td p={6}>
-                    <Text c={colorScheme === "dark" ? "gray.4" : "gray.7"} fz="13px">
-                      {evaluation.area}
-                    </Text>
+                    <Stack gap={4}>
+                      <Badge
+                        color={
+                          evaluation.score >= 8 ? "green" : evaluation.score >= 5 ? "orange" : "red"
+                        }
+                      >
+                        {evaluation.score}
+                      </Badge>
+                      <Text c={colorScheme === "dark" ? "gray.4" : "gray.9"} fz="13px" fw={500}>
+                        {evaluation.area}
+                      </Text>
+                    </Stack>
                   </Table.Td>
-                  <Table.Td ta="center" p={6}>
+                  {/* <Table.Td ta="center" p={6}>
                     <Badge
                       color={
                         evaluation.score >= 8 ? "green" : evaluation.score >= 5 ? "orange" : "red"
@@ -189,13 +203,12 @@ export default function EvaluationTab({ id }: EvaluationTabProps) {
                     >
                       {evaluation.score}
                     </Badge>
-                  </Table.Td>
+                  </Table.Td> */}
                   <Table.Td p={6}>
-                    
-                    <Text fz="13px" c={colorScheme === "dark" ? "gray.4" : "gray.7"}>
+                   
+                    <Text fz="14px" c={colorScheme === "dark" ? "gray.4" : "gray.9"}>
                       {evaluation.description}
                     </Text>
-
                     {/* Suggestion */}
                     {evaluation.suggestion && (
                       <Box

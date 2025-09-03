@@ -184,7 +184,8 @@ export default function RightSidebarSetting({
           <Tooltip
             label={
               <Text size="xs">
-                Vui lòng chọn &apos;Lưu dưới dạng PDF&apos; hoặc &apos;Save as PDF&apos; trong hộp thoại In.
+                Vui lòng chọn &apos;Lưu dưới dạng PDF&apos; hoặc &apos;Save as PDF&apos; trong hộp
+                thoại In.
               </Text>
             }
           >
