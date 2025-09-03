@@ -1,0 +1,20 @@
+/* Optional CSS Module for Footer component */
+.footer {
+  @apply bg-slate-800 text-gray-300;
+}
+
+.footerLink {
+  @apply transition-colors duration-200 hover:text-white;
+}
+
+.logo {
+  @apply w-8 h-8 bg-white rounded-full flex items-center justify-center;
+}
+
+.sectionTitle {
+  @apply font-semibold text-lg;
+}
+
+.badge {
+  @apply text-xs px-2 py-1 rounded-full;
+}

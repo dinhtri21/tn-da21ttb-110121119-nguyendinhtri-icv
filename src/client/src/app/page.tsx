@@ -1,5 +1,6 @@
 "use client";
 
+import { Footer } from "@/components/Footer";
 import { clearToken, setToken } from "@/redux/slices/authSlice";
 import { clearUser, setUser } from "@/redux/slices/userSlide";
 import { RootState } from "@/redux/store";
@@ -16,7 +17,12 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { useHeadroom } from "@mantine/hooks";
-import { IconChevronDown, IconSwitchHorizontal, IconLogout, IconSquares } from "@tabler/icons-react";
+import {
+  IconChevronDown,
+  IconSwitchHorizontal,
+  IconLogout,
+  IconSquares,
+} from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -144,7 +150,9 @@ export default function HomePage() {
                   <Button size="xs" variant="light" onClick={() => Router.push("/auth/register")}>
                     Đăng ký
                   </Button>
-                  <Button size="xs" onClick={() => Router.push("/auth/login")}>Đăng nhập</Button>
+                  <Button size="xs" onClick={() => Router.push("/auth/login")}>
+                    Đăng nhập
+                  </Button>
                 </>
               )}
             </Group>
@@ -152,7 +160,7 @@ export default function HomePage() {
         </Container>
       </AppShell.Header>
       <AppShell.Main pt="76px">
-        <Container size="80rem" px={16} pb="100px">
+        <Container size="80rem" px={16} >
           <Flex direction="column" align="center" justify="center" py="40px">
             <Text fz="30px" fw={600} className="font-sansfont-serif">
               Tìm công việc mơ ước
@@ -171,7 +179,7 @@ export default function HomePage() {
               Bắt đầu ngay !
             </Button>
           </Flex>
-          <Flex direction="row" align="center" justify="center" py="20px">
+          <Flex direction="row" align="center" justify="center" py="20px" mb={60}>
             <div className="w-full relative max-w-5xl mx-auto px-4 md:px-6 lg:px-8">
               <div className="absolute top-10 left-1/2 transform -translate-x-1/2 w-full h-[400px] bg-gradient-to-r from-blue-800 to-blue-500 rounded-full blur-3xl opacity-40 z-0" />
               <div className="w-full  rounded-xl shadow-lg bg-background">
@@ -186,6 +194,7 @@ export default function HomePage() {
               </div>
             </div>
           </Flex>
+          <Footer />
         </Container>
       </AppShell.Main>
     </AppShell>

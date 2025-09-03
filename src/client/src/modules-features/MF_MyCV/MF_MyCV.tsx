@@ -35,6 +35,7 @@ import { SkeletonCard } from "./SkeletonCard";
 import { utils_date_DateToDDMMYYYYHHMMString } from "@/utils/date";
 import { useRef } from "react";
 import { useDisclosure } from "@mantine/hooks";
+import { Footer } from "@/components/Footer";
 
 export default function MF_MyCV() {
   const [visible, { open: showOverlay, close: hideOverlay }] = useDisclosure(false);
@@ -201,7 +202,7 @@ export default function MF_MyCV() {
           style={{ display: "none" }}
         />
       </Flex>
-      <Flex direction="column" mt={20}>
+      <Flex direction="column" mt={20} mb={50}>
         <Text fw={500} size="md">
           Tất cả CV
         </Text>
@@ -227,7 +228,7 @@ export default function MF_MyCV() {
                 </Center>
               </Box>
             </Grid.Col>
-            {query?.data && 
+            {query?.data &&
               query.data.map((cv, i) => {
                 return (
                   <Grid.Col key={i} span={{ base: 12, sm: 6, md: 3, lg: 2 }}>
@@ -309,6 +310,7 @@ export default function MF_MyCV() {
           </Grid>
         </Box>
       </Flex>
+      <Footer />
     </Container>
   );
 }
