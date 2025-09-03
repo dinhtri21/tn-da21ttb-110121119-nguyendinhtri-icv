@@ -94,7 +94,7 @@ namespace iCV.API.Controllers
                 HttpContext.Session.SetString("oauth_state", state);
                 HttpContext.Session.SetString("oauth_return_url", callbackUrl);
                 HttpContext.Session.SetString("oauth_created_at", DateTimeOffset.UtcNow.ToString());
-
+                
                 var googleClientId = _configuration["Authentication:Google:ClientId"];
                 var scopes = Uri.EscapeDataString("openid profile email");
 
@@ -118,8 +118,10 @@ namespace iCV.API.Controllers
         [HttpGet("google-callback")]
         public async Task<IActionResult> GoogleCallback([FromQuery] string code, [FromQuery] string state, [FromQuery] string? error = null)
         {
-            // Lấy return URL từ session thay vì hardcode
+            // Lấy return URL từ session
             var returnUrl = HttpContext.Session.GetString("oauth_return_url");
+            var sessionStateFromSession = HttpContext.Session.GetString("oauth_state"); // Renamed variable
+            var createdAtStr = HttpContext.Session.GetString("oauth_created_at");
             var frontendOrigin = GetFrontendOrigin();
 
             // Sử dụng returnUrl từ session, fallback về default callback
@@ -135,10 +137,7 @@ namespace iCV.API.Controllers
                 }
 
                 // Validate state
-                var sessionState = HttpContext.Session.GetString("oauth_state");
-                var createdAtStr = HttpContext.Session.GetString("oauth_created_at");
-
-                if (string.IsNullOrEmpty(sessionState) || sessionState != state)
+                if (string.IsNullOrEmpty(sessionStateFromSession) || sessionStateFromSession != state)
                 {
                     ClearSessionData();
                     return Redirect($"{callbackUrl}?error=invalid_state");
@@ -195,8 +194,10 @@ namespace iCV.API.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Google OAuth Error: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
                 ClearSessionData();
-                return Redirect($"{callbackUrl}?error={Uri.EscapeDataString("authentication_failed")}");
+                return Redirect($"{callbackUrl}?error={Uri.EscapeDataString("authentication_failed")}&details={Uri.EscapeDataString(ex.Message)}");
             }
         }
 

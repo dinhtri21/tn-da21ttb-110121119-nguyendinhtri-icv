@@ -48,8 +48,12 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Thay vì SameAsRequest
-    options.Cookie.Name = "__Host-SessionId"; // Thêm prefix cho security
+    // Fix for development: use SameAsRequest instead of Always
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment() ? 
+        CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+    // Remove __Host- prefix for development (requires HTTPS)
+    options.Cookie.Name = builder.Environment.IsDevelopment() ? 
+        "SessionId" : "__Host-SessionId";
 });
 
 // SQl Server
@@ -65,22 +69,22 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IAppl
 // Repository
 builder.Services.AddRepositories();
 
-// Google Authentication
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-})
-.AddCookie()
-.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-{
-    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-    options.CallbackPath = builder.Configuration["Authentication:Google:CallbackPath"];
-    options.Scope.Add("profile");
-    options.ClaimActions.MapJsonKey("picture", "picture");
-    options.SaveTokens = true; 
-});
+// Google Authentication - Disable built-in handler since we have custom implementation
+// builder.Services.AddAuthentication(options =>
+// {
+//     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//     options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+// })
+// .AddCookie()
+// .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+// {
+//     options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+//     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+//     options.CallbackPath = builder.Configuration["Authentication:Google:CallbackPath"];
+//     options.Scope.Add("profile");
+//     options.ClaimActions.MapJsonKey("picture", "picture");
+//     options.SaveTokens = true; 
+// });
 
 // Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration["Jwt:key"]);
@@ -118,7 +122,7 @@ app.Use(async (context, next) =>
 app.UseRouting();
 app.UseCors("AllowSpecificOrigin");
 app.UseSession();
-app.UseAuthentication();
+// app.UseAuthentication(); // Commented out since we disabled built-in Google auth
 app.UseAuthorization();
 
 app.MapControllers();
