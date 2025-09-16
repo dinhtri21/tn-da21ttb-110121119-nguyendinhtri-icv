@@ -206,19 +206,19 @@ namespace iCV.Infrastructure.Services.GeminiService
 
             // PHẦN 4: ĐỊNH DẠNG CORRECTION
             sb.AppendLine("\nĐỊNH DẠNG CORRECTION PHẢI CHÍNH XÁC NHƯ SAU:");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">phát triễn</span> => <span style=\"color: green;\">phát triển</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">Deverloper</span> => <span style=\"color: green;\">Developer</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">trien khai</span> => <span style=\"color: green;\">triển khai</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">triểnkhai</span> => <span style=\"color: green;\">triển khai</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">javascript</span> => <span style=\"color: green;\">JavaScript</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">react js</span> => <span style=\"color: green;\">React.js</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">côngnghệ</span> => <span style=\"color: green;\">công nghệ</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">phát triễn</span> => <span style=\"color: green;\">phát triển</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">Deverloper</span> => <span style=\"color: green;\">Developer</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">trien khai</span> => <span style=\"color: green;\">triển khai</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">triểnkhai</span> => <span style=\"color: green;\">triển khai</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">javascript</span> => <span style=\"color: green;\">JavaScript</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">react js</span> => <span style=\"color: green;\">React.js</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">côngnghệ</span> => <span style=\"color: green;\">công nghệ</span></p>");
 
             // PHẦN 5: HƯỚNG DẪN CHO NHIỀU LỖI
             sb.AppendLine("\nNẾU CÓ NHIỀU LỖI, PHẢI LIỆT KÊ TỪNG LỖI TRONG THẺ <p> RIÊNG:");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">phát triễn</span> => <span style=\"color: green;\">phát triển</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">kinh ngiệm</span> => <span style=\"color: green;\">kinh nghiệm</span></p>");
-            sb.AppendLine("<p>Lỗi: <span style=\"color: red;\">triểm khai</span> => <span style=\"color: green;\">triển khai</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">phát triễn</span> => <span style=\"color: green;\">phát triển</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">kinh ngiệm</span> => <span style=\"color: green;\">kinh nghiệm</span></p>");
+            sb.AppendLine("<p><span style=\"color: red;\">triểm khai</span> => <span style=\"color: green;\">triển khai</span></p>");
     
             // PHẦN 6: KIỂM TRA CHI TIẾT TỪNG KHU VỰC
             sb.AppendLine("\nKIỂM TRA CHI TIẾT TỪNG KHU VỰC:");
