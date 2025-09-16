@@ -83,10 +83,18 @@ namespace iCV.Infrastructure.Services.GeminiService
         private string GenerateNormalizePrompt(CVDto cv)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Bạn là AI, hãy chuẩn hóa dữ liệu CV dưới đây thành JSON với các trường: FullName, JobTitle, Address, Email, Phone, Overview, Experiences (list), Projects (list), Educations (list), Skills (list), Awards (list), Certificates (list), CareerObjective, Achievements (list).");
-            sb.AppendLine("Loại bỏ HTML, gom thông tin rải rác, tách các trường nếu nằm trong description.");
-            sb.AppendLine("Chỉ trả về JSON thuần túy, không giải thích, không markdown, không bọc trong dấu `.");
-            sb.AppendLine("CV:");
+
+            // SECTION 1: MAIN TASK AND OBJECTIVES
+            sb.AppendLine("YOU ARE an AI assistant tasked with normalizing CV data into a structured JSON format.");
+            sb.AppendLine("Please standardize the CV data below into JSON with these fields: FullName, JobTitle, Address, Email, Phone, Overview, Experiences (list), Projects (list), Educations (list), Skills (list), Awards (list), Certificates (list), CareerObjective, Achievements (list).");
+            sb.AppendLine("Remove HTML, consolidate scattered information, and separate fields if they are embedded within descriptions.");
+            sb.AppendLine("Return ONLY pure JSON without explanations, markdown formatting, or backtick enclosures.");
+
+            // CRITICAL ADDITION: Instruction to preserve Vietnamese content
+            sb.AppendLine("\nCRITICAL INSTRUCTION: DO NOT translate any Vietnamese content to English. Preserve all original language and terminology.");
+
+            // SECTION 2: CV DATA
+            sb.AppendLine("\nCV data to normalize:");
             sb.AppendLine($"Họ tên: {cv.PersonalInfo?.FullName}");
             sb.AppendLine($"Vị trí ứng tuyển: {cv.PersonalInfo?.JobTitle}");
             sb.AppendLine($"Địa chỉ: {cv.PersonalInfo?.Address}");
@@ -174,38 +182,38 @@ namespace iCV.Infrastructure.Services.GeminiService
         {
             var sb = new StringBuilder();
 
-            // PHẦN 1: NHIỆM VỤ VÀ MỤC TIÊU CHÍNH
-            sb.AppendLine("NHIỆM VỤ DUY NHẤT CỦA BẠN: KIỂM TRA LỖI CHÍNH TẢ, NGỮ PHÁP VÀ DIỄN ĐẠT TRONG CV");
-            sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia ngôn ngữ, chuyên kiểm tra lỗi chính tả và ngữ pháp. KHÔNG làm bất kỳ việc đánh giá nội dung nào khác.");
-            sb.AppendLine("Bạn có kiến thức sâu rộng về cả tiếng Việt và tiếng Anh, đặc biệt là các thuật ngữ kỹ thuật trong lĩnh vực công nghệ thông tin.");
+            // SECTION 1: MAIN TASK AND OBJECTIVES
+            sb.AppendLine("YOUR ONLY TASK: CHECK FOR SPELLING, GRAMMAR, AND EXPRESSION ERRORS IN THE CV");
+            sb.AppendLine("You ARE EXACTLY a language expert specializing in checking spelling and grammar. DO NOT perform any other content evaluation.");
+            sb.AppendLine("You have extensive knowledge of both Vietnamese and English, especially technical terms in information technology.");
             sb.AppendLine("");
-            sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), bạn CHỈ làm MỘT việc duy nhất:");
-            sb.AppendLine("- Kiểm tra KỸ LƯỠNG các lỗi chính tả tiếng Việt/tiếng Anh, ngữ pháp, từ vựng, và diễn đạt không tự nhiên.");
-            sb.AppendLine("- Ghi RÕ RÀNG những lỗi này vào trường 'correction' của khu vực tương ứng.");
-            sb.AppendLine("- Nếu THỰC SỰ không có lỗi nào, hãy đặt trường 'correction' là null.");
+            sb.AppendLine("For EACH area of the CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), you ONLY do ONE thing:");
+            sb.AppendLine("- THOROUGHLY check for Vietnamese/English spelling errors, grammar, vocabulary, and unnatural expressions.");
+            sb.AppendLine("- CLEARLY record these errors in the 'correction' field of the corresponding area.");
+            sb.AppendLine("- If there are TRULY no errors, set the 'correction' field to null.");
 
-            // PHẦN 2: QUY TRÌNH KIỂM TRA LỖI CHÍNH TẢ
-            sb.AppendLine("\nQUY TRÌNH KIỂM TRA LỖI CHÍNH TẢ:");
-            sb.AppendLine("1. Đọc kỹ từng câu trong CV và kiểm tra từng từ một.");
-            sb.AppendLine("2. Kiểm tra đặc biệt các thuật ngữ kỹ thuật, tên công nghệ, tên công ty.");
-            sb.AppendLine("3. Kiểm tra dấu câu và khoảng cách giữa các từ.");
-            sb.AppendLine("4. Kiểm tra nhất quán trong cách viết (ví dụ: JavaScript vs Javascript).");
-            sb.AppendLine("5. Kiểm tra các từ bị dính liền không đúng (ví dụ: côngnghệ, lậptrình, triểnkhai).");
+            // SECTION 2: SPELL-CHECKING PROCESS
+            sb.AppendLine("\nSPELL-CHECKING PROCESS:");
+            sb.AppendLine("1. Carefully read each sentence in the CV and check each word.");
+            sb.AppendLine("2. Pay special attention to technical terms, technology names, company names.");
+            sb.AppendLine("3. Check punctuation and spacing between words.");
+            sb.AppendLine("4. Check consistency in writing (e.g., JavaScript vs Javascript).");
+            sb.AppendLine("5. Check words that are incorrectly joined together (e.g., côngnghệ, lậptrình, triểnkhai).");
 
-            // PHẦN 3: DANH SÁCH CÁC LỖI THƯỜNG GẶP
-            sb.AppendLine("\nCÁC LỖI THƯỜNG GẶP CẦN KIỂM TRA:");
-            sb.AppendLine("- Lỗi chính tả tiếng Việt: thiếu dấu, sai dấu, sai chính tả (ví dụ: nghên cứu, phát triễn, trien khai)");
-            sb.AppendLine("- Lỗi chính tả tiếng Anh: sai chính tả (ví dụ: Deverloper, Font-end, Javascipt, experence)");
-            sb.AppendLine("- Lỗi thuật ngữ công nghệ: viết sai tên công nghệ (ví dụ: React Js, Node JS, Vue js thay vì ReactJS, Node.js, Vue.js)");
-            sb.AppendLine("- Lỗi viết hoa: không viết hoa tên riêng, tên công nghệ (ví dụ: javascript thay vì JavaScript)");
-            sb.AppendLine("- Lỗi khoảng trắng: thiếu hoặc thừa khoảng trắng (ví dụ: ReactNative thay vì React Native)");
-            sb.AppendLine("- Lỗi từ dính liền: các từ bị dính liền không đúng (vví dụd: côngnghệ, kỹnăng, lậptrình, ngônngữ, full-stackdeveloper)");
-            sb.AppendLine("- Lỗi nhất quán: dùng nhiều cách viết khác nhau cho cùng một thuật ngữ");
-            sb.AppendLine("- Các từ viết sai thường gặp: font-end/front-end, back-end/back end, full-stack/fullstack, javascrip/javascript");
-            sb.AppendLine("- Hay bất cứ lỗi nào khác bạn bắt gặp được");
+            // SECTION 3: LIST OF COMMON ERRORS
+            sb.AppendLine("\nCOMMON ERRORS TO CHECK:");
+            sb.AppendLine("- Vietnamese spelling errors: missing accents, wrong accents, misspellings (e.g., nghên cứu, phát triễn, trien khai)");
+            sb.AppendLine("- English spelling errors: misspellings (e.g., Deverloper, Font-end, Javascipt, experence)");
+            sb.AppendLine("- Technology term errors: incorrectly written technology names (e.g., React Js, Node JS, Vue js instead of ReactJS, Node.js, Vue.js)");
+            sb.AppendLine("- Capitalization errors: not capitalizing proper names, technology names (e.g., javascript instead of JavaScript)");
+            sb.AppendLine("- Spacing errors: missing or extra spaces (e.g., ReactNative instead of React Native)");
+            sb.AppendLine("- Word joining errors: words incorrectly joined together (e.g., côngnghệ, kỹnăng, lậptrình, ngônngữ, full-stackdeveloper)");
+            sb.AppendLine("- Consistency errors: using different spellings for the same term");
+            sb.AppendLine("- Common misspellings: font-end/front-end, back-end/back end, full-stack/fullstack, javascrip/javascript");
+            sb.AppendLine("- Or any other errors you may encounter");
 
-            // PHẦN 4: ĐỊNH DẠNG CORRECTION
-            sb.AppendLine("\nĐỊNH DẠNG CORRECTION PHẢI CHÍNH XÁC NHƯ SAU:");
+            // SECTION 4: CORRECTION FORMAT
+            sb.AppendLine("\nCORRECTION FORMAT MUST BE EXACTLY AS FOLLOWS:");
             sb.AppendLine("<p><span style=\"color: red;\">phát triễn</span> => <span style=\"color: green;\">phát triển</span></p>");
             sb.AppendLine("<p><span style=\"color: red;\">Deverloper</span> => <span style=\"color: green;\">Developer</span></p>");
             sb.AppendLine("<p><span style=\"color: red;\">trien khai</span> => <span style=\"color: green;\">triển khai</span></p>");
@@ -214,24 +222,24 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("<p><span style=\"color: red;\">react js</span> => <span style=\"color: green;\">React.js</span></p>");
             sb.AppendLine("<p><span style=\"color: red;\">côngnghệ</span> => <span style=\"color: green;\">công nghệ</span></p>");
 
-            // PHẦN 5: HƯỚNG DẪN CHO NHIỀU LỖI
-            sb.AppendLine("\nNẾU CÓ NHIỀU LỖI, PHẢI LIỆT KÊ TỪNG LỖI TRONG THẺ <p> RIÊNG:");
+            // SECTION 5: INSTRUCTIONS FOR MULTIPLE ERRORS
+            sb.AppendLine("\nIF THERE ARE MULTIPLE ERRORS, LIST EACH ERROR IN A SEPARATE <p> TAG:");
             sb.AppendLine("<p><span style=\"color: red;\">phát triễn</span> => <span style=\"color: green;\">phát triển</span></p>");
             sb.AppendLine("<p><span style=\"color: red;\">kinh ngiệm</span> => <span style=\"color: green;\">kinh nghiệm</span></p>");
             sb.AppendLine("<p><span style=\"color: red;\">triểm khai</span> => <span style=\"color: green;\">triển khai</span></p>");
-    
-            // PHẦN 6: KIỂM TRA CHI TIẾT TỪNG KHU VỰC
-            sb.AppendLine("\nKIỂM TRA CHI TIẾT TỪNG KHU VỰC:");
-            sb.AppendLine("1. Thông tin: Kiểm tra lỗi chính tả trong họ tên, địa chỉ, vị trí ứng tuyển, email, số điện thoại.");
-            sb.AppendLine("2. Kinh nghiệm: Kiểm tra lỗi chính tả trong Title và Description.");
-            sb.AppendLine("3. Học vấn: Kiểm tra lỗi chính tả trong UniversityName và Description.");
-            sb.AppendLine("4. Dự án: Kiểm tra lỗi chính tả trong Title và Description. (Lưu ý có nhiều dự án)");
-            sb.AppendLine("5. Kỹ năng: Kiểm tra lỗi chính tả trong mô tả kỹ năng, đặc biệt là tên các công nghệ, ngôn ngữ lập trình.");
-            sb.AppendLine("6. Chứng chỉ: Kiểm tra lỗi chính tả trong Title và Description.");
-            sb.AppendLine("7. Giải thưởng: Kiểm tra lỗi chính tả trong Title và Description.");
 
-            // PHẦN 7: ĐỊNH DẠNG JSON VÀ CÁC TRƯỜNG
-            sb.AppendLine("\nTrả về kết quả dưới dạng JSON không có giải thích hay markdown bọc ngoài, chỉ JSON thuần túy với cấu trúc:");
+            // SECTION 6: DETAILED CHECK FOR EACH AREA
+            sb.AppendLine("\nDETAILED CHECK FOR EACH AREA:");
+            sb.AppendLine("1. Thông tin: Check for spelling errors in full name, address, job position, email, phone number.");
+            sb.AppendLine("2. Kinh nghiệm: Check for spelling errors in Title and Description.");
+            sb.AppendLine("3. Học vấn: Check for spelling errors in UniversityName and Description.");
+            sb.AppendLine("4. Dự án: Check for spelling errors in Title and Description. (Note that there may be multiple projects)");
+            sb.AppendLine("5. Kỹ năng: Check for spelling errors in skill descriptions, especially names of technologies and programming languages.");
+            sb.AppendLine("6. Chứng chỉ: Check for spelling errors in Title and Description.");
+            sb.AppendLine("7. Giải thưởng: Check for spelling errors in Title and Description.");
+
+            // SECTION 7: JSON FORMAT AND FIELDS
+            sb.AppendLine("\nReturn the result as pure JSON without explanation or markdown wrapping, just pure JSON with this structure:");
             sb.AppendLine(@"
 {
  ""areas"": [
@@ -246,13 +254,13 @@ namespace iCV.Infrastructure.Services.GeminiService
  ]
 }
 ");
-            sb.AppendLine("Lưu ý: Chỉ điền trường 'correction', các trường khác để trống hoặc giá trị mặc định. Score luôn để là 0.");
-            sb.AppendLine("Trường 'correction' PHẢI sử dụng thẻ <p> và <span> với thuộc tính style cho màu sắc để hiển thị lỗi và cách sửa.");
-            sb.AppendLine("Chú ý Quan trọng tránh trình trạng không lỗi mà thông báo lối (Ví dụ ReactJS => ReactJS, học hỏi => học hỏi");
-            sb.AppendLine("Chú ý Quan trọng khu vực nào không có dữ liệu thì không kiểm tra lỗi chính tả ");
+            sb.AppendLine("Note: Only fill in the 'correction' field, leave other fields empty or with default values. Score should always be 0.");
+            sb.AppendLine("The 'correction' field MUST use <p> and <span> tags with style attributes for colors to display errors and corrections.");
+            sb.AppendLine("Important note: Avoid reporting errors when there aren't any (Example: ReactJS => ReactJS, học hỏi => học hỏi)");
+            sb.AppendLine("Important note: Do not check for spelling errors in areas that have no data");
 
-            // PHẦN 8: DỮ LIỆU CV
-            sb.AppendLine("\nDữ liệu CV chuẩn hóa:");
+            // SECTION 8: CV DATA
+            sb.AppendLine("\nNormalized CV data:");
             sb.AppendLine(normalizedJson);
 
             return sb.ToString();
@@ -263,86 +271,86 @@ namespace iCV.Infrastructure.Services.GeminiService
         {
             var sb = new StringBuilder();
 
-            // PHẦN 1: NHIỆM VỤ VÀ MỤC TIÊU CHÍNH
-            sb.AppendLine("NHIỆM VỤ DUY NHẤT CỦA BẠN: ĐÁNH GIÁ CHẤT LƯỢNG CV");
-            sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia nhân sự đánh giá CV. KHÔNG kiểm tra lỗi chính tả hay ngữ pháp.");
-            sb.AppendLine("Tập trung vào việc đánh giá nội dung, cấu trúc và sự phù hợp của CV với vị trí ứng tuyển.");
+            // SECTION 1: MAIN TASK AND OBJECTIVES
+            sb.AppendLine("YOUR ONLY TASK: EVALUATE CV QUALITY");
+            sb.AppendLine("You ARE EXACTLY a human resources expert who evaluates CVs. DO NOT check for spelling or grammar errors.");
+            sb.AppendLine("Focus on evaluating content, structure, and relevance of the CV to the job position.");
             sb.AppendLine("");
-            sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), bạn PHẢI:");
-            sb.AppendLine("1. Đánh giá mức độ đầy đủ và phù hợp của thông tin");
-            sb.AppendLine("2. Đánh giá mức độ phù hợp của thông tin với vị trí ứng tuyển");
-            sb.AppendLine("3. Đề xuất các cải thiện cụ thể để nâng cao chất lượng CV");
-            sb.AppendLine("4. Cung cấp ví dụ minh họa cho các cải thiện được đề xuất");
-            sb.AppendLine("5. Cho điểm từng khu vực (0-10) dựa trên mức độ hoàn thiện, nếu khu vực nào không có thông tin thì 0 điểm");
+            sb.AppendLine("For EACH area of the CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng), you MUST:");
+            sb.AppendLine("1. Evaluate the completeness and relevance of the information");
+            sb.AppendLine("2. Evaluate how well the information aligns with the job position");
+            sb.AppendLine("3. Suggest specific improvements to enhance the CV quality");
+            sb.AppendLine("4. Provide examples illustrating the suggested improvements");
+            sb.AppendLine("5. Score each area (0-10) based on completeness - if an area has no information, score it 0");
 
-            // PHẦN 2: TIÊU CHÍ ĐÁNH GIÁ
-            sb.AppendLine("\nTIÊU CHÍ ĐÁNH GIÁ:");
-            sb.AppendLine("1. Đầy đủ: Thông tin có đầy đủ và chi tiết không");
-            sb.AppendLine("2. Phù hợp: Thông tin có phù hợp với vị trí ứng tuyển không");
-            sb.AppendLine("3. Cụ thể: Thông tin có được trình bày cụ thể, rõ ràng không");
-            sb.AppendLine("4. Định dạng: Thông tin có được trình bày với định dạng phù hợp không");
-            sb.AppendLine("5. Tổ chức: Thông tin có được tổ chức logic, dễ theo dõi không");
+            // SECTION 2: EVALUATION CRITERIA
+            sb.AppendLine("\nEVALUATION CRITERIA:");
+            sb.AppendLine("1. Completeness: Is the information comprehensive and detailed?");
+            sb.AppendLine("2. Relevance: Is the information relevant to the job position?");
+            sb.AppendLine("3. Specificity: Is the information presented clearly and specifically?");
+            sb.AppendLine("4. Formatting: Is the information presented with appropriate formatting?");
+            sb.AppendLine("5. Organization: Is the information organized logically and easy to follow?");
 
-            // PHẦN 3: HƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC
-            sb.AppendLine("\nHƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC:");
-            
-            sb.AppendLine("\n1. KHU VỰC THÔNG TIN:");
-            sb.AppendLine("- Kiểm tra đầy đủ thông tin cơ bản: họ tên, email, số điện thoại, địa chỉ, vị trí ứng tuyển.");
-            sb.AppendLine("- KHÔNG cần gợi ý bổ sung các liên kết như LinkedIn, GitHub cá nhân, trừ khi chúng đã có sẵn trong dữ liệu CV.");
+            // SECTION 3: AREA-SPECIFIC EVALUATION GUIDELINES
+            sb.AppendLine("\nAREA-SPECIFIC EVALUATION GUIDELINES:");
 
-            sb.AppendLine("\n2. KHU VỰC GIỚI THIỆU:");
-            sb.AppendLine("- Kiểm tra có cung cấp thông tin giới thiệu không");
-            sb.AppendLine("- Ví dụ gợi ý: ");
-            sb.AppendLine("+ Nêu rõ hơn mục tiêu ngắn hạn và dài hạn liên quan đến vị trí ứng tuyển.");
+            sb.AppendLine("\n1. THÔNG TIN AREA:");
+            sb.AppendLine("- Check for complete basic information: full name, email, phone number, address, job position.");
+            sb.AppendLine("- DO NOT suggest adding links like LinkedIn or GitHub profiles unless they already exist in the CV data.");
 
-            sb.AppendLine("\n3. KHU VỰC KINH NGHIỆM:");
-            sb.AppendLine("- So sánh kinh nghiệm làm việc với các yêu cầu kinh nghiệm trong JD");
-            sb.AppendLine("- Đánh giá mức độ liên quan của kinh nghiệm với vị trí đang ứng tuyển");
-            sb.AppendLine("- Xác định khoảng cách giữa kinh nghiệm hiện tại và yêu cầu trong JD");
-            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của kinh nghiệm với vị trí ứng tuyển.");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
-            sb.AppendLine("- Ví dụ gợi ý: ");
-            sb.AppendLine("+ Lượng hóa các thành tựu đạt được trong quá trình làm việc (nếu có)");
+            sb.AppendLine("\n2. GIỚI THIỆU AREA:");
+            sb.AppendLine("- Check if introduction information is provided");
+            sb.AppendLine("- Example suggestion: ");
+            sb.AppendLine("+ Clearly state short-term and long-term goals related to the job position.");
 
-            sb.AppendLine("\n4. KHU VỰC HỌC VẤN:");
-            sb.AppendLine("- Đánh giá mức độ phù hợp của học vấn với yêu cầu trong JD.");
-            sb.AppendLine("- Xem xét liệu chuyên ngành có liên quan đến vị trí công việc không.");
-            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường, ngành học, và thời gian học tập không.");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc.");
-            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường");
-            sb.AppendLine("- Gợi ý nếu không có thông tin về ngành học, GPA, thành viên CLB...");
-            sb.AppendLine("- Ví dụ: Bổ sung thông tin về GPA (nếu có)");
+            sb.AppendLine("\n3. KINH NGHIỆM AREA:");
+            sb.AppendLine("- Compare work experience with job description requirements");
+            sb.AppendLine("- Evaluate relevance of experience to the position");
+            sb.AppendLine("- Identify gaps between current experience and job requirements");
+            sb.AppendLine("- Evaluate level of detail and relevance of experience to the job position.");
+            sb.AppendLine("- No need to check start or end dates");
+            sb.AppendLine("- Example suggestion: ");
+            sb.AppendLine("+ Quantify achievements during employment (if applicable)");
 
-            sb.AppendLine("\n5. KHU VỰC DỰ ÁN:");
-            sb.AppendLine("- Đánh giá mức độ liên quan của các dự án với vị trí trong JD.");
-            sb.AppendLine("- Phân tích các kỹ năng và công nghệ sử dụng trong dự án có phù hợp với JD không");
-            sb.AppendLine("- Đánh giá mức độ chi tiết của mô tả dự án và vai trò của ứng viên.");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
-            sb.AppendLine("- Gợi ý mô tả dự án có nêu công nghệ sử dụng, vai trò, trách nhiệm,... không");
-            sb.AppendLine("- Ví dụ gợi ý: ");
-            sb.AppendLine("+  Bổ sung thông tin về kết quả đạt được của dự án.");
+            sb.AppendLine("\n4. HỌC VẤN AREA:");
+            sb.AppendLine("- Evaluate relevance of education to job requirements.");
+            sb.AppendLine("- Consider if the field of study relates to the job position.");
+            sb.AppendLine("- Check for complete information about school name, field of study, and study period.");
+            sb.AppendLine("- No need to check start or end dates.");
+            sb.AppendLine("- Check for complete information about school name");
+            sb.AppendLine("- Suggest if information about field of study, GPA, club membership, etc. is missing.");
+            sb.AppendLine("- Example: Add GPA information (if available)");
 
-            sb.AppendLine("\n6. KHU VỰC KỸ NĂNG:");
-            sb.AppendLine("- So sánh chi tiết kỹ năng trong CV với các kỹ năng yêu cầu trong JD");
-            sb.AppendLine("- Phân tích kỹ năng đã đáp ứng và kỹ năng còn thiếu");
-            sb.AppendLine("- Đề xuất cách bổ sung hoặc làm nổi bật kỹ năng phù hợp với JD");
-            sb.AppendLine("- Kiểm tra kỹ năng có được liệt kê rõ ràng, phân loại và định dạng tốt không.");
-            sb.AppendLine("- Gợi ý cách tổ chức và trình bày kỹ năng hiệu quả hơn.");
-            sb.AppendLine("- Ví dụ gợi ý: ");
-            sb.AppendLine("+ Nhóm các ký năng theo Frontend, Backend, Công cụ");
+            sb.AppendLine("\n5. DỰ ÁN AREA:");
+            sb.AppendLine("- Evaluate relevance of projects to the job position.");
+            sb.AppendLine("- Analyze whether skills and technologies used in projects align with job requirements");
+            sb.AppendLine("- Evaluate detail level of project descriptions and the candidate's role.");
+            sb.AppendLine("- No need to check start or end dates");
+            sb.AppendLine("- Suggest if project descriptions mention technologies used, role, responsibilities, etc.");
+            sb.AppendLine("- Example suggestion: ");
+            sb.AppendLine("+  Add information about project outcomes.");
 
-            sb.AppendLine("\n7. KHU VỰC CHỨNG CHỈ:");
-            sb.AppendLine("- Đánh giá mức độ phù hợp của chứng chỉ với các yêu cầu trong JD.");
-            sb.AppendLine("- Xác định xem chứng chỉ có phải là lợi thế cho vị trí này không");
-            sb.AppendLine("- Kiểm tra tên chứng chỉ có rõ ràng, từ tổ chức nào cấp không.");
+            sb.AppendLine("\n6. KỸ NĂNG AREA:");
+            sb.AppendLine("- Compare detailed skills in CV with skills required in job description");
+            sb.AppendLine("- Analyze skills that meet requirements and skills that are missing");
+            sb.AppendLine("- Suggest ways to add or highlight skills relevant to the job description");
+            sb.AppendLine("- Check if skills are clearly listed, categorized, and well-formatted.");
+            sb.AppendLine("- Suggest how to organize and present skills more effectively.");
+            sb.AppendLine("- Example suggestion: ");
+            sb.AppendLine("+ Group skills by Frontend, Backend, Tools");
 
-            sb.AppendLine("\n8. KHU VỰC GIẢI THƯỞNG:");
-            sb.AppendLine("- Đánh giá mức độ phù hợp của giải thưởng với vị trí ứng tuyển.");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
-            sb.AppendLine("- Kiểm tra mô tả có nêu rõ giải thưởng là gì, trong lĩnh vực nào, từ tổ chức nào không.");
+            sb.AppendLine("\n7. CHỨNG CHỈ AREA:");
+            sb.AppendLine("- Evaluate relevance of certificates to job requirements.");
+            sb.AppendLine("- Determine if certificates provide an advantage for this position");
+            sb.AppendLine("- Check if certificate names are clear and the issuing organization is mentioned.");
 
-            // PHẦN 4: ĐỊNH DẠNG JSON VÀ CÁC TRƯỜNG
-            sb.AppendLine("\nTrả về kết quả dưới dạng JSON không có giải thích hay markdown bọc ngoài, chỉ JSON thuần túy với cấu trúc:");
+            sb.AppendLine("\n8. GIẢI THƯỞNG AREA:");
+            sb.AppendLine("- Evaluate relevance of awards to the job position.");
+            sb.AppendLine("- No need to check start or end dates");
+            sb.AppendLine("- Check if descriptions clearly state what the award is, in which field, and from which organization.");
+
+            // SECTION 4: JSON FORMAT AND FIELD INSTRUCTIONS
+            sb.AppendLine("\nReturn results as pure JSON without explanation or markdown wrapping, just pure JSON with this structure:");
             sb.AppendLine(@"
 {
  ""areas"": [
@@ -358,128 +366,26 @@ namespace iCV.Infrastructure.Services.GeminiService
 }
 ");
 
-            sb.AppendLine("Chú ý quan trọng, trong phần phản hồi:");
-            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào. Nội dung gắn gọn, chỉ cần ý chính");
-            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện. Nội dung gắn gọn, chỉ cần ý chính");
-            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa. Nội dung gắn gọn, chỉ cần ý chính, nêu dạng liệt kê. Hãy bỏ từ 'Ví dụ :' phía trước mỗi ví dụ.");
-            sb.AppendLine("- Trường `correction` LUÔN là null vì bạn không kiểm tra lỗi chính tả.");
+            sb.AppendLine("Important note for your response:");
+            sb.AppendLine("- The `description` field MUST be plain text (regular text) with NO HTML tags. Content should be concise, focused on main points");
+            sb.AppendLine("- The `suggestion` field should use HTML lists (<ul>, <li>) to enumerate improvement suggestions. Content should be concise, focused on main points");
+            sb.AppendLine("- The `example` field should contain specific examples with HTML formatting. Content should be concise, listed format. Remove 'Example:' from the beginning of each example.");
+            sb.AppendLine("- The `correction` field should ALWAYS be null because you're not checking for spelling errors.");
 
-            // PHẦN 5: DỮ LIỆU CV
-            sb.AppendLine("\nDữ liệu CV chuẩn hóa:");
+            // CRITICAL ADDITION: Instruction to respond in Vietnamese
+            sb.AppendLine("\nCRITICAL INSTRUCTION: You MUST provide ALL content in Vietnamese language ONLY!");
+            sb.AppendLine("- ALL area names must remain in Vietnamese as shown above (Thông tin, Giới thiệu, etc.)");
+            sb.AppendLine("- ALL descriptions must be written in Vietnamese");
+            sb.AppendLine("- ALL suggestions must be written in Vietnamese");
+            sb.AppendLine("- ALL examples must be written in Vietnamese");
+            sb.AppendLine("- Despite receiving instructions in English, your ENTIRE response must be in Vietnamese");
+
+            // SECTION 5: CV DATA
+            sb.AppendLine("\nNormalized CV data:");
             sb.AppendLine(normalizedJson);
 
             return sb.ToString();
         }
-        ////////// Suggestion
-        public async Task<List<string>> SuggestJobsAsync(CVDto cv)
-        {
-            try
-            {
-                var prompt = GenerateJobSuggestionPrompt(cv);
-
-                var requestBody = new
-                {
-                    contents = new[]
-                    {
-                new
-                {
-                    parts = new[]
-                    {
-                        new { text = prompt }
-                    }
-                }
-            }
-                };
-
-                var json = JsonSerializer.Serialize(requestBody);
-                var request = new HttpRequestMessage(HttpMethod.Post, $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={_apiKey}")
-                {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
-                };
-
-                var response = await _httpClient.SendAsync(request);
-                response.EnsureSuccessStatusCode();
-
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                if (string.IsNullOrWhiteSpace(jsonResponse))
-                    return new List<string>();
-
-                using var doc = JsonDocument.Parse(jsonResponse);
-                var text = doc.RootElement
-                              .GetProperty("candidates")[0]
-                              .GetProperty("content")
-                              .GetProperty("parts")[0]
-                              .GetProperty("text")
-                              .GetString();
-
-                if (string.IsNullOrWhiteSpace(text))
-                    return new List<string>();
-
-                text = CleanJsonResponse(text);
-
-                // Giả định Gemini trả về mảng JSON ["Job 1", "Job 2"]
-                try
-                {
-                    var suggestions = JsonSerializer.Deserialize<List<string>>(text);
-                    return suggestions ?? new List<string>();
-                }
-                catch (JsonException)
-                {
-                    Console.WriteLine($"Không thể parse JSON từ Gemini SuggestJobsAsync: {text}");
-                    return new List<string>();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"SuggestJobsAsync error: {ex.Message}");
-                return new List<string>();
-            }
-        }
-
-        private string GenerateJobSuggestionPrompt(CVDto cv)
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("Bạn là AI chuyên gợi ý công việc cho ứng viên.");
-            sb.AppendLine("Dưới đây là thông tin CV, hãy phân tích và trả về danh sách 5-10 vị trí công việc phù hợp nhất với kỹ năng, kinh nghiệm, dự án và định hướng nghề nghiệp của ứng viên.");
-            sb.AppendLine("Trả về dưới dạng JSON array chỉ gồm tên công việc, không có markdown, không giải thích, không có thứ tự đánh số.");
-
-            sb.AppendLine($"Họ tên: {cv.PersonalInfo?.FullName}");
-            sb.AppendLine($"Vị trí mong muốn: {cv.PersonalInfo?.JobTitle}");
-            sb.AppendLine($"Tóm tắt bản thân: {StripHtml(cv.PersonalInfo?.Overview)}");
-
-            if (cv.Skill != null)
-                sb.AppendLine($"Kỹ năng: {StripHtml(cv.Skill.Description)}");
-
-            if (cv.Experiences != null)
-            {
-                sb.AppendLine("Kinh nghiệm:");
-                foreach (var exp in cv.Experiences)
-                {
-                    sb.AppendLine($"- {exp.Title}: {StripHtml(exp.Description)}");
-                }
-            }
-
-            if (cv.Projects != null)
-            {
-                sb.AppendLine("Dự án:");
-                foreach (var proj in cv.Projects)
-                {
-                    sb.AppendLine($"- {proj.Title}: {StripHtml(proj.Description)}");
-                }
-            }
-
-            if (cv.Certificates != null && cv.Certificates.Any(c => !string.IsNullOrEmpty(c.Title)))
-            {
-                sb.AppendLine("Chứng chỉ:");
-                foreach (var cert in cv.Certificates)
-                {
-                    sb.AppendLine($"- {cert.Title}");
-                }
-            }
-
-            return sb.ToString();
-        }
-
         public async Task<CVDto> ExtractCVDataFromPdfTextAsync(CVDto emptyCV, string pdfText)
         {
             try
@@ -542,64 +448,86 @@ namespace iCV.Infrastructure.Services.GeminiService
         private string GenerateExtractCVDataPrompt(CVDto emptyCV, string pdfText)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("Bạn là một AI chuyên gia trong việc phân tích CV. Tôi đã gửi cho bạn nội dung văn bản từ một file PDF CV.");
-            sb.AppendLine("Vui lòng phân tích nội dung văn bản này và trả về một JSON với các thông tin sau:");
+
+            // SECTION 1: INTRODUCTION AND MAIN TASK
+            sb.AppendLine("YOU ARE an AI expert in CV analysis. I've sent you text content from a PDF CV file.");
+            sb.AppendLine("Please analyze this content and return a JSON with the following information:");
             sb.AppendLine();
-            sb.AppendLine("1. PersonalInfo (thông tin cá nhân):");
-            sb.AppendLine("   - FullName: Họ và tên của ứng viên");
-            sb.AppendLine("   - JobTitle: Vị trí/chức danh ứng viên đang tìm kiếm");
-            sb.AppendLine("   - Email: Địa chỉ email");
-            sb.AppendLine("   - Phone: Số điện thoại");
-            sb.AppendLine("   - Address: Địa chỉ (nếu có)");
-            sb.AppendLine("   - Overview: Tóm tắt về bản thân, mục tiêu nghề nghiệp (BẮT BUỘC trả về dưới dạng HTML với định dạng phù hợp như đoạn văn <p>, in đậm <strong>, in nghiêng <em>)");
+
+            // SECTION 2: PERSONAL INFORMATION EXTRACTION
+            sb.AppendLine("1. PersonalInfo (personal information):");
+            sb.AppendLine("   - FullName: Candidate's full name");
+            sb.AppendLine("   - JobTitle: Position/title the candidate is seeking");
+            sb.AppendLine("   - Email: Email address");
+            sb.AppendLine("   - Phone: Phone number");
+            sb.AppendLine("   - Address: Address (if available)");
+            sb.AppendLine("   - Overview: Summary about self, career goals (MUST be returned in HTML format with appropriate formatting like paragraphs <p>, bold <strong>, italic <em>)");
             sb.AppendLine();
-            sb.AppendLine("2. Experiences (kinh nghiệm làm việc): Liệt kê các kinh nghiệm làm việc dưới dạng mảng, mỗi phần tử có:");
-            sb.AppendLine("   - Title: Tên công ty và vị trí");
-            sb.AppendLine("   - Description: Mô tả công việc - BẮT BUỘC PHẢI CHỨA HTML để định dạng văn bản. KHÔNG DÙNG DẤU • mà phải dùng thẻ <ul><li> cho danh sách.");
-            sb.AppendLine("     Ví dụ: \"<p>Làm việc tại dự án X với vai trò Y.</p><ul><li>Phát triển tính năng A</li><li>Thiết kế hệ thống B</li></ul>\"");
-            sb.AppendLine("   - StartDate: Thời gian bắt đầu (tháng/năm hoặc năm)");
-            sb.AppendLine("   - EndDate: Thời gian kết thúc (tháng/năm hoặc năm)");
+
+            // SECTION 3: WORK EXPERIENCE EXTRACTION
+            sb.AppendLine("2. Experiences (work experience): List work experiences as an array, each element having:");
+            sb.AppendLine("   - Title: Company name and position");
+            sb.AppendLine("   - Description: Job description - MUST CONTAIN HTML for text formatting. DO NOT USE • symbol but use <ul><li> tags for lists.");
+            sb.AppendLine("     Example: \"<p>Worked on project X with role Y.</p><ul><li>Developed feature A</li><li>Designed system B</li></ul>\"");
+            sb.AppendLine("   - StartDate: Start time (month/year or year)");
+            sb.AppendLine("   - EndDate: End time (month/year or year)");
             sb.AppendLine();
-            sb.AppendLine("3. Education (học vấn): Liệt kê học vấn dưới dạng mảng, mỗi phần tử có:");
-            sb.AppendLine("   - UniversityName: Tên trường");
-            sb.AppendLine("   - Description: Thông tin về ngành học, điểm số, v.v. (BẮT BUỘC PHẢI CHỨA HTML, KHÔNG DÙNG DẤU • mà phải dùng thẻ <ul><li> cho danh sách)");
-            sb.AppendLine("   - StartDate: Thời gian bắt đầu (năm)");
-            sb.AppendLine("   - EndDate: Thời gian kết thúc (năm)");
+
+            // SECTION 4: EDUCATION EXTRACTION
+            sb.AppendLine("3. Education: List education as an array, each element having:");
+            sb.AppendLine("   - UniversityName: School name");
+            sb.AppendLine("   - Description: Information about major, grades, etc. (MUST CONTAIN HTML, DO NOT USE • symbol but use <ul><li> tags for lists)");
+            sb.AppendLine("   - StartDate: Start time (year)");
+            sb.AppendLine("   - EndDate: End time (year)");
             sb.AppendLine();
-            sb.AppendLine("4. Projects (dự án): Liệt kê các dự án dưới dạng mảng, mỗi phần tử có:");
-            sb.AppendLine("   - Title: Tên dự án");
-            sb.AppendLine("   - Description: Mô tả dự án - BẮT BUỘC PHẢI CHỨA HTML, KHÔNG DÙNG DẤU • mà phải dùng thẻ <ul><li> cho danh sách các công nghệ và kỹ năng sử dụng");
-            sb.AppendLine("     Ví dụ: \"<p>Dự án quản lý nhân sự.</p><ul><li>Sử dụng React cho frontend</li><li>Xây dựng API với ASP.NET Core</li></ul>\"");
-            sb.AppendLine("   - StartDate: Thời gian bắt đầu (nếu có)");
-            sb.AppendLine("   - EndDate: Thời gian kết thúc (nếu có)");
+
+            // SECTION 5: PROJECTS EXTRACTION
+            sb.AppendLine("4. Projects: List projects as an array, each element having:");
+            sb.AppendLine("   - Title: Project name");
+            sb.AppendLine("   - Description: Project description - MUST CONTAIN HTML, DO NOT USE • symbol but use <ul><li> tags for lists of technologies and skills used");
+            sb.AppendLine("     Example: \"<p>Personnel management project.</p><ul><li>Used React for frontend</li><li>Built API with ASP.NET Core</li></ul>\"");
+            sb.AppendLine("   - StartDate: Start time (if available)");
+            sb.AppendLine("   - EndDate: End time (if available)");
             sb.AppendLine();
-            sb.AppendLine("5. Skills (kỹ năng):");
-            sb.AppendLine("   - Description: Liệt kê các kỹ năng - BẮT BUỘC PHẢI CHỨA HTML, KHÔNG DÙNG DẤU • mà phải dùng thẻ <ul><li> cho danh sách kỹ năng");
-            sb.AppendLine("     Ví dụ ĐÚNG: \"<ul><li><strong>Ngôn ngữ lập trình:</strong> JavaScript, TypeScript, C#</li><li><strong>Framework:</strong> React, Angular, ASP.NET Core</li></ul>\"");
-            sb.AppendLine("     Ví dụ SAI: \"• Ngôn ngữ lập trình: JavaScript, TypeScript, C#\\n• Framework: React, Angular, ASP.NET Core\"");
+
+            // SECTION 6: SKILLS EXTRACTION
+            sb.AppendLine("5. Skills:");
+            sb.AppendLine("   - Description: List skills - MUST CONTAIN HTML, DO NOT USE • symbol but use <ul><li> tags for skill lists");
+            sb.AppendLine("     CORRECT Example: \"<ul><li><strong>Programming languages:</strong> JavaScript, TypeScript, C#</li><li><strong>Frameworks:</strong> React, Angular, ASP.NET Core</li></ul>\"");
+            sb.AppendLine("     INCORRECT Example: \"• Programming languages: JavaScript, TypeScript, C#\\n• Frameworks: React, Angular, ASP.NET Core\"");
             sb.AppendLine();
-            sb.AppendLine("6. Certificates (chứng chỉ): Liệt kê các chứng chỉ dưới dạng mảng, mỗi phần tử có:");
-            sb.AppendLine("   - Title: Tên chứng chỉ");
-            sb.AppendLine("   - Date: Ngày cấp (nếu có)");
-            sb.AppendLine("   - Description: Mô tả thêm (nếu có, BẮT BUỘC PHẢI CHỨA HTML, KHÔNG DÙNG DẤU • mà phải dùng thẻ <ul><li> cho danh sách)");
+
+            // SECTION 7: CERTIFICATES EXTRACTION
+            sb.AppendLine("6. Certificates: List certificates as an array, each element having:");
+            sb.AppendLine("   - Title: Certificate name");
+            sb.AppendLine("   - Date: Issue date (if available)");
+            sb.AppendLine("   - Description: Additional description (if available, MUST CONTAIN HTML, DO NOT USE • symbol but use <ul><li> tags for lists)");
             sb.AppendLine();
-            sb.AppendLine("7. Awards (giải thưởng): Liệt kê các giải thưởng dưới dạng mảng, mỗi phần tử có:");
-            sb.AppendLine("   - Title: Tên giải thưởng");
-            sb.AppendLine("   - Date: Ngày đạt được (nếu có)");
-            sb.AppendLine("   - Description: Mô tả thêm (nếu có, BẮT BUỘC PHẢI CHỨA HTML, KHÔNG DÙNG DẤU • mà phải dùng thẻ <ul><li> cho danh sách)");
+
+            // SECTION 8: AWARDS EXTRACTION
+            sb.AppendLine("7. Awards: List awards as an array, each element having:");
+            sb.AppendLine("   - Title: Award name");
+            sb.AppendLine("   - Date: Date received (if available)");
+            sb.AppendLine("   - Description: Additional description (if available, MUST CONTAIN HTML, DO NOT USE • symbol but use <ul><li> tags for lists)");
             sb.AppendLine();
-            sb.AppendLine("8. Language (ngôn ngữ CV):");
-            sb.AppendLine("   - Xác định CV này viết bằng ngôn ngữ gì. Trả về 'vi' nếu là tiếng Việt, 'en' nếu là tiếng Anh");
+
+            // SECTION 9: LANGUAGE DETECTION
+            sb.AppendLine("8. Language (CV language):");
+            sb.AppendLine("   - Determine what language this CV is written in. Return 'vi' if Vietnamese, 'en' if English");
             sb.AppendLine();
-            sb.AppendLine("HƯỚNG DẪN QUAN TRỌNG VỀ ĐỊNH DẠNG HTML:");
-            sb.AppendLine("- LUÔN sử dụng thẻ <p> cho các đoạn văn, KHÔNG sử dụng văn bản thuần");
-            sb.AppendLine("- LUÔN sử dụng thẻ <ul><li> cho danh sách, TUYỆT ĐỐI KHÔNG DÙNG DẤU • hoặc - hoặc * để liệt kê");
-            sb.AppendLine("- Sử dụng thẻ <strong> cho văn bản in đậm, KHÔNG dùng **text**");
-            sb.AppendLine("- Sử dụng thẻ <em> cho văn bản in nghiêng, KHÔNG dùng *text*");
-            sb.AppendLine("- Sử dụng thẻ <br> cho ngắt dòng, KHÔNG dùng \\n");
-            sb.AppendLine("- Đối với danh sách kỹ năng, hãy phân loại theo nhóm và sử dụng định dạng HTML đúng");
+
+            // SECTION 10: IMPORTANT HTML FORMATTING GUIDELINES
+            sb.AppendLine("IMPORTANT HTML FORMATTING GUIDELINES:");
+            sb.AppendLine("- ALWAYS use <p> tags for paragraphs, DO NOT use plain text");
+            sb.AppendLine("- ALWAYS use <ul><li> tags for lists, ABSOLUTELY DO NOT USE • or - or * for listing");
+            sb.AppendLine("- Use <strong> for bold text, DO NOT use **text**");
+            sb.AppendLine("- Use <em> for italic text, DO NOT use *text*");
+            sb.AppendLine("- Use <br> for line breaks, DO NOT use \\n");
+            sb.AppendLine("- For skill lists, categorize by group and use proper HTML formatting");
             sb.AppendLine();
-            sb.AppendLine("VÍ DỤ VỀ MÔ TẢ KỸ NĂNG ĐÚNG:");
+
+            // SECTION 11: EXAMPLES OF CORRECT FORMATTING
+            sb.AppendLine("EXAMPLE OF CORRECT SKILLS DESCRIPTION:");
             sb.AppendLine("<ul>");
             sb.AppendLine("  <li><strong>Ngôn ngữ lập trình:</strong> JavaScript, TypeScript, C#</li>");
             sb.AppendLine("  <li><strong>Framework:</strong> React, Angular, ASP.NET Core</li>");
@@ -607,7 +535,8 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("  <li><strong>Công cụ:</strong> Git, Docker, CI/CD</li>");
             sb.AppendLine("</ul>");
             sb.AppendLine();
-            sb.AppendLine("VÍ DỤ VỀ MÔ TẢ KINH NGHIỆM ĐÚNG:");
+
+            sb.AppendLine("EXAMPLE OF CORRECT EXPERIENCE DESCRIPTION:");
             sb.AppendLine("<p>Làm việc tại Công ty ABC với vai trò Developer, phụ trách phát triển và bảo trì các ứng dụng web.</p>");
             sb.AppendLine("<ul>");
             sb.AppendLine("  <li>Phát triển frontend sử dụng React và TypeScript</li>");
@@ -615,12 +544,21 @@ namespace iCV.Infrastructure.Services.GeminiService
             sb.AppendLine("  <li>Tối ưu hóa hiệu suất hệ thống, giảm 30% thời gian tải trang</li>");
             sb.AppendLine("</ul>");
             sb.AppendLine();
-            sb.AppendLine("Đảm bảo format data phù hợp để có thể parse thành JSON. Trả về kết quả là một đối tượng JSON hoàn chỉnh có tất cả các trường trên (nếu không tìm thấy thông tin, hãy để trống hoặc null).");
-            sb.AppendLine("Nội dung CV từ PDF:");
+
+            // SECTION 12: FINAL INSTRUCTIONS AND LANGUAGE REQUIREMENT
+            sb.AppendLine("Ensure data format is suitable for parsing into JSON. Return a complete JSON object with all fields above (if information is not found, leave blank or null).");
+
+            // CRITICAL ADDITION: Instruction to respond in Vietnamese
+            sb.AppendLine("\nCRITICAL INSTRUCTION: The extracted content MUST be in Vietnamese if the original CV is in Vietnamese.");
+            sb.AppendLine("- DO NOT translate Vietnamese content to English");
+            sb.AppendLine("- Preserve all original language terms and phrases");
+            sb.AppendLine("- Field names in the JSON should follow the structure provided above");
+
+            // SECTION 13: CV CONTENT
+            sb.AppendLine("\nCV content from PDF:");
             sb.AppendLine(pdfText.Length > 5000 ? pdfText.Substring(0, 5000) + "..." : pdfText);
 
             return sb.ToString();
-        
         }
 
         private CVDto UpdateCVFromGeminiResponse(CVDto cvDto, string jsonResponse)
@@ -1093,106 +1031,103 @@ namespace iCV.Infrastructure.Services.GeminiService
         {
             var sb = new StringBuilder();
 
-            // PHẦN 1: NHIỆM VỤ VÀ MỤC TIÊU CHÍNH
-            sb.AppendLine("NHIỆM VỤ DUY NHẤT CỦA BẠN: ĐÁNH GIÁ SỰ PHÙ HỢP CỦA CV VỚI JOB DESCRIPTION");
-            sb.AppendLine("Bạn CHÍNH XÁC là một chuyên gia nhân sự đánh giá mức độ phù hợp của CV với yêu cầu công việc. KHÔNG kiểm tra lỗi chính tả hay ngữ pháp.");
-            sb.AppendLine("Tập trung vào việc đánh giá mức độ đáp ứng và phù hợp của CV với các yêu cầu cụ thể trong JD.");
+            // SECTION 1: MAIN TASK AND OBJECTIVES
+            sb.AppendLine("YOUR ONLY TASK: EVALUATE CV COMPATIBILITY WITH JOB DESCRIPTION");
+            sb.AppendLine("You ARE EXACTLY a human resources expert who evaluates how well a CV matches specific job requirements. DO NOT check for spelling or grammar errors.");
+            sb.AppendLine("Focus on evaluating how well the CV meets the specific requirements in the job description provided.");
             sb.AppendLine("");
-            sb.AppendLine("Với MỖI khu vực của CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng, Đánh giá tổng thể CV so với JD), bạn PHẢI:");
-            sb.AppendLine("1. Đánh giá mức độ phù hợp của thông tin với yêu cầu trong JD");
-            sb.AppendLine("2. Chỉ ra những điểm mạnh và điểm yếu so với JD");
-            sb.AppendLine("3. Đề xuất các cải thiện cụ thể để tăng sự phù hợp với JD");
-            sb.AppendLine("4. Cho điểm từng khu vực (0-10) dựa trên mức độ phù hợp với JD");
-            sb.AppendLine("5. Cung cấp ví dụ minh họa cho các cải thiện được đề xuất"); 
+            sb.AppendLine("For EACH area of the CV (Thông tin, Giới thiệu, Kinh nghiệm, Kĩ năng, Học vấn, Dự án, Thành tích, Chứng chỉ, Giải thưởng, Đánh giá tổng thể CV so với JD), you MUST:");
+            sb.AppendLine("1. Evaluate how well the information matches the job description requirements");
+            sb.AppendLine("2. Identify strengths and weaknesses compared to the JD");
+            sb.AppendLine("3. Suggest specific improvements to increase compatibility with the JD");
+            sb.AppendLine("4. Score each area (0-10) based on compatibility with the JD");
+            sb.AppendLine("5. Provide examples illustrating the suggested improvements");
 
-            // PHẦN 2: TIÊU CHÍ ĐÁNH GIÁ
-            sb.AppendLine("\nTIÊU CHÍ ĐÁNH GIÁ:");
-            sb.AppendLine("1. Mức độ phù hợp: Thông tin có phù hợp với các yêu cầu trong JD không");
-            sb.AppendLine("2. Mức độ đáp ứng: CV đáp ứng được bao nhiêu phần trăm yêu cầu của JD");
-            sb.AppendLine("3. Kinh nghiệm liên quan: Kinh nghiệm làm việc có liên quan đến vị trí trong JD không");
-            sb.AppendLine("4. Kỹ năng phù hợp: Kỹ năng của ứng viên có phù hợp với các kỹ năng yêu cầu trong JD không");
-            sb.AppendLine("5. Điểm nổi bật: Ứng viên có điểm nổi bật nào đặc biệt phù hợp với vị trí này không");
-            sb.AppendLine("6. Đầy đủ: Thông tin có đầy đủ và chi tiết không");
-            sb.AppendLine("7. Cụ thể: Thông tin có được trình bày cụ thể, rõ ràng không");
-            sb.AppendLine("8. Định dạng: Thông tin có được trình bày với định dạng phù hợp không");
-            sb.AppendLine("9. Tổ chức: Thông tin có được tổ chức logic, dễ theo dõi không");
+            // SECTION 2: EVALUATION CRITERIA
+            sb.AppendLine("\nEVALUATION CRITERIA:");
+            sb.AppendLine("1. Compatibility: Does the information match the requirements in the JD?");
+            sb.AppendLine("2. Fulfillment: What percentage of the JD requirements does the CV fulfill?");
+            sb.AppendLine("3. Relevant experience: Is the work experience relevant to the position in the JD?");
+            sb.AppendLine("4. Matching skills: Do the candidate's skills match the skills required in the JD?");
+            sb.AppendLine("5. Standout points: Does the candidate have any standout qualities especially suitable for this position?");
+            sb.AppendLine("6. Completeness: Is the information comprehensive and detailed?");
+            sb.AppendLine("7. Specificity: Is the information presented clearly and specifically?");
+            sb.AppendLine("8. Formatting: Is the information presented with appropriate formatting?");
+            sb.AppendLine("9. Organization: Is the information organized logically and easy to follow?");
 
-            // PHẦN 3: HƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC
-            sb.AppendLine("\nHƯỚNG DẪN ĐÁNH GIÁ TỪNG KHU VỰC:");
+            // SECTION 3: AREA-SPECIFIC EVALUATION GUIDELINES
+            sb.AppendLine("\nAREA-SPECIFIC EVALUATION GUIDELINES:");
 
-            sb.AppendLine("\n1. KHU VỰC THÔNG TIN:");
-            sb.AppendLine("- Phân tích mức độ phù hợp của vị trí ứng tuyển với JD");
-            sb.AppendLine("- Đánh giá các thông tin liên hệ có đầy đủ không");
-            sb.AppendLine("- Nếu thông tin đầy đủ và cị trí ứng tuyển có liên quan đến JD thì cho 10 điểm luôn và không cần cải thi");
-            sb.AppendLine("- Kiểm tra đầy đủ thông tin cơ bản: họ tên, email, số điện thoại, địa chỉ, vị trí ứng tuyển");
-            sb.AppendLine("- KHÔNG cần gợi ý bổ sung các liên kết như LinkedIn, GitHub cá nhân, trừ khi chúng đã có sẵn trong dữ liệu CV");
-            sb.AppendLine("- Đánh giá các thông tin liên hệ có đầy đủ không");
+            sb.AppendLine("\n1. THÔNG TIN AREA:");
+            sb.AppendLine("- Analyze how well the job position matches the JD");
+            sb.AppendLine("- Evaluate if contact information is complete");
+            sb.AppendLine("- If information is complete and the position is relevant to the JD, give 10 points with no improvements needed");
+            sb.AppendLine("- Check for complete basic information: full name, email, phone number, address, job position");
+            sb.AppendLine("- DO NOT suggest adding links like LinkedIn or GitHub profiles unless they already exist in the CV data");
 
+            sb.AppendLine("\n2. GIỚI THIỆU AREA:");
+            sb.AppendLine("- Check if introduction information is provided");
+            sb.AppendLine("- Evaluate how clearly short-term and long-term goals related to the position are stated");
+            sb.AppendLine("- Evaluate how well the introduction aligns with JD requirements");
+            sb.AppendLine("- Example suggestion: ");
+            sb.AppendLine("+ Focus career orientation on the specific field mentioned in the JD");
 
-            sb.AppendLine("\n2. KHU VỰC GIỚI THIỆU:");
-            sb.AppendLine("- Kiểm tra có cung cấp thông tin giới thiệu không");
-            sb.AppendLine("- Nêu rõ hơn mục tiêu ngắn hạn và dài hạn liên quan đến vị trí ứng tuyển");
-            sb.AppendLine("- Đánh giá mức độ phù hợp của thông tin giới thiệu với yêu cầu trong JD");
-            sb.AppendLine("- Ví dụ gợi ý: ");
-            sb.AppendLine("+ Định hướng nghề nghiệp tập trung vào lĩnh vực phát triển ứng dụng cho công ty trong JD");
+            sb.AppendLine("\n3. KINH NGHIỆM AREA:");
+            sb.AppendLine("- Compare work experience with JD experience requirements");
+            sb.AppendLine("- Evaluate relevance of experience to the position");
+            sb.AppendLine("- Identify gaps between current experience and JD requirements");
+            sb.AppendLine("- Evaluate detail level and relevance of experience to the position");
+            sb.AppendLine("- No need to check start or end dates");
+            sb.AppendLine("- Example suggestions: ");
+            sb.AppendLine("+ Quantify achievements during employment (if applicable)");
+            sb.AppendLine("+ Highlight experience in projects related to the field in the JD");
 
-            sb.AppendLine("\n3. KHU VỰC KINH NGHIỆM:");
-            sb.AppendLine("- So sánh kinh nghiệm làm việc với các yêu cầu kinh nghiệm trong JD");
-            sb.AppendLine("- Đánh giá mức độ liên quan của kinh nghiệm với vị trí đang ứng tuyển");
-            sb.AppendLine("- Xác định khoảng cách giữa kinh nghiệm hiện tại và yêu cầu trong JD");
-            sb.AppendLine("- Đánh giá mức độ chi tiết và phù hợp của kinh nghiệm với vị trí ứng tuyển");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
-            sb.AppendLine("- Ví dụ gợi ý: ");
-            sb.AppendLine("+ Lượng hóa các thành tựu đạt được trong quá trình làm việc (nếu có)");
-            sb.AppendLine("+ Có kinh nghiệm làm việc trong các dự án liên quan đến lĩnh vực theo JD.");
+            sb.AppendLine("\n4. HỌC VẤN AREA:");
+            sb.AppendLine("- Evaluate how well education matches JD requirements");
+            sb.AppendLine("- Consider if the field of study relates to the job position");
+            sb.AppendLine("- Check for complete information about school name and field of study");
+            sb.AppendLine("- No need to check start or end dates");
+            sb.AppendLine("- Suggest if information about field of study, GPA, club membership is missing");
+            sb.AppendLine("- Example: Add GPA information (if available)");
 
+            sb.AppendLine("\n5. DỰ ÁN AREA:");
+            sb.AppendLine("- Evaluate how well projects relate to the position in the JD");
+            sb.AppendLine("- Analyze whether skills and technologies used in projects align with JD requirements");
+            sb.AppendLine("- Evaluate detail level of project descriptions and the candidate's role");
+            sb.AppendLine("- No need to check start or end dates");
+            sb.AppendLine("- Suggest if project descriptions should mention technologies, role, responsibilities");
+            sb.AppendLine("- Example suggestion: Add information about project outcomes");
 
-            sb.AppendLine("\n4. KHU VỰC HỌC VẤN:");
-            sb.AppendLine("- Đánh giá mức độ phù hợp của học vấn với yêu cầu trong JD");
-            sb.AppendLine("- Xem xét liệu chuyên ngành có liên quan đến vị trí công việc không");
-            sb.AppendLine("- Kiểm tra có đầy đủ thông tin về tên trường, ngành học không");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
-            sb.AppendLine("- Gợi ý nếu không có thông tin về ngành học, GPA, thành viên CLB...");
-            sb.AppendLine("- Ví dụ: Bổ sung thông tin về GPA (nếu có)");
+            sb.AppendLine("\n6. KỸ NĂNG AREA:");
+            sb.AppendLine("- Compare detailed skills in CV with skills required in the JD");
+            sb.AppendLine("- Analyze skills that meet requirements and skills that are missing");
+            sb.AppendLine("- Suggest ways to add or highlight skills relevant to the JD");
+            sb.AppendLine("- Check if skills are clearly listed, categorized, and well-formatted");
+            sb.AppendLine("- Suggest how to organize and present skills more effectively");
+            sb.AppendLine("- Example suggestion: Group skills by Frontend, Backend, Tools");
 
-            sb.AppendLine("\n5. KHU VỰC DỰ ÁN:");
-            sb.AppendLine("- Đánh giá mức độ liên quan của các dự án với vị trí trong JD");
-            sb.AppendLine("- Phân tích các kỹ năng và công nghệ sử dụng trong dự án có phù hợp với JD không");
-            sb.AppendLine("- Đánh giá mức độ chi tiết của mô tả dự án và vai trò của ứng viên");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
-            sb.AppendLine("- Gợi ý mô tả dự án có nêu công nghệ sử dụng, vai trò, trách nhiệm,... không");
-            sb.AppendLine("- Ví dụ gợi ý: Bổ sung thông tin về kết quả đạt được của dự án");
+            sb.AppendLine("\n7. CHỨNG CHỈ AREA:");
+            sb.AppendLine("- Evaluate relevance of certificates to JD requirements");
+            sb.AppendLine("- Determine if certificates provide an advantage for this position");
+            sb.AppendLine("- Check if certificate names are clear and the issuing organization is mentioned");
+            sb.AppendLine("- No need to check start or end dates");
 
-            sb.AppendLine("\n6. KHU VỰC KỸ NĂNG:");
-            sb.AppendLine("- So sánh chi tiết kỹ năng trong CV với các kỹ năng yêu cầu trong JD");
-            sb.AppendLine("- Phân tích kỹ năng đã đáp ứng và kỹ năng còn thiếu");
-            sb.AppendLine("- Đề xuất cách bổ sung hoặc làm nổi bật kỹ năng phù hợp với JD");
-            sb.AppendLine("- Kiểm tra kỹ năng có được liệt kê rõ ràng, phân loại và định dạng tốt không");
-            sb.AppendLine("- Gợi ý cách tổ chức và trình bày kỹ năng hiệu quả hơn");
-            sb.AppendLine("- Ví dụ gợi ý: Nhóm các kỹ năng theo Frontend, Backend, Công cụ");
+            sb.AppendLine("\n8. GIẢI THƯỞNG AREA:");
+            sb.AppendLine("- Evaluate relevance of awards to the field in the JD");
+            sb.AppendLine("- Determine if awards create a distinguishing factor for the candidate");
+            sb.AppendLine("- Check if descriptions clearly state what the award is, in which field, and from which organization");
+            sb.AppendLine("- No need to check start or end dates");
 
-            sb.AppendLine("\n7. KHU VỰC CHỨNG CHỈ:");
-            sb.AppendLine("- Đánh giá mức độ phù hợp của chứng chỉ với các yêu cầu trong JD");
-            sb.AppendLine("- Xác định xem chứng chỉ có phải là lợi thế cho vị trí này không");
-            sb.AppendLine("- Kiểm tra tên chứng chỉ có rõ ràng, từ tổ chức nào cấp không");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
+            sb.AppendLine("\n9. ĐÁNH GIÁ TỔNG THỂ CV SO VỚI JD AREA:");
+            sb.AppendLine("- Evaluate overall compatibility of the CV with the JD");
+            sb.AppendLine("- Identify main strengths and weaknesses");
+            sb.AppendLine("- Provide an overall score from 0-10 on compatibility");
+            sb.AppendLine("- Provide specific suggestions to increase compatibility with the JD");
+            sb.AppendLine("- Summarize skills and experience most relevant to the JD");
+            sb.AppendLine("- Assess what percentage of job requirements the candidate can meet");
 
-            sb.AppendLine("\n8. KHU VỰC GIẢI THƯỞNG:");
-            sb.AppendLine("- Đánh giá mức độ liên quan của giải thưởng với lĩnh vực trong JD");
-            sb.AppendLine("- Xác định liệu giải thưởng có tạo điểm khác biệt cho ứng viên không");
-            sb.AppendLine("- Kiểm tra mô tả có nêu rõ giải thưởng là gì, trong lĩnh vực nào, từ tổ chức nào không");
-            sb.AppendLine("- Không cần kiểm tra thời gian bắt đầu hay kết thúc");
-
-            sb.AppendLine("\n9. KHU VỰC ĐÁNH GIÁ TỔNG THỂ CV SO VỚI JD:");
-            sb.AppendLine("- Đánh giá tổng thể mức độ phù hợp của CV với JD");
-            sb.AppendLine("- Chỉ ra những điểm mạnh và điểm yếu chính");
-            sb.AppendLine("- Cung cấp điểm số tổng thể từ 0-10 về mức độ phù hợp");
-            sb.AppendLine("- Đưa ra các gợi ý cụ thể để tăng tính phù hợp với JD");
-            sb.AppendLine("- Tóm tắt các kỹ năng và kinh nghiệm phù hợp nhất với JD");
-            sb.AppendLine("- Đánh giá xem ứng viên có thể đáp ứng bao nhiêu phần trăm yêu cầu công việc");
-
-            // PHẦN 4: ĐỊNH DẠNG JSON VÀ CÁC TRƯỜNG
-            sb.AppendLine("\nTrả về kết quả dưới dạng JSON không có giải thích hay markdown bọc ngoài, chỉ JSON thuần túy với cấu trúc:");
+            // SECTION 4: JSON FORMAT AND FIELD INSTRUCTIONS
+            sb.AppendLine("\nReturn results as pure JSON without explanation or markdown wrapping, just pure JSON with this structure:");
             sb.AppendLine(@"
 {
  ""areas"": [
@@ -1201,7 +1136,7 @@ namespace iCV.Infrastructure.Services.GeminiService
      ""score"": 10,
      ""description"": ""Mô tả chi tiết bằng text thuần, KHÔNG có HTML"",
      ""suggestion"": ""<ul><li>Gợi ý 1</li><li>Gợi ý 2</li></ul>"",
-    ""example"": ""<ul><li>Nội dung ví dụ 1</li><li>Nội dung ví dụ 2</li></ul>"",
+     ""example"": ""<ul><li>Nội dung ví dụ 1</li><li>Nội dung ví dụ 2</li></ul>"",
      ""correction"": null
    },
    {
@@ -1216,16 +1151,24 @@ namespace iCV.Infrastructure.Services.GeminiService
 }
 ");
 
-            sb.AppendLine("Chú ý Quan trọng trong phần phản hồi:");
-            sb.AppendLine("- Trường `description` PHẢI là văn bản thuần túy (text thường) KHÔNG chứa bất kỳ thẻ HTML nào. Thể hiện nội dung gắn gọn, trọng tâm, chỉ cần ý chính.");
-            sb.AppendLine("- Trường `suggestion` nên sử dụng danh sách HTML (<ul>, <li>) để liệt kê các gợi ý cải thiện. Thể hiện nội dung gắn gọn, trọng tâm, chỉ cần ý chính.");
-            sb.AppendLine("- Trường `example` nên chứa ví dụ cụ thể với định dạng HTML để minh họa. Thể hiện nội dung gắn gọn, trọng tâm, chỉ cần ý chính.");
-            sb.AppendLine("- Trường `correction` LUÔN là null vì bạn không kiểm tra lỗi chính tả.");
-            sb.AppendLine("- PHẢI thêm một khu vực \"Đánh giá tổng thể JD\" vào cuối danh sách, với điểm tổng thể và phân tích mức độ phù hợp");
-            sb.AppendLine("- Trong trường `example`, hãy bỏ từ 'Ví dụ:' phía trước mỗi ví dụ");
+            // SECTION 5: CRITICAL LANGUAGE AND FORMAT INSTRUCTIONS
+            sb.AppendLine("\nCRITICAL INSTRUCTIONS FOR YOUR RESPONSE:");
+            sb.AppendLine("- The `description` field MUST be plain text with NO HTML tags. Content should be concise, focused on main points.");
+            sb.AppendLine("- The `suggestion` field should use HTML lists (<ul>, <li>) to enumerate improvement suggestions. Content should be concise, focused on main points.");
+            sb.AppendLine("- The `example` field should contain specific examples with HTML formatting. Content should be concise, in list format. Remove any 'Ví dụ:' prefix.");
+            sb.AppendLine("- The `correction` field should ALWAYS be null because you're not checking for spelling errors.");
+            sb.AppendLine("- You MUST include a \"Đánh giá tổng thể JD\" area at the end of the list, with an overall score and compatibility analysis.");
 
-            // PHẦN 5: DỮ LIỆU CV VÀ JD
-            sb.AppendLine("\nDữ liệu CV chuẩn hóa:");
+            // CRITICAL ADDITION: Instruction to respond in Vietnamese
+            sb.AppendLine("\nCRITICAL LANGUAGE INSTRUCTION: You MUST provide ALL content in Vietnamese language ONLY!");
+            sb.AppendLine("- ALL area names must remain in Vietnamese as shown above (Thông tin, Giới thiệu, etc.)");
+            sb.AppendLine("- ALL descriptions must be written in Vietnamese");
+            sb.AppendLine("- ALL suggestions must be written in Vietnamese");
+            sb.AppendLine("- ALL examples must be written in Vietnamese");
+            sb.AppendLine("- Despite receiving instructions in English, your ENTIRE response must be in Vietnamese");
+
+            // SECTION 6: CV DATA AND JOB DESCRIPTION
+            sb.AppendLine("\nNormalized CV data:");
             sb.AppendLine(normalizedJson);
 
             sb.AppendLine("\nJOB DESCRIPTION:");
